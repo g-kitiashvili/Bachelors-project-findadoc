@@ -1,0 +1,45 @@
+[project]
+name = "findadoc-pipeline"
+version = "0.1.0"
+description = "Web-scraping pipeline for Find-a-Doc"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.32",
+    "httpx>=0.28",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.3",
+    "pydantic>=2.10",
+    "psycopg[binary]>=3.2",
+    "structlog>=24.4",
+    "tenacity>=9.0",
+    "apscheduler>=3.10",
+    "python-Levenshtein>=0.26",
+    "phonenumbers>=8.13",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "ruff>=0.8",
+    "black>=24.10",
+]
+
+[project.scripts]
+findadoc-pipeline = "pipeline.__main__:main"
+
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pipeline*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]

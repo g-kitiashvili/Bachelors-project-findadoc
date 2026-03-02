@@ -1,0 +1,63 @@
+name: findadoc
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-findadoc}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-findadoc}
+      POSTGRES_DB: ${POSTGRES_DB:-findadoc}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-findadoc}
+      DATABASE_USERNAME: ${POSTGRES_USER:-findadoc}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-findadoc}
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${API_PORT:-8080}:8080"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    environment:
+      API_URL: http://api:8080
+      PORT: "3000"
+    depends_on:
+      - api
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    restart: unless-stopped
+
+  pipeline:
+    build:
+      context: ./pipeline
+      dockerfile: Dockerfile
+    command: python -m pipeline scheduler
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-findadoc}:${POSTGRES_PASSWORD:-findadoc}@postgres:5432/${POSTGRES_DB:-findadoc}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
