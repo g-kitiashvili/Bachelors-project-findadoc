@@ -18,8 +18,41 @@ class Doctor(
     @Column(nullable = false, unique = true)
     val slug: String,
 
-    @Column(name = "full_name", nullable = false)
-    val fullName: String,
+    @Column(name = "full_name_ka", nullable = false)
+    val fullNameKa: String,
+
+    @Column(name = "full_name_en", nullable = false)
+    val fullNameEn: String,
+
+    @Column(name = "gender")
+    val gender: String? = null,
+
+    @Column(name = "photo_url")
+    val photoUrl: String? = null,
+
+    @Column(name = "is_accepting_new_patients", nullable = false)
+    val isAcceptingNewPatients: Boolean = true,
+
+    @Column(name = "treats_children", nullable = false)
+    val treatsChildren: Boolean = false,
+
+    @Column(name = "treats_adults", nullable = false)
+    val treatsAdults: Boolean = true,
+
+    @Column(name = "bio_ka")
+    val bioKa: String? = null,
+
+    @Column(name = "bio_en")
+    val bioEn: String? = null,
+
+    @Column(name = "last_source_url")
+    val lastSourceUrl: String? = null,
+
+    @Column(name = "last_updated_at")
+    val lastUpdatedAt: OffsetDateTime? = null,
+
+    @Column(name = "status", nullable = false)
+    val status: String = "ACTIVE",
 
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: OffsetDateTime = OffsetDateTime.now(),

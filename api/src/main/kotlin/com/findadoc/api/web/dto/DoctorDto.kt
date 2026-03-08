@@ -9,5 +9,5 @@ data class DoctorDto(
 
 fun Doctor.toDto(): DoctorDto = DoctorDto(
     slug = slug,
-    fullName = fullName,
+    fullName = fullNameEn,
 )
