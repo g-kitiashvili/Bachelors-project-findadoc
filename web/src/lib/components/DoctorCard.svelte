@@ -15,38 +15,49 @@
   const hue = doctor.slug.split('').reduce((h, c) => h + c.charCodeAt(0), 0) % 360;
 </script>
 
-<article class="card">
-  {#if doctor.photoUrl}
-    <img class="photo" src={doctor.photoUrl} alt="" />
-  {:else}
-    <div class="photo placeholder" style="background: hsl({hue}, 50%, 70%)">
-      {initial}
+<a class="card-link" href="/doctors/{doctor.slug}">
+  <article class="card">
+    {#if doctor.photoUrl}
+      <img class="photo" src={doctor.photoUrl} alt="" />
+    {:else}
+      <div class="photo placeholder" style="background: hsl({hue}, 50%, 70%)">
+        {initial}
+      </div>
+    {/if}
+    <div class="body">
+      <div class="name-en">{doctor.fullNameEn}</div>
+      <div class="name-ka">{doctor.fullNameKa}</div>
+      <ul class="badges">
+        {#if doctor.isAcceptingNewPatients}
+          <li class="badge accepting">✓ Accepting new patients</li>
+        {/if}
+        {#if doctor.treatsChildren}
+          <li class="badge">👶 Children</li>
+        {/if}
+        {#if doctor.treatsAdults}
+          <li class="badge">🧓 Adults</li>
+        {/if}
+      </ul>
     </div>
-  {/if}
-  <div class="body">
-    <div class="name-en">{doctor.fullNameEn}</div>
-    <div class="name-ka">{doctor.fullNameKa}</div>
-    <ul class="badges">
-      {#if doctor.isAcceptingNewPatients}
-        <li class="badge accepting">✓ Accepting new patients</li>
-      {/if}
-      {#if doctor.treatsChildren}
-        <li class="badge">👶 Children</li>
-      {/if}
-      {#if doctor.treatsAdults}
-        <li class="badge">🧓 Adults</li>
-      {/if}
-    </ul>
-  </div>
-</article>
+  </article>
+</a>
 
 <style>
+  .card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card-link:hover .card {
+    border-color: #2563eb;
+  }
   .card {
     display: flex;
     gap: 1rem;
     padding: 1rem;
     border: 1px solid #ddd;
     border-radius: 8px;
+    transition: border-color 0.15s ease;
   }
   .photo {
     width: 72px;

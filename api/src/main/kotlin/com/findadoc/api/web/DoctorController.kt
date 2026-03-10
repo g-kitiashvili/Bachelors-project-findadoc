@@ -1,16 +1,15 @@
 package com.findadoc.api.web
 
 import com.findadoc.api.repository.DoctorRepository
-import com.findadoc.api.web.dto.DoctorDto
 import com.findadoc.api.web.dto.DoctorListItemDto
+import com.findadoc.api.web.dto.DoctorProfileDto
 import com.findadoc.api.web.dto.PageResponseDto
-import com.findadoc.api.web.dto.toDto
 import com.findadoc.api.web.dto.toListItemDto
+import com.findadoc.api.web.dto.toProfileDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -46,9 +45,9 @@ class DoctorController(
 
     @Operation(summary = "Get a doctor by slug")
     @GetMapping("/{slug}")
-    fun getBySlug(@PathVariable slug: String): ResponseEntity<DoctorDto> {
+    fun getBySlug(@PathVariable slug: String): DoctorProfileDto {
         val doctor = doctorRepository.findBySlug(slug)
-            ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(doctor.toDto())
+            ?: throw DoctorNotFoundException(slug)
+        return doctor.toProfileDto()
     }
 }
