@@ -30,6 +30,12 @@ class Doctor(
     @Column(name = "photo_url")
     val photoUrl: String? = null,
 
+    @Column(name = "specialty_ka")
+    val specialtyKa: String? = null,
+
+    @Column(name = "specialty_en")
+    val specialtyEn: String? = null,
+
     @Column(name = "is_accepting_new_patients", nullable = false)
     val isAcceptingNewPatients: Boolean = true,
 

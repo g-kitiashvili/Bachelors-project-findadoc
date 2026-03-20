@@ -13,6 +13,8 @@ data class DoctorProfileDto(
     val treatsAdults: Boolean,
     val bioKa: String?,
     val bioEn: String?,
+    val specialtyKa: String?,
+    val specialtyEn: String?,
 )
 
 fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
@@ -26,4 +28,6 @@ fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
     treatsAdults = treatsAdults,
     bioKa = bioKa,
     bioEn = bioEn,
+    specialtyKa = specialtyKa,
+    specialtyEn = specialtyEn,
 )

@@ -10,6 +10,8 @@ interface DoctorListItem {
   isAcceptingNewPatients: boolean;
   treatsChildren: boolean;
   treatsAdults: boolean;
+  specialtyKa: string | null;
+  specialtyEn: string | null;
 }
 
 interface DoctorPage {

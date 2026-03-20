@@ -14,6 +14,8 @@ interface DoctorProfile {
   treatsAdults: boolean;
   bioKa: string | null;
   bioEn: string | null;
+  specialtyKa: string | null;
+  specialtyEn: string | null;
 }
 
 export const load: PageServerLoad = async ({ params, fetch }) => {

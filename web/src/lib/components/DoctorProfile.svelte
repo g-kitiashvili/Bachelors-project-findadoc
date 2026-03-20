@@ -10,6 +10,8 @@
     treatsAdults: boolean;
     bioKa: string | null;
     bioEn: string | null;
+    specialtyKa: string | null;
+    specialtyEn: string | null;
   }
 
   let { doctor }: { doctor: Doctor } = $props();
@@ -32,6 +34,9 @@
     <div class="names">
       <div class="name-en">{doctor.fullNameEn}</div>
       <div class="name-ka">{doctor.fullNameKa}</div>
+      {#if doctor.specialtyEn || doctor.specialtyKa}
+        <div class="specialty">{doctor.specialtyEn ?? doctor.specialtyKa}</div>
+      {/if}
       {#if doctor.gender}
         <div class="meta">{doctor.gender}</div>
       {/if}
@@ -122,6 +127,12 @@
     border-radius: 4px;
   }
   .badge.accepting { background: #d4f5d4; }
+  .specialty {
+    color: #2563eb;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+  }
   .tabs {
     display: flex;
     gap: 0;

@@ -7,6 +7,8 @@
     isAcceptingNewPatients: boolean;
     treatsChildren: boolean;
     treatsAdults: boolean;
+    specialtyKa: string | null;
+    specialtyEn: string | null;
   }
 
   let { doctor }: { doctor: Doctor } = $props();
@@ -27,6 +29,9 @@
     <div class="body">
       <div class="name-en">{doctor.fullNameEn}</div>
       <div class="name-ka">{doctor.fullNameKa}</div>
+      {#if doctor.specialtyEn || doctor.specialtyKa}
+        <div class="specialty">{doctor.specialtyEn ?? doctor.specialtyKa}</div>
+      {/if}
       <ul class="badges">
         {#if doctor.isAcceptingNewPatients}
           <li class="badge accepting">✓ Accepting new patients</li>
@@ -92,5 +97,11 @@
   }
   .badge.accepting {
     background: #d4f5d4;
+  }
+  .specialty {
+    color: #2563eb;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 0.15rem;
   }
 </style>

@@ -10,6 +10,8 @@ data class DoctorListItemDto(
     val isAcceptingNewPatients: Boolean,
     val treatsChildren: Boolean,
     val treatsAdults: Boolean,
+    val specialtyKa: String?,
+    val specialtyEn: String?,
 )
 
 fun Doctor.toListItemDto(): DoctorListItemDto = DoctorListItemDto(
@@ -20,4 +22,6 @@ fun Doctor.toListItemDto(): DoctorListItemDto = DoctorListItemDto(
     isAcceptingNewPatients = isAcceptingNewPatients,
     treatsChildren = treatsChildren,
     treatsAdults = treatsAdults,
+    specialtyKa = specialtyKa,
+    specialtyEn = specialtyEn,
 )

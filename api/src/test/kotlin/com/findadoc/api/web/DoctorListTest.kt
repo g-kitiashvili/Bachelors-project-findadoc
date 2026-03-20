@@ -16,6 +16,7 @@ class DoctorListTest @Autowired constructor(
     private val mockMvc: MockMvc,
 ) {
     @Test
+    @Sql(value = ["/sql/cleanup.sql"], executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     fun `getAll returns empty page when no doctors`() {
         mockMvc.get("/api/v1/doctors")
             .andExpect {
