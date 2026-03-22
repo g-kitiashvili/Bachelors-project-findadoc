@@ -1,47 +1,145 @@
 <script lang="ts">
   import DoctorCard from "$lib/components/DoctorCard.svelte";
   import Pagination from "$lib/components/Pagination.svelte";
+  import SearchBar from "$lib/components/SearchBar.svelte";
 
   let { data } = $props();
 </script>
 
-<main>
-  <h1>Doctors</h1>
+<svelte:head>
+  <title>Doctors — Find-a-Doc</title>
+</svelte:head>
 
-  {#if data.items.length === 0}
-    <p class="empty">No doctors found.</p>
-  {:else}
-    <ul class="grid">
-      {#each data.items as doctor (doctor.slug)}
-        <li><DoctorCard {doctor} /></li>
-      {/each}
-    </ul>
-  {/if}
+<div class="search-strip">
+  <div class="search-strip-inner">
+    <SearchBar />
+  </div>
+</div>
 
+<div class="section-head">
+  <div>
+    <h1>{data.total > 0 ? `${data.total} doctors` : "Doctors"}</h1>
+    <p>Verified profiles, indexed daily from public sources.</p>
+  </div>
+  <div class="meta">
+    {#if data.total > 0}
+      Page {data.page} · {data.pageSize} per page
+    {/if}
+  </div>
+</div>
+
+{#if data.items.length === 0}
+  <section class="empty">
+    <h2>No doctors found</h2>
+    <p>Try a broader search, or browse all specialties.</p>
+  </section>
+{:else}
+  <section class="grid">
+    {#each data.items as doctor (doctor.slug)}
+      <DoctorCard {doctor} />
+    {/each}
+  </section>
+{/if}
+
+<div class="pagination-wrap">
   <Pagination page={data.page} pageSize={data.pageSize} total={data.total} />
-</main>
+</div>
 
 <style>
-  main {
-    max-width: 720px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-    font-family: system-ui, sans-serif;
+  .search-strip {
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--line);
+    padding: 1.5rem 0;
   }
-  h1 {
-    margin-bottom: 1.5rem;
+  .search-strip-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 2rem;
   }
-  .empty {
-    color: #777;
-    text-align: center;
-    margin: 3rem 0;
-  }
-  .grid {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+
+  .section-head {
+    max-width: 1280px;
+    margin: 3rem auto 2rem;
+    padding: 0 2rem;
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    justify-content: space-between;
+    align-items: end;
+    gap: 2rem;
+  }
+  .section-head h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0 0 0.4rem;
+  }
+  .section-head p {
+    color: var(--ink-muted);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .section-head .meta {
+    color: var(--ink-faint);
+    font-size: 0.86rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .grid {
+    max-width: 1280px;
+    margin: 0 auto 2rem;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .empty {
+    max-width: 720px;
+    margin: 6rem auto 4rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+  .empty h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .empty p {
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  .pagination-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem 2rem;
+  }
+
+  @media (max-width: 1000px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: 1fr;
+      padding: 0 1.25rem;
+    }
+    .section-head {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0 1.25rem;
+    }
+    .search-strip-inner {
+      padding: 0 1.25rem;
+    }
   }
 </style>

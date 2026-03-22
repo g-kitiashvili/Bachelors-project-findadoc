@@ -13,95 +13,177 @@
 
   let { doctor }: { doctor: Doctor } = $props();
 
-  const initial = doctor.fullNameEn.charAt(0).toUpperCase();
-  const hue = doctor.slug.split('').reduce((h, c) => h + c.charCodeAt(0), 0) % 360;
+  const initial = doctor.fullNameEn.trim().charAt(0).toUpperCase() || "·";
+  // Pick a deterministic gradient class based on the slug — keeps repeated cards
+  // visually varied without random flicker on re-render.
+  const bgClass = (() => {
+    const sum = doctor.slug.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+    const buckets = ["bg-a", "bg-b", "bg-c", "bg-d", "bg-e", "bg-f"] as const;
+    return buckets[sum % buckets.length];
+  })();
+  const specialty = doctor.specialtyEn ?? doctor.specialtyKa;
+  const sourceHost = (() => {
+    // Derive source from slug context — for now we don't have it on the DTO,
+    // so leave the placeholder element off until that field surfaces.
+    return null as string | null;
+  })();
 </script>
 
-<a class="card-link" href="/doctors/{doctor.slug}">
-  <article class="card">
+<a class="card" href="/doctors/{doctor.slug}">
+  <div class="photo {bgClass}">
     {#if doctor.photoUrl}
-      <img class="photo" src={doctor.photoUrl} alt="" />
+      <img src={doctor.photoUrl} alt="" />
     {:else}
-      <div class="photo placeholder" style="background: hsl({hue}, 50%, 70%)">
-        {initial}
-      </div>
+      <span class="initial">{initial}</span>
     {/if}
-    <div class="body">
-      <div class="name-en">{doctor.fullNameEn}</div>
-      <div class="name-ka">{doctor.fullNameKa}</div>
-      {#if doctor.specialtyEn || doctor.specialtyKa}
-        <div class="specialty">{doctor.specialtyEn ?? doctor.specialtyKa}</div>
+    {#if doctor.isAcceptingNewPatients}
+      <span class="tag-accepting"><span class="dot"></span>Accepting</span>
+    {/if}
+    {#if sourceHost}
+      <span class="tag-source">{sourceHost}</span>
+    {/if}
+  </div>
+  <div class="info">
+    {#if specialty}
+      <div class="specialty">{specialty}</div>
+    {/if}
+    <h3 class="name">{doctor.fullNameEn}</h3>
+    <p class="name-ka">{doctor.fullNameKa}</p>
+    <div class="meta">
+      {#if doctor.treatsAdults}
+        <span class="pill">Adults</span>
       {/if}
-      <ul class="badges">
-        {#if doctor.isAcceptingNewPatients}
-          <li class="badge accepting">✓ Accepting new patients</li>
-        {/if}
-        {#if doctor.treatsChildren}
-          <li class="badge">👶 Children</li>
-        {/if}
-        {#if doctor.treatsAdults}
-          <li class="badge">🧓 Adults</li>
-        {/if}
-      </ul>
+      {#if doctor.treatsChildren}
+        <span class="pill">Children</span>
+      {/if}
     </div>
-  </article>
+  </div>
 </a>
 
 <style>
-  .card-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-  }
-  .card-link:hover .card {
-    border-color: #2563eb;
-  }
   .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
     display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    transition: border-color 0.15s ease;
+    flex-direction: column;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    color: inherit;
+    text-decoration: none;
   }
+  .card:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -12px rgba(14, 19, 32, 0.16);
+  }
+
   .photo {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-  .photo.placeholder {
+    aspect-ratio: 4 / 3;
+    background: var(--bg-soft);
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.75rem;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .photo .initial {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 4.5rem;
+    color: var(--ink);
+    opacity: 0.75;
+    letter-spacing: -0.02em;
+  }
+  .bg-a { background: linear-gradient(135deg, #f6ebe8, #e8c9c0); }
+  .bg-b { background: linear-gradient(135deg, #e5ebf5, #c6d2e6); }
+  .bg-c { background: linear-gradient(135deg, #f2ebd7, #d9c895); }
+  .bg-d { background: linear-gradient(135deg, #e5f0e8, #bfdbc4); }
+  .bg-e { background: linear-gradient(135deg, #f2e7f0, #d5b5cc); }
+  .bg-f { background: linear-gradient(135deg, #ecedea, #c8c0be); }
+
+  .tag-accepting {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    background: white;
+    color: var(--ink);
+    font-size: 0.74rem;
     font-weight: 600;
-    color: #fff;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(14, 19, 32, 0.08);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
   }
-  .name-en { font-weight: 600; }
-  .name-ka { color: #555; font-size: 0.9rem; }
-  .badges {
-    list-style: none;
-    padding: 0;
-    margin: 0.5rem 0 0 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+  .tag-accepting .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
   }
-  .badge {
-    font-size: 0.85rem;
-    padding: 0.15rem 0.5rem;
-    background: #f0f0f0;
+  .tag-source {
+    position: absolute;
+    bottom: 0.7rem;
+    right: 0.85rem;
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    background: rgba(255, 255, 255, 0.92);
+    padding: 0.25rem 0.55rem;
     border-radius: 4px;
+    font-weight: 500;
   }
-  .badge.accepting {
-    background: #d4f5d4;
+
+  .info {
+    padding: 1.2rem 1.3rem 1.4rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
   .specialty {
-    color: #2563eb;
-    font-size: 0.9rem;
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  .name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.15;
+    color: var(--ink);
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.015em;
+  }
+  .name-ka {
+    font-family: var(--sans-ge);
     font-weight: 500;
-    margin-top: 0.15rem;
+    color: var(--ink-muted);
+    font-size: 0.92rem;
+    margin: 0 0 1rem;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: auto;
+  }
+  .pill {
+    border: 1px solid var(--line);
+    background: var(--bg-soft);
+    color: var(--ink-muted);
+    font-size: 0.76rem;
+    font-weight: 500;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
   }
 </style>

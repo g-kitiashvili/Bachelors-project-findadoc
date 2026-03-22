@@ -11,19 +11,19 @@
 </script>
 
 {#if total > 0}
-  <nav class="pagination">
+  <nav class="pagination" aria-label="Pagination">
     <a
       href={prevDisabled ? null : `?page=${page - 1}`}
       class:disabled={prevDisabled}
       aria-disabled={prevDisabled}>
-      &lt; Prev
+      ← Prev
     </a>
     <span class="status">Page {page} of {totalPages}</span>
     <a
       href={nextDisabled ? null : `?page=${page + 1}`}
       class:disabled={nextDisabled}
       aria-disabled={nextDisabled}>
-      Next &gt;
+      Next →
     </a>
   </nav>
 {/if}
@@ -31,22 +31,35 @@
 <style>
   .pagination {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     align-items: center;
     justify-content: center;
-    margin: 2rem 0;
+    margin: 2.5rem 0 1rem;
   }
   .pagination a {
-    text-decoration: none;
-    padding: 0.4rem 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    color: #333;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--ink);
+    font-size: 0.92rem;
+    font-weight: 500;
+    transition: all 0.15s;
+    background: var(--surface);
+  }
+  .pagination a:not(.disabled):hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
   }
   .pagination a.disabled {
-    color: #aaa;
+    color: var(--ink-faint);
     pointer-events: none;
-    background: #f5f5f5;
+    background: var(--bg-soft);
   }
-  .status { color: #555; }
+  .status {
+    color: var(--ink-muted);
+    font-size: 0.92rem;
+    font-weight: 500;
+    margin: 0 0.5rem;
+  }
 </style>
