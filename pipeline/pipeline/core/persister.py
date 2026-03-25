@@ -2,6 +2,10 @@
 
 Idempotency: ON CONFLICT (last_source_url) DO UPDATE.
 Slug collisions: retry with -2, -3, ..., -99 (then raise).
+
+When a `SpecialtyMatcher` is provided, also writes `doctor_specialty` rows by
+tokenizing the scraped specialty strings and matching tokens against the
+canonical taxonomy. Unmatched tokens log a `specialty_unmapped` warning.
 """
 
 from __future__ import annotations
@@ -9,20 +13,22 @@ from __future__ import annotations
 from typing import Literal
 
 import psycopg
+import structlog
 from psycopg.errors import UniqueViolation
 
 from pipeline.core.record import DoctorRecord
+from pipeline.core.specialty_matcher import SpecialtyMatcher, infer_age_groups, tokenize
 from pipeline.core.translit import next_slug_candidate
 
 
-_UPSERT_SQL = """
+_UPSERT_DOCTOR_SQL = """
 INSERT INTO doctor (
     slug, full_name_ka, full_name_en, photo_url, bio_ka, bio_en, gender,
-    specialty_ka, specialty_en,
+    specialty_ka, specialty_en, treats_children, treats_adults,
     last_source_url, last_updated_at, status
 ) VALUES (
     %(slug)s, %(full_name_ka)s, %(full_name_en)s, %(photo_url)s, %(bio_ka)s, %(bio_en)s, %(gender)s,
-    %(specialty_ka)s, %(specialty_en)s,
+    %(specialty_ka)s, %(specialty_en)s, %(treats_children)s, %(treats_adults)s,
     %(source_url)s, NOW(), 'ACTIVE'
 )
 ON CONFLICT (last_source_url) DO UPDATE SET
@@ -34,19 +40,35 @@ ON CONFLICT (last_source_url) DO UPDATE SET
     gender          = EXCLUDED.gender,
     specialty_ka    = EXCLUDED.specialty_ka,
     specialty_en    = EXCLUDED.specialty_en,
+    treats_children = EXCLUDED.treats_children,
+    treats_adults   = EXCLUDED.treats_adults,
     last_updated_at = EXCLUDED.last_updated_at
-RETURNING (xmax = 0) AS inserted
+RETURNING id, (xmax = 0) AS inserted
+"""
+
+_UPSERT_DOCTOR_SPECIALTY_SQL = """
+INSERT INTO doctor_specialty (doctor_id, specialty_id, is_primary)
+VALUES (%(doctor_id)s, %(specialty_id)s, %(is_primary)s)
+ON CONFLICT (doctor_id, specialty_id) DO UPDATE
+SET is_primary = doctor_specialty.is_primary OR EXCLUDED.is_primary
 """
 
 
+log = structlog.get_logger("pipeline.persister")
+
+
 class Persister:
-    def __init__(self, dsn: str) -> None:
+    def __init__(self, dsn: str, *, specialty_matcher: SpecialtyMatcher | None = None) -> None:
         self._dsn = dsn
+        self._matcher = specialty_matcher
 
     def upsert(self, record: DoctorRecord) -> Literal["inserted", "updated"]:
         assert record.full_name_en is not None, "Record must be normalized before upsert"
         assert record.slug_base is not None, "Record must be normalized before upsert"
 
+        treats_children, treats_adults = infer_age_groups(
+            record.specialty_ka, record.specialty_en
+        )
         for attempt in range(1, 100):
             slug = next_slug_candidate(record.slug_base, attempt)
             params = {
@@ -59,15 +81,52 @@ class Persister:
                 "gender": record.gender,
                 "specialty_ka": record.specialty_ka,
                 "specialty_en": record.specialty_en,
+                "treats_children": treats_children,
+                "treats_adults": treats_adults,
                 "source_url": str(record.source_url),
             }
             try:
                 with psycopg.connect(self._dsn, autocommit=True) as conn, conn.cursor() as cur:
-                    cur.execute(_UPSERT_SQL, params)
-                    row = cur.fetchone()
-                    return "inserted" if row[0] else "updated"
+                    cur.execute(_UPSERT_DOCTOR_SQL, params)
+                    doctor_id, inserted = cur.fetchone()
+                    self._write_specialties(cur, doctor_id, record)
+                    return "inserted" if inserted else "updated"
             except UniqueViolation as e:
                 if "doctor_slug_key" not in str(e):
                     raise
                 continue
         raise RuntimeError(f"slug collision exhausted for base={record.slug_base!r}")
+
+    def _write_specialties(self, cur: psycopg.Cursor, doctor_id: int, record: DoctorRecord) -> None:
+        if self._matcher is None:
+            return
+
+        ka_tokens = tokenize(record.specialty_ka)
+        en_tokens = tokenize(record.specialty_en)
+        max_len = max(len(ka_tokens), len(en_tokens))
+        if max_len == 0:
+            return
+
+        seen_specialty_ids: set[int] = set()
+        for i in range(max_len):
+            tk = ka_tokens[i] if i < len(ka_tokens) else None
+            te = en_tokens[i] if i < len(en_tokens) else None
+            result = self._matcher.match(token_ka=tk, token_en=te)
+            if result is None:
+                log.warning(
+                    "specialty_unmapped",
+                    doctor_id=doctor_id,
+                    raw_string_ka=record.specialty_ka,
+                    raw_string_en=record.specialty_en,
+                    token_ka=tk,
+                    token_en=te,
+                    threshold=0.45,
+                )
+                continue
+            if result.id in seen_specialty_ids:
+                continue
+            seen_specialty_ids.add(result.id)
+            cur.execute(
+                _UPSERT_DOCTOR_SPECIALTY_SQL,
+                {"doctor_id": doctor_id, "specialty_id": result.id, "is_primary": i == 0},
+            )

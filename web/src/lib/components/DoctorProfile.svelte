@@ -1,4 +1,11 @@
 <script lang="ts">
+  interface SpecialtyRef {
+    slug: string;
+    nameKa: string;
+    nameEn: string;
+    isPrimary: boolean;
+  }
+
   interface Doctor {
     slug: string;
     fullNameKa: string;
@@ -12,6 +19,7 @@
     bioEn: string | null;
     specialtyKa: string | null;
     specialtyEn: string | null;
+    specialties: SpecialtyRef[];
   }
 
   let { doctor }: { doctor: Doctor } = $props();
@@ -19,7 +27,6 @@
 
   const initial = doctor.fullNameEn.trim().charAt(0).toUpperCase() || "·";
   const activeBio = $derived(activeTab === "en" ? doctor.bioEn : doctor.bioKa);
-  const specialty = doctor.specialtyEn ?? doctor.specialtyKa;
 
   // Deterministic photo gradient based on slug (matches DoctorCard logic)
   const bgClass = (() => {
@@ -46,12 +53,6 @@
       {/if}
     </div>
     <div class="card-meta">
-      {#if specialty}
-        <div class="meta-row">
-          <span class="meta-label">Specialty</span>
-          <span class="meta-val accent">{specialty}</span>
-        </div>
-      {/if}
       <div class="meta-row">
         <span class="meta-label">Treats</span>
         <span class="meta-val">{treatsLabel}</span>
@@ -79,13 +80,22 @@
     <h1 class="name">{doctor.fullNameEn}</h1>
     <p class="name-ka">{doctor.fullNameKa}</p>
 
+    {#if doctor.specialties && doctor.specialties.length > 0}
+      <div class="specialty-row">
+        {#each doctor.specialties as s (s.slug)}
+          <a class="profile-specialty-pill" href={`/specialties/${s.slug}`} class:primary={s.isPrimary}>
+            {s.nameEn}
+            {#if s.isPrimary}<span class="primary-dot" title="Primary">●</span>{/if}
+          </a>
+        {/each}
+      </div>
+    {:else if doctor.specialtyEn}
+      <div class="specialty-row">
+        <span class="profile-specialty-pill profile-specialty-pill--raw">{doctor.specialtyEn}</span>
+      </div>
+    {/if}
+
     <div class="quick-meta">
-      {#if specialty}
-        <div class="quick">
-          <span class="quick-label">Specialty</span>
-          <span class="quick-val accent">{specialty}</span>
-        </div>
-      {/if}
       <div class="quick">
         <span class="quick-label">Treats</span>
         <span class="quick-val">{treatsLabel}</span>
@@ -243,6 +253,20 @@
     color: var(--ink-muted);
     margin: 0 0 1.8rem;
   }
+  .specialty-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 1.6rem; }
+  .profile-specialty-pill {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--bg-soft); border: 1px solid var(--line);
+    border-radius: 100px; padding: 0.4rem 0.95rem;
+    font-size: 0.86rem; color: var(--ink); font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .profile-specialty-pill:hover { background: white; border-color: var(--accent); color: var(--accent); }
+  .profile-specialty-pill--raw { color: var(--ink-muted); cursor: default; }
+  .profile-specialty-pill--raw:hover { background: var(--bg-soft); border-color: var(--line); color: var(--ink-muted); }
+  .primary-dot { color: var(--accent); font-size: 0.6rem; }
+
   .quick-meta {
     display: flex;
     gap: 1.5rem;

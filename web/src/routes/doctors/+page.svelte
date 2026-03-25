@@ -1,25 +1,47 @@
 <script lang="ts">
   import DoctorCard from "$lib/components/DoctorCard.svelte";
+  import FilterBar from "$lib/components/FilterBar.svelte";
   import Pagination from "$lib/components/Pagination.svelte";
   import SearchBar from "$lib/components/SearchBar.svelte";
 
   let { data } = $props();
+
+  const hasQuery = $derived(Boolean(data.q));
+  const headlineMain = $derived(
+    !hasQuery
+      ? data.total > 0
+        ? `${data.total} doctors`
+        : "Doctors"
+      : data.total > 0
+        ? `${data.total} ${data.total === 1 ? "result" : "results"}`
+        : "No matches",
+  );
+  const headlineSub = $derived(
+    hasQuery
+      ? `For "${data.q}"`
+      : "Verified profiles, indexed daily from public sources.",
+  );
 </script>
 
 <svelte:head>
-  <title>Doctors — Find-a-Doc</title>
+  <title>{hasQuery ? `Search · ${data.q}` : "Doctors"} — Find-a-Doc</title>
 </svelte:head>
 
 <div class="search-strip">
   <div class="search-strip-inner">
-    <SearchBar />
+    <SearchBar initialValue={data.q ?? ""} />
+    {#if hasQuery}
+      <a class="clear" href="/doctors">Clear search</a>
+    {/if}
   </div>
 </div>
 
+<FilterBar selectedSlugs={data.selectedSlugs} specialties={data.specialties} />
+
 <div class="section-head">
   <div>
-    <h1>{data.total > 0 ? `${data.total} doctors` : "Doctors"}</h1>
-    <p>Verified profiles, indexed daily from public sources.</p>
+    <h1>{headlineMain}</h1>
+    <p>{headlineSub}</p>
   </div>
   <div class="meta">
     {#if data.total > 0}
@@ -30,8 +52,13 @@
 
 {#if data.items.length === 0}
   <section class="empty">
-    <h2>No doctors found</h2>
-    <p>Try a broader search, or browse all specialties.</p>
+    {#if hasQuery}
+      <h2>No matches for "{data.q}"</h2>
+      <p>Try a different name or specialty.</p>
+    {:else}
+      <h2>No doctors found</h2>
+      <p>Try a broader search, or browse all specialties.</p>
+    {/if}
   </section>
 {:else}
   <section class="grid">
@@ -42,7 +69,13 @@
 {/if}
 
 <div class="pagination-wrap">
-  <Pagination page={data.page} pageSize={data.pageSize} total={data.total} />
+  <Pagination
+    page={data.page}
+    pageSize={data.pageSize}
+    total={data.total}
+    q={data.q ?? ""}
+    specialty={data.selectedSlugs.join(",")}
+  />
 </div>
 
 <style>
@@ -55,6 +88,20 @@
     max-width: 880px;
     margin: 0 auto;
     padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .clear {
+    color: var(--accent);
+    font-size: 0.86rem;
+    font-weight: 500;
+    align-self: flex-end;
+    transition: color 0.15s;
+  }
+  .clear:hover {
+    color: var(--accent-deep);
+    text-decoration: underline;
   }
 
   .section-head {

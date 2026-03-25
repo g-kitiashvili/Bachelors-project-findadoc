@@ -12,16 +12,21 @@ data class DoctorListItemDto(
     val treatsAdults: Boolean,
     val specialtyKa: String?,
     val specialtyEn: String?,
+    val primarySpecialty: SpecialtyRefDto?,
 )
 
-fun Doctor.toListItemDto(): DoctorListItemDto = DoctorListItemDto(
-    slug = slug,
-    fullNameKa = fullNameKa,
-    fullNameEn = fullNameEn,
-    photoUrl = photoUrl,
-    isAcceptingNewPatients = isAcceptingNewPatients,
-    treatsChildren = treatsChildren,
-    treatsAdults = treatsAdults,
-    specialtyKa = specialtyKa,
-    specialtyEn = specialtyEn,
-)
+fun Doctor.toListItemDto(): DoctorListItemDto {
+    val primary = doctorSpecialties.firstOrNull { it.isPrimary }?.specialty?.toRefDto()
+    return DoctorListItemDto(
+        slug = slug,
+        fullNameKa = fullNameKa,
+        fullNameEn = fullNameEn,
+        photoUrl = photoUrl,
+        isAcceptingNewPatients = isAcceptingNewPatients,
+        treatsChildren = treatsChildren,
+        treatsAdults = treatsAdults,
+        specialtyKa = specialtyKa,
+        specialtyEn = specialtyEn,
+        primarySpecialty = primary,
+    )
+}

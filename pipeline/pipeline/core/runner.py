@@ -10,6 +10,7 @@ from __future__ import annotations
 import time
 import uuid
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 import structlog
 
@@ -17,6 +18,9 @@ from pipeline.core.fetcher import FetchError
 from pipeline.core.persister import Persister
 from pipeline.core.registry import SCRAPERS, get_scraper
 from pipeline.core.translit import normalize
+
+if TYPE_CHECKING:
+    from pipeline.core.specialty_seeder import SpecialtySeeder
 
 
 log = structlog.get_logger("pipeline.runner")
@@ -37,10 +41,23 @@ class SourceSummary:
 
 
 class Runner:
-    def __init__(self, *, persister: Persister) -> None:
+    def __init__(
+        self,
+        *,
+        persister: Persister,
+        specialty_seeder: "SpecialtySeeder | None" = None,
+    ) -> None:
         self._persister = persister
+        self._specialty_seeder = specialty_seeder
+        self._seeded = False
+
+    def _ensure_seeded(self) -> None:
+        if self._specialty_seeder is not None and not self._seeded:
+            self._specialty_seeder.seed()
+            self._seeded = True
 
     def run_source(self, name: str) -> SourceSummary:
+        self._ensure_seeded()
         scraper = get_scraper(name)
         summary = SourceSummary(source=name)
         bound = log.bind(cycle_id=summary.cycle_id, source=name)
@@ -129,4 +146,5 @@ class Runner:
         return summary
 
     def run_all(self) -> dict[str, SourceSummary]:
+        self._ensure_seeded()
         return {name: self.run_source(name) for name in list(SCRAPERS)}

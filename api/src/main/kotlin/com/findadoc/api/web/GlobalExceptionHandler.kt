@@ -1,5 +1,7 @@
 package com.findadoc.api.web
 
+import com.findadoc.api.service.DoctorNotFoundException
+import com.findadoc.api.service.SpecialtyNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -17,6 +19,17 @@ class GlobalExceptionHandler {
         ).apply {
             type = URI.create("https://findadoc.example.com/problems/doctor-not-found")
             title = "Doctor not found"
+            setProperty("slug", ex.slug)
+        }
+
+    @ExceptionHandler(SpecialtyNotFoundException::class)
+    fun handleSpecialtyNotFound(ex: SpecialtyNotFoundException): ProblemDetail =
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.NOT_FOUND,
+            "Specialty with slug '${ex.slug}' not found",
+        ).apply {
+            type = URI.create("https://findadoc.example.com/problems/specialty-not-found")
+            title = "Specialty not found"
             setProperty("slug", ex.slug)
         }
 }

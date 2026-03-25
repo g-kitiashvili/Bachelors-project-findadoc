@@ -15,6 +15,7 @@ data class DoctorProfileDto(
     val bioEn: String?,
     val specialtyKa: String?,
     val specialtyEn: String?,
+    val specialties: List<SpecialtyRefWithFlagDto>,
 )
 
 fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
@@ -30,4 +31,13 @@ fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
     bioEn = bioEn,
     specialtyKa = specialtyKa,
     specialtyEn = specialtyEn,
+    specialties = doctorSpecialties
+        .sortedWith(compareByDescending<com.findadoc.api.domain.DoctorSpecialty> { it.isPrimary }
+            .thenBy { it.specialty.sortOrder })
+        .map { SpecialtyRefWithFlagDto(
+            slug = it.specialty.slug,
+            nameKa = it.specialty.nameKa,
+            nameEn = it.specialty.nameEn,
+            isPrimary = it.isPrimary,
+        ) },
 )

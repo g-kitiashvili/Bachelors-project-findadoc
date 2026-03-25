@@ -18,12 +18,14 @@ class DoctorBySlugTest @Autowired constructor(
     @Test
     @Sql("/sql/doctors-test-fixture.sql")
     fun `getBySlug returns 200 with full profile when slug found`() {
-        mockMvc.get("/api/v1/doctors/a-test")
+        mockMvc.get("/api/v1/doctors/giorgi-tsintsadze")
             .andExpect {
                 status { isOk() }
-                jsonPath("$.slug") { value("a-test") }
-                jsonPath("$.fullNameKa") { value("ა ტესტი") }
-                jsonPath("$.fullNameEn") { value("A Test") }
+                jsonPath("$.slug") { value("giorgi-tsintsadze") }
+                jsonPath("$.fullNameKa") { value("გიორგი ცინცაძე") }
+                jsonPath("$.fullNameEn") { value("Giorgi Tsintsadze") }
+                jsonPath("$.specialtyKa") { value("კარდიოლოგი") }
+                jsonPath("$.specialtyEn") { value("Cardiologist") }
                 jsonPath("$.gender") { isEmpty() }
                 jsonPath("$.photoUrl") { isEmpty() }
                 jsonPath("$.isAcceptingNewPatients") { value(true) }
@@ -45,6 +47,30 @@ class DoctorBySlugTest @Autowired constructor(
                 jsonPath("$.status") { value(404) }
                 jsonPath("$.detail") { value("Doctor with slug 'does-not-exist' not found") }
                 jsonPath("$.slug") { value("does-not-exist") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getBySlug returns specialties array with primary first`() {
+        mockMvc.get("/api/v1/doctors/luka-javakhishvili")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.specialties.length()") { value(2) }
+                jsonPath("$.specialties[0].slug") { value("dermatology") }
+                jsonPath("$.specialties[0].isPrimary") { value(true) }
+                jsonPath("$.specialties[1].slug") { value("neurology") }
+                jsonPath("$.specialties[1].isPrimary") { value(false) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getBySlug returns empty specialties array when doctor has no mapping`() {
+        mockMvc.get("/api/v1/doctors/ana-eradze")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.specialties.length()") { value(0) }
             }
     }
 }

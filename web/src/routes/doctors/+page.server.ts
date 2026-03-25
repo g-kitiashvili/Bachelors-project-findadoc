@@ -2,6 +2,12 @@ import type { PageServerLoad } from "./$types";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:8080";
 
+export interface SpecialtyRef {
+  slug: string;
+  nameKa: string;
+  nameEn: string;
+}
+
 interface DoctorListItem {
   slug: string;
   fullNameKa: string;
@@ -12,6 +18,7 @@ interface DoctorListItem {
   treatsAdults: boolean;
   specialtyKa: string | null;
   specialtyEn: string | null;
+  primarySpecialty: SpecialtyRef | null;
 }
 
 interface DoctorPage {
@@ -24,9 +31,24 @@ interface DoctorPage {
 export const load: PageServerLoad = async ({ url, fetch }) => {
   const rawPage = Number(url.searchParams.get("page") ?? "1");
   const page = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1;
-  const res = await fetch(`${API_BASE}/api/v1/doctors?page=${page}&pageSize=5`);
-  if (!res.ok) {
-    return { items: [], page, pageSize: 5, total: 0 } as DoctorPage;
-  }
-  return (await res.json()) as DoctorPage;
+  const q = (url.searchParams.get("q") ?? "").trim();
+  const specialty = (url.searchParams.get("specialty") ?? "").trim();
+
+  const params = new URLSearchParams({ page: String(page), pageSize: "5" });
+  if (q) params.set("q", q);
+  if (specialty) params.set("specialty", specialty);
+
+  const res = await fetch(`${API_BASE}/api/v1/doctors?${params.toString()}`);
+  const data = res.ok
+    ? ((await res.json()) as DoctorPage)
+    : { items: [], page, pageSize: 5, total: 0 };
+
+  const selectedSlugs = specialty ? specialty.split(",").filter(Boolean) : [];
+
+  const specRes = await fetch(`${API_BASE}/api/v1/specialties`);
+  const specialties = specRes.ok
+    ? ((await specRes.json()) as { items: Array<SpecialtyRef & { doctorCount: number }> }).items
+    : [];
+
+  return { ...data, q, selectedSlugs, specialties };
 };

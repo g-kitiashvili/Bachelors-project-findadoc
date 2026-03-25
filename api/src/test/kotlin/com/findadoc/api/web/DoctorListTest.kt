@@ -38,8 +38,8 @@ class DoctorListTest @Autowired constructor(
                 jsonPath("$.total") { value(7) }
                 jsonPath("$.page") { value(1) }
                 jsonPath("$.pageSize") { value(5) }
-                jsonPath("$.items[0].slug") { value("a-test") }
-                jsonPath("$.items[4].slug") { value("e-test") }
+                jsonPath("$.items[0].slug") { value("ana-eradze") }
+                jsonPath("$.items[4].slug") { value("mariam-beridze") }
             }
     }
 
@@ -52,8 +52,8 @@ class DoctorListTest @Autowired constructor(
                 jsonPath("$.items.length()") { value(2) }
                 jsonPath("$.total") { value(7) }
                 jsonPath("$.page") { value(2) }
-                jsonPath("$.items[0].slug") { value("f-test") }
-                jsonPath("$.items[1].slug") { value("g-test") }
+                jsonPath("$.items[0].slug") { value("nika-kapanadze") }
+                jsonPath("$.items[1].slug") { value("tamar-maisuradze") }
             }
     }
 
@@ -89,6 +89,167 @@ class DoctorListTest @Autowired constructor(
                 status { isOk() }
                 jsonPath("$.total") { value(7) }
                 jsonPath("$.items[?(@.slug == 'inactive-test')]") { isEmpty() }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q fuzzy matches en typo`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "Giorggi") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("giorgi-tsintsadze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q fuzzy matches ka substring`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "ცინცა") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("giorgi-tsintsadze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q fuzzy matches en specialty substring`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "kardio") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("giorgi-tsintsadze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q fuzzy matches ka specialty substring`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "კარდი") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[0].slug") { value("giorgi-tsintsadze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q fuzzy matches ka name typo with missing letter`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "მარიმ") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[0].slug") { value("mariam-beridze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q fuzzy matches transposed letter typo`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "Marima") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[0].slug") { value("mariam-beridze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q fuzzy matches surname substring`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "javakhi") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("luka-javakhishvili") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q ranks exact match first`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "Giorgi") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[0].slug") { value("giorgi-tsintsadze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q below threshold returns empty`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "Xenobiology") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(0) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q excludes inactive doctors`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "Inactive") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(0) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with specialty filter narrows to that specialty only`() {
+        mockMvc.get("/api/v1/doctors") { param("specialty", "cardiology") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(2) }
+                jsonPath("$.items[0].primarySpecialty.slug") { value("cardiology") }
+                jsonPath("$.items[1].primarySpecialty.slug") { value("cardiology") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with multiple specialty slugs returns union`() {
+        mockMvc.get("/api/v1/doctors") { param("specialty", "cardiology,pediatrics") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(3) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q and specialty returns intersection`() {
+        mockMvc.get("/api/v1/doctors") {
+            param("q", "giorgi")
+            param("specialty", "cardiology")
+        }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("giorgi-tsintsadze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with unknown specialty slug returns no doctors`() {
+        mockMvc.get("/api/v1/doctors") { param("specialty", "does-not-exist") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(0) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll items include primarySpecialty when mapped`() {
+        mockMvc.get("/api/v1/doctors") { param("specialty", "cardiology") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[0].primarySpecialty.nameEn") { value("Cardiology") }
+                jsonPath("$.items[0].primarySpecialty.nameKa") { value("კარდიოლოგია") }
             }
     }
 }

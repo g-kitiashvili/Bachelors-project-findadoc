@@ -1,9 +1,10 @@
 """CLI dispatch — argparse-based.
 
 Subcommands:
-  run --source X  → run one scraper and exit
-  run --all       → run every registered scraper and exit
-  scheduler       → long-running APScheduler loop
+  run --source X      → run one scraper and exit
+  run --all           → run every registered scraper and exit
+  scheduler           → long-running APScheduler loop
+  seed-specialties    → upsert the specialty taxonomy from YAML and exit
 """
 
 from __future__ import annotations
@@ -11,6 +12,7 @@ from __future__ import annotations
 import argparse
 import logging
 import sys
+from pathlib import Path
 
 import structlog
 
@@ -18,6 +20,11 @@ from pipeline.config import Settings
 from pipeline.core.persister import Persister
 from pipeline.core.runner import Runner
 from pipeline.core.scheduler import run_blocking_scheduler
+from pipeline.core.specialty_matcher import SpecialtyMatcher
+from pipeline.core.specialty_seeder import SpecialtySeeder
+
+
+_SPECIALTY_YAML_PATH = Path(__file__).parent / "data" / "specialties.yaml"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -30,6 +37,7 @@ def build_parser() -> argparse.ArgumentParser:
     group.add_argument("--all", action="store_true", help="Run every registered scraper.")
 
     sub.add_parser("scheduler", help="Long-running scheduler loop.")
+    sub.add_parser("seed-specialties", help="Upsert the specialty taxonomy from YAML.")
     return parser
 
 
@@ -45,10 +53,10 @@ def _configure_logging(level: str) -> None:
 
 
 def _make_runner(settings: Settings) -> Runner:
-    # Each scraper carries its own fetcher (HttpxFetcher / PlaywrightFetcher).
-    # The Runner only needs the Persister.
-    persister = Persister(settings.database_url)
-    return Runner(persister=persister)
+    matcher = SpecialtyMatcher(dsn=settings.database_url)
+    persister = Persister(settings.database_url, specialty_matcher=matcher)
+    seeder = SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH)
+    return Runner(persister=persister, specialty_seeder=seeder)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -58,6 +66,10 @@ def main(argv: list[str] | None = None) -> int:
 
     # Importing pipeline.scrapers registers all known scrapers via side-effect.
     import pipeline.scrapers  # noqa: F401
+
+    if args.cmd == "seed-specialties":
+        SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH).seed()
+        return 0
 
     runner = _make_runner(settings)
 

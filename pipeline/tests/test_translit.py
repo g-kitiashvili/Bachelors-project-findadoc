@@ -1,5 +1,5 @@
 import pytest
-from pipeline.core.translit import mkhedruli_to_latin, slugify, next_slug_candidate, normalize
+from pipeline.core.translit import kartuli_to_latin, slugify, next_slug_candidate, normalize
 from pipeline.core.record import DoctorRecord
 
 
@@ -15,16 +15,16 @@ from pipeline.core.record import DoctorRecord
         ("ხ", "kh"), ("ჯ", "j"), ("ჰ", "h"),
     ],
 )
-def test_mkhedruli_letter_table(ka, expected):
-    assert mkhedruli_to_latin(ka) == expected
+def test_kartuli_letter_table(ka, expected):
+    assert kartuli_to_latin(ka) == expected
 
 
-def test_mkhedruli_passes_through_non_georgian_chars():
-    assert mkhedruli_to_latin("Dr. გიორგი 42") == "Dr. giorgi 42"
+def test_kartuli_passes_through_non_georgian_chars():
+    assert kartuli_to_latin("Dr. გიორგი 42") == "Dr. giorgi 42"
 
 
-def test_mkhedruli_uppercase_georgian_letters_not_expected_but_dont_crash():
-    out = mkhedruli_to_latin("Ⴀ")
+def test_kartuli_uppercase_georgian_letters_not_expected_but_dont_crash():
+    out = kartuli_to_latin("Ⴀ")
     assert isinstance(out, str)
 
 
@@ -108,3 +108,36 @@ def test_normalize_is_idempotent():
     r1 = normalize(_record())
     r2 = normalize(r1)
     assert r1 == r2
+
+
+@pytest.mark.parametrize("ka,expected", [
+    ("გიორგი ცინცაძე",   "giorgi tsintsadze"),
+    ("ღოღობერიძე",       "ghoghoberidze"),
+    ("ყიფიანი",          "qipiani"),
+    ("ჯავახიშვილი",      "javakhishvili"),
+    ("ეკატერინე ჭელიძე", "ekaterine chelidze"),
+])
+def test_kartuli_to_latin_handles_full_letter_inventory(ka, expected):
+    assert kartuli_to_latin(ka) == expected
+
+
+@pytest.mark.parametrize("input_,expected", [
+    ("ციტო",            "Cito"),
+    ("ავერსი ფარმაცია", "Aversi parmatsia"),
+    ("ციტო-ს კლინიკა",  "Cito-s klinika"),
+])
+def test_brand_token_takes_precedence_over_char_translit(input_, expected):
+    assert kartuli_to_latin(input_) == expected
+
+
+def test_brand_override_does_not_match_substring_of_larger_word():
+    assert kartuli_to_latin("ციტოლოგი") == "tsitologi"
+
+
+def test_normalize_applies_brand_override_to_full_name_en():
+    record = DoctorRecord(
+        source="aversi",
+        source_url="https://aversiclinic.ge/x",
+        full_name_ka="ციტო კლინიკის ექიმი",
+    )
+    assert normalize(record).full_name_en == "Cito Klinikis Ekimi"

@@ -1,0 +1,80 @@
+<script lang="ts">
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+  import FilterDrawer from "./FilterDrawer.svelte";
+
+  interface SpecialtyOption { slug: string; nameKa: string; nameEn: string; doctorCount: number }
+
+  interface Props {
+    selectedSlugs: string[];
+    specialties: SpecialtyOption[];
+  }
+
+  let { selectedSlugs, specialties }: Props = $props();
+
+  let drawerOpen = $state(false);
+
+  const selectedSpecialties = $derived(
+    selectedSlugs
+      .map((slug) => specialties.find((s) => s.slug === slug))
+      .filter((s): s is SpecialtyOption => s !== undefined)
+  );
+
+  function removeSlug(slug: string) {
+    const next = selectedSlugs.filter((s) => s !== slug);
+    const url = new URL($page.url);
+    if (next.length > 0) {
+      url.searchParams.set("specialty", next.join(","));
+    } else {
+      url.searchParams.delete("specialty");
+    }
+    url.searchParams.delete("page");
+    goto(url.pathname + url.search);
+  }
+
+  function clearAll() {
+    const url = new URL($page.url);
+    url.searchParams.delete("specialty");
+    url.searchParams.delete("page");
+    goto(url.pathname + url.search);
+  }
+</script>
+
+<div class="bar">
+  <button class="filters-btn" onclick={() => (drawerOpen = true)}>
+    <span>Filters{selectedSlugs.length > 0 ? ` (${selectedSlugs.length})` : ""}</span>
+  </button>
+
+  <div class="chips">
+    {#each selectedSpecialties as s (s.slug)}
+      <button class="chip" onclick={() => removeSlug(s.slug)} aria-label={`Remove ${s.nameEn} filter`}>
+        <span>{s.nameEn}</span>
+        <span class="x">✕</span>
+      </button>
+    {/each}
+  </div>
+
+  {#if selectedSlugs.length > 0}
+    <button class="clear" onclick={clearAll}>Clear all</button>
+  {/if}
+</div>
+
+<FilterDrawer
+  open={drawerOpen}
+  {selectedSlugs}
+  {specialties}
+  onClose={() => (drawerOpen = false)}
+/>
+
+<style>
+  .bar { max-width: 1280px; margin: 1.5rem auto 0; padding: 0 2rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .filters-btn { background: white; border: 1px solid var(--line); padding: 0.55rem 1rem; border-radius: 100px; font: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
+  .filters-btn::before { content: "≡"; font-weight: bold; }
+  .filters-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .chips { display: flex; gap: 0.5rem; flex-wrap: wrap; flex: 1; }
+  .chip { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 100px; padding: 0.4rem 0.85rem; font: inherit; font-size: 0.86rem; cursor: pointer; color: var(--ink); }
+  .chip:hover { background: white; border-color: var(--accent); }
+  .chip .x { color: var(--ink-muted); font-size: 0.8rem; }
+  .clear { background: none; border: 0; color: var(--accent); font: inherit; font-size: 0.86rem; cursor: pointer; }
+  .clear:hover { text-decoration: underline; }
+</style>

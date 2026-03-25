@@ -3,24 +3,34 @@
     page,
     pageSize,
     total,
-  }: { page: number; pageSize: number; total: number } = $props();
+    q = "",
+    specialty = "",
+  }: { page: number; pageSize: number; total: number; q?: string; specialty?: string } = $props();
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const prevDisabled = page <= 1;
   const nextDisabled = page >= totalPages;
+
+  function linkFor(p: number): string {
+    const params = new URLSearchParams();
+    params.set("page", String(p));
+    if (q) params.set("q", q);
+    if (specialty) params.set("specialty", specialty);
+    return `?${params.toString()}`;
+  }
 </script>
 
 {#if total > 0}
   <nav class="pagination" aria-label="Pagination">
     <a
-      href={prevDisabled ? null : `?page=${page - 1}`}
+      href={prevDisabled ? null : linkFor(page - 1)}
       class:disabled={prevDisabled}
       aria-disabled={prevDisabled}>
       ← Prev
     </a>
     <span class="status">Page {page} of {totalPages}</span>
     <a
-      href={nextDisabled ? null : `?page=${page + 1}`}
+      href={nextDisabled ? null : linkFor(page + 1)}
       class:disabled={nextDisabled}
       aria-disabled={nextDisabled}>
       Next →

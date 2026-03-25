@@ -3,6 +3,13 @@ import type { PageServerLoad } from "./$types";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:8080";
 
+interface SpecialtyRef {
+  slug: string;
+  nameKa: string;
+  nameEn: string;
+  isPrimary: boolean;
+}
+
 interface DoctorProfile {
   slug: string;
   fullNameKa: string;
@@ -16,6 +23,7 @@ interface DoctorProfile {
   bioEn: string | null;
   specialtyKa: string | null;
   specialtyEn: string | null;
+  specialties: SpecialtyRef[];
 }
 
 export const load: PageServerLoad = async ({ params, fetch }) => {

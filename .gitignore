@@ -1,0 +1,46 @@
+# Environment
+.env
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Java / Kotlin / Gradle
+api/build/
+api/.gradle/
+api/out/
+api/bin/
+*.class
+
+# Node
+web/node_modules/
+web/.next/
+web/out/
+*.log
+
+# Python
+pipeline/__pycache__/
+pipeline/.venv/
+pipeline/*.egg-info/
+pipeline/.pytest_cache/
+pipeline/.ruff_cache/
+pipeline/.coverage
+
+# Docker volumes (only matters if local mounts are added)
+docker-data/
+
+# Build outputs
+dist/
+build/
+
+# Misc
+*.tmp
+*.bak

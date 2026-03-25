@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.OffsetDateTime
 
@@ -62,4 +63,7 @@ class Doctor(
 
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: OffsetDateTime = OffsetDateTime.now(),
+
+    @OneToMany(mappedBy = "doctor")
+    val doctorSpecialties: List<DoctorSpecialty> = emptyList(),
 )

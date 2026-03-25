@@ -1,4 +1,6 @@
 <script lang="ts">
+  interface SpecialtyRef { slug: string; nameKa: string; nameEn: string; }
+
   interface Doctor {
     slug: string;
     fullNameKa: string;
@@ -9,46 +11,48 @@
     treatsAdults: boolean;
     specialtyKa: string | null;
     specialtyEn: string | null;
+    primarySpecialty: SpecialtyRef | null;
   }
 
   let { doctor }: { doctor: Doctor } = $props();
 
   const initial = doctor.fullNameEn.trim().charAt(0).toUpperCase() || "·";
-  // Pick a deterministic gradient class based on the slug — keeps repeated cards
-  // visually varied without random flicker on re-render.
   const bgClass = (() => {
     const sum = doctor.slug.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
     const buckets = ["bg-a", "bg-b", "bg-c", "bg-d", "bg-e", "bg-f"] as const;
     return buckets[sum % buckets.length];
   })();
-  const specialty = doctor.specialtyEn ?? doctor.specialtyKa;
-  const sourceHost = (() => {
-    // Derive source from slug context — for now we don't have it on the DTO,
-    // so leave the placeholder element off until that field surfaces.
-    return null as string | null;
-  })();
+  const sourceHost = null as string | null;
 </script>
 
-<a class="card" href="/doctors/{doctor.slug}">
-  <div class="photo {bgClass}">
-    {#if doctor.photoUrl}
-      <img src={doctor.photoUrl} alt="" />
-    {:else}
-      <span class="initial">{initial}</span>
-    {/if}
-    {#if doctor.isAcceptingNewPatients}
-      <span class="tag-accepting"><span class="dot"></span>Accepting</span>
-    {/if}
-    {#if sourceHost}
-      <span class="tag-source">{sourceHost}</span>
-    {/if}
-  </div>
+<div class="card">
+  <a class="card-link" href="/doctors/{doctor.slug}">
+    <div class="photo {bgClass}">
+      {#if doctor.photoUrl}
+        <img src={doctor.photoUrl} alt="" />
+      {:else}
+        <span class="initial">{initial}</span>
+      {/if}
+      {#if doctor.isAcceptingNewPatients}
+        <span class="tag-accepting"><span class="dot"></span>Accepting</span>
+      {/if}
+      {#if sourceHost}
+        <span class="tag-source">{sourceHost}</span>
+      {/if}
+    </div>
+  </a>
   <div class="info">
-    {#if specialty}
-      <div class="specialty">{specialty}</div>
+    <a class="name-link" href="/doctors/{doctor.slug}">
+      <h3 class="name">{doctor.fullNameEn}</h3>
+      <p class="name-ka">{doctor.fullNameKa}</p>
+    </a>
+    {#if doctor.primarySpecialty}
+      <a class="specialty-pill" href={`/specialties/${doctor.primarySpecialty.slug}`}>
+        {doctor.primarySpecialty.nameEn}
+      </a>
+    {:else if doctor.specialtyEn}
+      <span class="specialty-pill specialty-pill--raw">{doctor.specialtyEn}</span>
     {/if}
-    <h3 class="name">{doctor.fullNameEn}</h3>
-    <p class="name-ka">{doctor.fullNameKa}</p>
     <div class="meta">
       {#if doctor.treatsAdults}
         <span class="pill">Adults</span>
@@ -58,7 +62,7 @@
       {/if}
     </div>
   </div>
-</a>
+</div>
 
 <style>
   .card {
@@ -70,12 +74,21 @@
     flex-direction: column;
     transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
     color: inherit;
-    text-decoration: none;
   }
   .card:hover {
     border-color: var(--line-strong);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px -12px rgba(14, 19, 32, 0.16);
+  }
+  .card-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+  .name-link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
   }
 
   .photo {
@@ -147,14 +160,6 @@
     display: flex;
     flex-direction: column;
   }
-  .specialty {
-    color: var(--accent);
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-  }
   .name {
     font-family: var(--display);
     font-weight: 600;
@@ -169,7 +174,36 @@
     font-weight: 500;
     color: var(--ink-muted);
     font-size: 0.92rem;
-    margin: 0 0 1rem;
+    margin: 0;
+  }
+  .specialty-pill {
+    display: inline-block;
+    margin-top: 0.6rem;
+    margin-bottom: 0.75rem;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.78rem;
+    color: var(--ink);
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    text-decoration: none;
+    align-self: flex-start;
+  }
+  .specialty-pill:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .specialty-pill--raw {
+    color: var(--ink-muted);
+    cursor: default;
+  }
+  .specialty-pill--raw:hover {
+    background: var(--bg-soft);
+    border-color: var(--line);
+    color: var(--ink-muted);
   }
   .meta {
     display: flex;

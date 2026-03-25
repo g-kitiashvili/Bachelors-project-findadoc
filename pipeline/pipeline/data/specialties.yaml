@@ -1,0 +1,324 @@
+# Specialty taxonomy for Find-a-Doc. Seeded into the `specialty` table by SpecialtySeeder.
+# Top-10 entries carry curated KA + EN descriptions; long-tail entries have name only.
+
+- slug: cardiology
+  name_ka: კარდიოლოგია
+  name_en: Cardiology
+  sort_order: 10
+  description_ka: |
+    კარდიოლოგია არის სამედიცინო სპეციალობა, რომელიც სწავლობს გულისა და
+    სისხლძარღვების დაავადებებს. კარდიოლოგი ექიმები სვამენ დიაგნოზს და
+    მკურნალობენ მდგომარეობებს არითმიიდან კორონარული არტერიის დაავადებამდე.
+  description_en: |
+    Cardiology is the medical specialty concerned with disorders of the heart and
+    blood vessels. Cardiologists diagnose and treat conditions ranging from
+    arrhythmias to coronary artery disease, and often coordinate care with
+    cardiac surgeons for interventional procedures.
+
+- slug: pediatrics
+  name_ka: პედიატრია
+  name_en: Pediatrics
+  sort_order: 20
+  description_ka: |
+    პედიატრია არის სამედიცინო სპეციალობა, რომელიც ეხება ჩვილების, ბავშვებისა
+    და მოზარდების ჯანმრთელობას, ფიზიკურ და ფსიქოლოგიურ განვითარებას.
+  description_en: |
+    Pediatrics is the medical specialty dealing with the health and medical care
+    of infants, children, and adolescents from birth up to age 18. Pediatricians
+    provide preventive care, diagnose and treat illnesses, and monitor growth and
+    development.
+
+- slug: gynecology
+  name_ka: გინეკოლოგია
+  name_en: Gynecology
+  sort_order: 30
+  description_ka: |
+    გინეკოლოგია არის სამედიცინო სპეციალობა, რომელიც ეხება ქალთა
+    რეპროდუქციული სისტემის ჯანმრთელობას.
+  description_en: |
+    Gynecology is the medical specialty dealing with the health of the female
+    reproductive system, including the uterus, ovaries, and fallopian tubes.
+
+- slug: dermatology
+  name_ka: დერმატოლოგია
+  name_en: Dermatology
+  sort_order: 40
+  description_ka: |
+    დერმატოლოგია არის სამედიცინო სპეციალობა, რომელიც ეხება კანის, თმის
+    და ფრჩხილების დაავადებებს.
+  description_en: |
+    Dermatology is the medical specialty concerned with the diagnosis and
+    treatment of conditions affecting the skin, hair, and nails.
+
+- slug: surgery
+  name_ka: ქირურგია
+  name_en: Surgery
+  sort_order: 50
+  description_ka: |
+    ქირურგია არის სამედიცინო სპეციალობა, რომელიც იყენებს ოპერაციულ
+    ტექნიკას ტრავმის, დაავადებებისა და დეფორმაციების სამკურნალოდ.
+  description_en: |
+    Surgery is the medical specialty that uses operative techniques to treat
+    injuries, diseases, and deformities.
+
+- slug: internal-medicine
+  name_ka: შინაგანი მედიცინა
+  name_en: Internal Medicine
+  sort_order: 60
+  description_ka: |
+    შინაგანი მედიცინა არის სამედიცინო სპეციალობა, რომელიც ეხება
+    ზრდასრულთა შინაგანი დაავადებების პრევენციას, დიაგნოსტიკას და
+    მკურნალობას.
+  description_en: |
+    Internal Medicine is the medical specialty concerned with the prevention,
+    diagnosis, and treatment of internal diseases in adults.
+
+- slug: neurology
+  name_ka: ნევროლოგია
+  name_en: Neurology
+  sort_order: 70
+  description_ka: |
+    ნევროლოგია არის სამედიცინო სპეციალობა, რომელიც ეხება ნერვული
+    სისტემის დაავადებებს.
+  description_en: |
+    Neurology is the medical specialty concerned with the diagnosis and treatment
+    of disorders of the nervous system, including the brain, spinal cord, and
+    peripheral nerves.
+
+- slug: ent
+  name_ka: ოტორინოლარინგოლოგია
+  name_en: ENT (Otorhinolaryngology)
+  sort_order: 80
+  description_ka: |
+    ოტორინოლარინგოლოგია (ყელ-ყურ-ცხვირის სამედიცინო სპეციალობა) ეხება
+    ყურის, ცხვირისა და ყელის დაავადებებს.
+  description_en: |
+    Otorhinolaryngology (ENT) is the medical specialty dealing with disorders of
+    the ear, nose, and throat.
+
+- slug: orthopedics
+  name_ka: ორთოპედია
+  name_en: Orthopedics
+  sort_order: 90
+  description_ka: |
+    ორთოპედია არის სამედიცინო სპეციალობა, რომელიც ეხება ძვალ-კუნთოვანი
+    სისტემის დაავადებებსა და დაზიანებებს.
+  description_en: |
+    Orthopedics is the medical specialty concerned with conditions involving the
+    musculoskeletal system — bones, joints, ligaments, tendons, and muscles.
+
+- slug: family-medicine
+  name_ka: საოჯახო მედიცინა
+  name_en: Family Medicine
+  sort_order: 100
+  description_ka: |
+    საოჯახო მედიცინა არის სამედიცინო სპეციალობა, რომელიც უზრუნველყოფს
+    ყოვლისმომცველ ჯანდაცვას ყველა ასაკის პაციენტისთვის.
+  description_en: |
+    Family Medicine is the medical specialty that provides comprehensive
+    healthcare for individuals and families across all ages.
+
+- slug: ophthalmology
+  name_ka: ოფთალმოლოგია
+  name_en: Ophthalmology
+  sort_order: 110
+
+- slug: urology
+  name_ka: უროლოგია
+  name_en: Urology
+  sort_order: 120
+
+- slug: oncology
+  name_ka: ონკოლოგია
+  name_en: Oncology
+  sort_order: 130
+
+- slug: endocrinology
+  name_ka: ენდოკრინოლოგია
+  name_en: Endocrinology
+  sort_order: 140
+
+- slug: gastroenterology
+  name_ka: გასტროენტეროლოგია
+  name_en: Gastroenterology
+  sort_order: 150
+
+- slug: psychiatry
+  name_ka: ფსიქიატრია
+  name_en: Psychiatry
+  sort_order: 160
+
+- slug: rheumatology
+  name_ka: რევმატოლოგია
+  name_en: Rheumatology
+  sort_order: 170
+
+- slug: pulmonology
+  name_ka: პულმონოლოგია
+  name_en: Pulmonology
+  sort_order: 180
+
+- slug: nephrology
+  name_ka: ნეფროლოგია
+  name_en: Nephrology
+  sort_order: 190
+
+- slug: hematology
+  name_ka: ჰემატოლოგია
+  name_en: Hematology
+  sort_order: 200
+
+- slug: infectious-diseases
+  name_ka: ინფექციური დაავადებები
+  name_en: Infectious Diseases
+  sort_order: 210
+
+- slug: allergology
+  name_ka: ალერგოლოგია
+  name_en: Allergology
+  sort_order: 220
+
+- slug: immunology
+  name_ka: იმუნოლოგია
+  name_en: Immunology
+  sort_order: 230
+
+- slug: cardiac-surgery
+  name_ka: კარდიოქირურგია
+  name_en: Cardiac Surgery
+  sort_order: 240
+
+- slug: neurosurgery
+  name_ka: ნეიროქირურგია
+  name_en: Neurosurgery
+  sort_order: 250
+
+- slug: plastic-surgery
+  name_ka: პლასტიკური ქირურგია
+  name_en: Plastic Surgery
+  sort_order: 260
+
+- slug: vascular-surgery
+  name_ka: სისხლძარღვთა ქირურგია
+  name_en: Vascular Surgery
+  sort_order: 270
+
+- slug: anesthesiology
+  name_ka: ანესთეზიოლოგია
+  name_en: Anesthesiology
+  sort_order: 280
+
+- slug: radiology
+  name_ka: რადიოლოგია
+  name_en: Radiology
+  sort_order: 290
+
+- slug: pathology
+  name_ka: პათოლოგია
+  name_en: Pathology
+  sort_order: 300
+
+- slug: laboratory-medicine
+  name_ka: ლაბორატორიული მედიცინა
+  name_en: Laboratory Medicine
+  sort_order: 310
+
+- slug: emergency-medicine
+  name_ka: გადაუდებელი მედიცინა
+  name_en: Emergency Medicine
+  sort_order: 320
+
+- slug: intensive-care
+  name_ka: ინტენსიური თერაპია
+  name_en: Intensive Care
+  sort_order: 330
+
+- slug: physical-medicine
+  name_ka: ფიზიკური მედიცინა
+  name_en: Physical Medicine
+  sort_order: 340
+
+- slug: sports-medicine
+  name_ka: სპორტული მედიცინა
+  name_en: Sports Medicine
+  sort_order: 350
+
+- slug: occupational-medicine
+  name_ka: პროფესიული მედიცინა
+  name_en: Occupational Medicine
+  sort_order: 360
+
+- slug: dentistry
+  name_ka: სტომატოლოგია
+  name_en: Dentistry
+  sort_order: 370
+
+- slug: oral-surgery
+  name_ka: პირის ღრუს ქირურგია
+  name_en: Oral Surgery
+  sort_order: 380
+
+- slug: periodontology
+  name_ka: პერიოდონტოლოგია
+  name_en: Periodontology
+  sort_order: 390
+
+- slug: orthodontics
+  name_ka: ორთოდონტია
+  name_en: Orthodontics
+  sort_order: 400
+
+- slug: prosthodontics
+  name_ka: პროთეზირება
+  name_en: Prosthodontics
+  sort_order: 410
+
+- slug: sexology
+  name_ka: სექსოლოგია
+  name_en: Sexology
+  sort_order: 420
+
+- slug: andrology
+  name_ka: ანდროლოგია
+  name_en: Andrology
+  sort_order: 430
+
+- slug: obstetrics
+  name_ka: მეანობა
+  name_en: Obstetrics
+  sort_order: 440
+
+- slug: neonatology
+  name_ka: ნეონატოლოგია
+  name_en: Neonatology
+  sort_order: 450
+
+- slug: geriatrics
+  name_ka: გერიატრია
+  name_en: Geriatrics
+  sort_order: 460
+
+- slug: palliative-care
+  name_ka: პალიატიური მზრუნველობა
+  name_en: Palliative Care
+  sort_order: 470
+
+- slug: nutrition
+  name_ka: კვება
+  name_en: Nutrition
+  sort_order: 480
+
+- slug: traumatology
+  name_ka: ტრავმატოლოგია
+  name_en: Traumatology
+  sort_order: 490
+
+- slug: echocardiography
+  name_ka: ექოკარდიოგრაფია
+  name_en: Echocardiography
+  sort_order: 500
+
+- slug: reanimatology
+  name_ka: რეანიმატოლოგია
+  name_en: Reanimatology
+  sort_order: 510
