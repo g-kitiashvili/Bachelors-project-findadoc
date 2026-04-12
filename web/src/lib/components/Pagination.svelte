@@ -5,7 +5,9 @@
     total,
     q = "",
     specialty = "",
-  }: { page: number; pageSize: number; total: number; q?: string; specialty?: string } = $props();
+    region = "",
+    city = "",
+  }: { page: number; pageSize: number; total: number; q?: string; specialty?: string; region?: string; city?: string } = $props();
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const prevDisabled = page <= 1;
@@ -16,6 +18,8 @@
     params.set("page", String(p));
     if (q) params.set("q", q);
     if (specialty) params.set("specialty", specialty);
+    if (region) params.set("region", region);
+    if (city) params.set("city", city);
     return `?${params.toString()}`;
   }
 </script>

@@ -21,14 +21,19 @@ from pipeline.core.specialty_matcher import SpecialtyMatcher, infer_age_groups, 
 from pipeline.core.translit import next_slug_candidate
 
 
+SOURCE_CITY = {
+    "newhospitals": "tbilisi",
+    "aversi": "tbilisi",
+}
+
 _UPSERT_DOCTOR_SQL = """
 INSERT INTO doctor (
     slug, full_name_ka, full_name_en, photo_url, bio_ka, bio_en, gender,
-    specialty_ka, specialty_en, treats_children, treats_adults,
+    specialty_ka, specialty_en, treats_children, treats_adults, location_id,
     last_source_url, last_updated_at, status
 ) VALUES (
     %(slug)s, %(full_name_ka)s, %(full_name_en)s, %(photo_url)s, %(bio_ka)s, %(bio_en)s, %(gender)s,
-    %(specialty_ka)s, %(specialty_en)s, %(treats_children)s, %(treats_adults)s,
+    %(specialty_ka)s, %(specialty_en)s, %(treats_children)s, %(treats_adults)s, %(location_id)s,
     %(source_url)s, NOW(), 'ACTIVE'
 )
 ON CONFLICT (last_source_url) DO UPDATE SET
@@ -42,6 +47,7 @@ ON CONFLICT (last_source_url) DO UPDATE SET
     specialty_en    = EXCLUDED.specialty_en,
     treats_children = EXCLUDED.treats_children,
     treats_adults   = EXCLUDED.treats_adults,
+    location_id     = EXCLUDED.location_id,
     last_updated_at = EXCLUDED.last_updated_at
 RETURNING id, (xmax = 0) AS inserted
 """
@@ -61,6 +67,7 @@ class Persister:
     def __init__(self, dsn: str, *, specialty_matcher: SpecialtyMatcher | None = None) -> None:
         self._dsn = dsn
         self._matcher = specialty_matcher
+        self._location_cache: dict[str, int | None] = {}
 
     def upsert(self, record: DoctorRecord) -> Literal["inserted", "updated"]:
         assert record.full_name_en is not None, "Record must be normalized before upsert"
@@ -69,6 +76,7 @@ class Persister:
         treats_children, treats_adults = infer_age_groups(
             record.specialty_ka, record.specialty_en
         )
+        location_id = self._resolve_location_id(record.source)
         for attempt in range(1, 100):
             slug = next_slug_candidate(record.slug_base, attempt)
             params = {
@@ -83,6 +91,7 @@ class Persister:
                 "specialty_en": record.specialty_en,
                 "treats_children": treats_children,
                 "treats_adults": treats_adults,
+                "location_id": location_id,
                 "source_url": str(record.source_url),
             }
             try:
@@ -96,6 +105,22 @@ class Persister:
                     raise
                 continue
         raise RuntimeError(f"slug collision exhausted for base={record.slug_base!r}")
+
+    def _resolve_location_id(self, source: str) -> int | None:
+        slug = SOURCE_CITY.get(source)
+        if slug is None:
+            log.warning("location_unmapped", source=source)
+            return None
+        if slug in self._location_cache:
+            return self._location_cache[slug]
+        with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+            cur.execute("SELECT id FROM location WHERE slug = %s", (slug,))
+            row = cur.fetchone()
+        location_id = row[0] if row else None
+        if location_id is None:
+            log.warning("location_unmapped", source=source, slug=slug)
+        self._location_cache[slug] = location_id
+        return location_id
 
     def _write_specialties(self, cur: psycopg.Cursor, doctor_id: int, record: DoctorRecord) -> None:
         if self._matcher is None:

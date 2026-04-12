@@ -252,4 +252,63 @@ class DoctorListTest @Autowired constructor(
                 jsonPath("$.items[0].primarySpecialty.nameKa") { value("კარდიოლოგია") }
             }
     }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    fun `getAll region filter returns only doctors in that region`() {
+        mockMvc.get("/api/v1/doctors?region=imereti")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("doc-kutaisi") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    fun `getAll region filter matches region-level attribution`() {
+        mockMvc.get("/api/v1/doctors?region=tbilisi")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("doc-tbilisi") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    fun `getAll city filter returns only doctors in that city`() {
+        mockMvc.get("/api/v1/doctors?city=kutaisi")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("doc-kutaisi") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    fun `getAll region and specialty filters combine with AND`() {
+        mockMvc.get("/api/v1/doctors?region=imereti&specialty=cardiology")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("doc-kutaisi") }
+            }
+        mockMvc.get("/api/v1/doctors?region=tbilisi&specialty=cardiology")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(0) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    fun `getAll without location filter includes doctors with no location`() {
+        mockMvc.get("/api/v1/doctors?pageSize=50")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(3) }
+            }
+    }
 }

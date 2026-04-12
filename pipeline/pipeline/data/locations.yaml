@@ -1,0 +1,133 @@
+# Region/city taxonomy for Find-a-Doc. Seeded into the `location` table by LocationSeeder.
+# Top-level entries are regions (parent_id NULL). Nested `cities` become child rows.
+# Tbilisi is a self-governing city = its own region, so it has no child cities.
+
+- slug: tbilisi
+  name_ka: თბილისი
+  name_en: Tbilisi
+  sort_order: 10
+
+- slug: adjara
+  name_ka: აჭარა
+  name_en: Adjara
+  sort_order: 20
+  cities:
+    - slug: batumi
+      name_ka: ბათუმი
+      name_en: Batumi
+      sort_order: 10
+    - slug: kobuleti
+      name_ka: ქობულეთი
+      name_en: Kobuleti
+      sort_order: 20
+
+- slug: imereti
+  name_ka: იმერეთი
+  name_en: Imereti
+  sort_order: 30
+  cities:
+    - slug: kutaisi
+      name_ka: ქუთაისი
+      name_en: Kutaisi
+      sort_order: 10
+    - slug: zestaponi
+      name_ka: ზესტაფონი
+      name_en: Zestaponi
+      sort_order: 20
+
+- slug: kakheti
+  name_ka: კახეთი
+  name_en: Kakheti
+  sort_order: 40
+  cities:
+    - slug: telavi
+      name_ka: თელავი
+      name_en: Telavi
+      sort_order: 10
+    - slug: gurjaani
+      name_ka: გურჯაანი
+      name_en: Gurjaani
+      sort_order: 20
+
+- slug: kvemo-kartli
+  name_ka: ქვემო ქართლი
+  name_en: Kvemo Kartli
+  sort_order: 50
+  cities:
+    - slug: rustavi
+      name_ka: რუსთავი
+      name_en: Rustavi
+      sort_order: 10
+    - slug: marneuli
+      name_ka: მარნეული
+      name_en: Marneuli
+      sort_order: 20
+
+- slug: shida-kartli
+  name_ka: შიდა ქართლი
+  name_en: Shida Kartli
+  sort_order: 60
+  cities:
+    - slug: gori
+      name_ka: გორი
+      name_en: Gori
+      sort_order: 10
+
+- slug: samegrelo-zemo-svaneti
+  name_ka: სამეგრელო-ზემო სვანეთი
+  name_en: Samegrelo-Zemo Svaneti
+  sort_order: 70
+  cities:
+    - slug: zugdidi
+      name_ka: ზუგდიდი
+      name_en: Zugdidi
+      sort_order: 10
+    - slug: poti
+      name_ka: ფოთი
+      name_en: Poti
+      sort_order: 20
+
+- slug: guria
+  name_ka: გურია
+  name_en: Guria
+  sort_order: 80
+  cities:
+    - slug: ozurgeti
+      name_ka: ოზურგეთი
+      name_en: Ozurgeti
+      sort_order: 10
+
+- slug: samtskhe-javakheti
+  name_ka: სამცხე-ჯავახეთი
+  name_en: Samtskhe-Javakheti
+  sort_order: 90
+  cities:
+    - slug: akhaltsikhe
+      name_ka: ახალციხე
+      name_en: Akhaltsikhe
+      sort_order: 10
+
+- slug: mtskheta-mtianeti
+  name_ka: მცხეთა-მთიანეთი
+  name_en: Mtskheta-Mtianeti
+  sort_order: 100
+  cities:
+    - slug: mtskheta
+      name_ka: მცხეთა
+      name_en: Mtskheta
+      sort_order: 10
+
+- slug: racha-lechkhumi-kvemo-svaneti
+  name_ka: რაჭა-ლეჩხუმი და ქვემო სვანეთი
+  name_en: Racha-Lechkhumi and Kvemo Svaneti
+  sort_order: 110
+  cities:
+    - slug: ambrolauri
+      name_ka: ამბროლაური
+      name_en: Ambrolauri
+      sort_order: 10
+
+- slug: abkhazia
+  name_ka: აფხაზეთი
+  name_en: Abkhazia
+  sort_order: 120

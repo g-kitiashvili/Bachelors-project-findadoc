@@ -2,21 +2,32 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
+  interface LocationCity { slug: string; nameKa: string; nameEn: string; doctorCount: number }
+  interface LocationRegion extends LocationCity { cities: LocationCity[] }
+
   interface Props {
     open: boolean;
     selectedSlugs: string[];
     specialties: Array<{ slug: string; nameEn: string; nameKa: string; doctorCount: number }>;
     onClose: () => void;
+    regions: LocationRegion[];
+    selectedRegion: string;
+    selectedCity: string;
   }
 
-  let { open, selectedSlugs, specialties, onClose }: Props = $props();
+  let { open, selectedSlugs, specialties, onClose, regions, selectedRegion, selectedCity }: Props = $props();
 
   let draft = $state<string[]>([...selectedSlugs]);
   let search = $state("");
+  let regionDraft = $state(selectedRegion);
+  let cityDraft = $state(selectedCity);
 
   $effect(() => {
     draft = [...selectedSlugs];
   });
+
+  $effect(() => { regionDraft = selectedRegion; });
+  $effect(() => { cityDraft = selectedCity; });
 
   const filtered = $derived(
     search.trim() === ""
@@ -27,12 +38,21 @@
         )
   );
 
+  const cityOptions = $derived(
+    regions.find((r) => r.slug === regionDraft)?.cities ?? []
+  );
+
   function toggle(slug: string) {
     if (draft.includes(slug)) {
       draft = draft.filter((s) => s !== slug);
     } else {
       draft = [...draft, slug];
     }
+  }
+
+  function onRegionChange(value: string) {
+    regionDraft = value;
+    cityDraft = "";
   }
 
   function apply() {
@@ -42,6 +62,10 @@
     } else {
       url.searchParams.delete("specialty");
     }
+    if (regionDraft) url.searchParams.set("region", regionDraft);
+    else url.searchParams.delete("region");
+    if (cityDraft) url.searchParams.set("city", cityDraft);
+    else url.searchParams.delete("city");
     url.searchParams.delete("page");
     goto(url.pathname + url.search);
     onClose();
@@ -49,6 +73,8 @@
 
   function clearDraft() {
     draft = [];
+    regionDraft = "";
+    cityDraft = "";
   }
 </script>
 
@@ -59,6 +85,26 @@
       <h2>Filters</h2>
       <button class="close" onclick={onClose} aria-label="Close">✕</button>
     </header>
+
+    <div class="section">
+      <div class="label">Region</div>
+      <select class="search" value={regionDraft} onchange={(e) => onRegionChange(e.currentTarget.value)}>
+        <option value="">All regions</option>
+        {#each regions as r (r.slug)}
+          <option value={r.slug}>{r.nameEn} ({r.doctorCount})</option>
+        {/each}
+      </select>
+
+      {#if cityOptions.length > 0}
+        <div class="label" style="margin-top:0.75rem;">City</div>
+        <select class="search" bind:value={cityDraft}>
+          <option value="">All cities</option>
+          {#each cityOptions as c (c.slug)}
+            <option value={c.slug}>{c.nameEn} ({c.doctorCount})</option>
+          {/each}
+        </select>
+      {/if}
+    </div>
 
     <div class="section">
       <div class="label">Specialty</div>

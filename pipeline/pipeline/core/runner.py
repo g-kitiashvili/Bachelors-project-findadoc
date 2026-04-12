@@ -20,6 +20,7 @@ from pipeline.core.registry import SCRAPERS, get_scraper
 from pipeline.core.translit import normalize
 
 if TYPE_CHECKING:
+    from pipeline.core.location_seeder import LocationSeeder
     from pipeline.core.specialty_seeder import SpecialtySeeder
 
 
@@ -46,15 +47,21 @@ class Runner:
         *,
         persister: Persister,
         specialty_seeder: "SpecialtySeeder | None" = None,
+        location_seeder: "LocationSeeder | None" = None,
     ) -> None:
         self._persister = persister
         self._specialty_seeder = specialty_seeder
+        self._location_seeder = location_seeder
         self._seeded = False
 
     def _ensure_seeded(self) -> None:
-        if self._specialty_seeder is not None and not self._seeded:
+        if self._seeded:
+            return
+        if self._location_seeder is not None:
+            self._location_seeder.seed()
+        if self._specialty_seeder is not None:
             self._specialty_seeder.seed()
-            self._seeded = True
+        self._seeded = True
 
     def run_source(self, name: str) -> SourceSummary:
         self._ensure_seeded()

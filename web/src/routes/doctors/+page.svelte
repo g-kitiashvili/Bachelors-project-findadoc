@@ -36,7 +36,7 @@
   </div>
 </div>
 
-<FilterBar selectedSlugs={data.selectedSlugs} specialties={data.specialties} />
+<FilterBar selectedSlugs={data.selectedSlugs} specialties={data.specialties} regions={data.regions} selectedRegion={data.selectedRegion} selectedCity={data.selectedCity} />
 
 <div class="section-head">
   <div>
@@ -75,6 +75,8 @@
     total={data.total}
     q={data.q ?? ""}
     specialty={data.selectedSlugs.join(",")}
+    region={data.selectedRegion}
+    city={data.selectedCity}
   />
 </div>
 

@@ -4,13 +4,18 @@
   import FilterDrawer from "./FilterDrawer.svelte";
 
   interface SpecialtyOption { slug: string; nameKa: string; nameEn: string; doctorCount: number }
+  interface LocationCity { slug: string; nameKa: string; nameEn: string; doctorCount: number }
+  interface LocationRegion extends LocationCity { cities: LocationCity[] }
 
   interface Props {
     selectedSlugs: string[];
     specialties: SpecialtyOption[];
+    regions: LocationRegion[];
+    selectedRegion: string;
+    selectedCity: string;
   }
 
-  let { selectedSlugs, specialties }: Props = $props();
+  let { selectedSlugs, specialties, regions, selectedRegion, selectedCity }: Props = $props();
 
   let drawerOpen = $state(false);
 
@@ -18,6 +23,11 @@
     selectedSlugs
       .map((slug) => specialties.find((s) => s.slug === slug))
       .filter((s): s is SpecialtyOption => s !== undefined)
+  );
+
+  const regionLabel = $derived(regions.find((r) => r.slug === selectedRegion)?.nameEn ?? "");
+  const cityLabel = $derived(
+    regions.flatMap((r) => r.cities).find((c) => c.slug === selectedCity)?.nameEn ?? ""
   );
 
   function removeSlug(slug: string) {
@@ -32,9 +42,19 @@
     goto(url.pathname + url.search);
   }
 
+  function clearLocation(kind: "region" | "city") {
+    const url = new URL($page.url);
+    if (kind === "region") { url.searchParams.delete("region"); url.searchParams.delete("city"); }
+    else url.searchParams.delete("city");
+    url.searchParams.delete("page");
+    goto(url.pathname + url.search);
+  }
+
   function clearAll() {
     const url = new URL($page.url);
     url.searchParams.delete("specialty");
+    url.searchParams.delete("region");
+    url.searchParams.delete("city");
     url.searchParams.delete("page");
     goto(url.pathname + url.search);
   }
@@ -52,9 +72,19 @@
         <span class="x">✕</span>
       </button>
     {/each}
+    {#if regionLabel}
+      <button class="chip" onclick={() => clearLocation("region")} aria-label={`Remove ${regionLabel} filter`}>
+        <span>{regionLabel}</span><span class="x">✕</span>
+      </button>
+    {/if}
+    {#if cityLabel}
+      <button class="chip" onclick={() => clearLocation("city")} aria-label={`Remove ${cityLabel} filter`}>
+        <span>{cityLabel}</span><span class="x">✕</span>
+      </button>
+    {/if}
   </div>
 
-  {#if selectedSlugs.length > 0}
+  {#if selectedSlugs.length > 0 || regionLabel || cityLabel}
     <button class="clear" onclick={clearAll}>Clear all</button>
   {/if}
 </div>
@@ -64,6 +94,9 @@
   {selectedSlugs}
   {specialties}
   onClose={() => (drawerOpen = false)}
+  {regions}
+  {selectedRegion}
+  {selectedCity}
 />
 
 <style>

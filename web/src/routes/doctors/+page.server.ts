@@ -8,6 +8,9 @@ export interface SpecialtyRef {
   nameEn: string;
 }
 
+export interface LocationCity { slug: string; nameKa: string; nameEn: string; doctorCount: number }
+export interface LocationRegion extends LocationCity { cities: LocationCity[] }
+
 interface DoctorListItem {
   slug: string;
   fullNameKa: string;
@@ -33,10 +36,14 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const page = Number.isFinite(rawPage) && rawPage >= 1 ? rawPage : 1;
   const q = (url.searchParams.get("q") ?? "").trim();
   const specialty = (url.searchParams.get("specialty") ?? "").trim();
+  const region = (url.searchParams.get("region") ?? "").trim();
+  const city = (url.searchParams.get("city") ?? "").trim();
 
   const params = new URLSearchParams({ page: String(page), pageSize: "5" });
   if (q) params.set("q", q);
   if (specialty) params.set("specialty", specialty);
+  if (region) params.set("region", region);
+  if (city) params.set("city", city);
 
   const res = await fetch(`${API_BASE}/api/v1/doctors?${params.toString()}`);
   const data = res.ok
@@ -46,9 +53,16 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const selectedSlugs = specialty ? specialty.split(",").filter(Boolean) : [];
 
   const specRes = await fetch(`${API_BASE}/api/v1/specialties`);
-  const specialties = specRes.ok
-    ? ((await specRes.json()) as { items: Array<SpecialtyRef & { doctorCount: number }> }).items
+  const specialties = (
+    specRes.ok
+      ? ((await specRes.json()) as { items: Array<SpecialtyRef & { doctorCount: number }> }).items
+      : []
+  ).filter((s) => s.doctorCount > 0);
+
+  const locRes = await fetch(`${API_BASE}/api/v1/locations`);
+  const regions = locRes.ok
+    ? ((await locRes.json()) as { items: LocationRegion[] }).items
     : [];
 
-  return { ...data, q, selectedSlugs, specialties };
+  return { ...data, q, selectedSlugs, specialties, regions, selectedRegion: region, selectedCity: city };
 };

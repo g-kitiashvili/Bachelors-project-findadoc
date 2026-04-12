@@ -14,11 +14,15 @@ interface DoctorRepository : JpaRepository<Doctor, Long> {
     @Query(
         value = """
             SELECT d FROM Doctor d
+            LEFT JOIN d.location loc
+            LEFT JOIN loc.parent reg
             WHERE d.status = 'ACTIVE'
               AND (:hasSpecialty = false OR EXISTS (
                     SELECT 1 FROM DoctorSpecialty ds
                     WHERE ds.doctor.id = d.id AND ds.specialty.slug IN :specialtySlugs
                   ))
+              AND (:hasRegion = false OR reg.slug = :region OR loc.slug = :region)
+              AND (:hasCity = false OR loc.slug = :city)
               AND (:hasQ = false OR GREATEST(
                     function('word_similarity', :q, LOWER(d.fullNameEn)),
                     function('word_similarity', :q, LOWER(d.fullNameKa)),
@@ -37,11 +41,15 @@ interface DoctorRepository : JpaRepository<Doctor, Long> {
         """,
         countQuery = """
             SELECT COUNT(d) FROM Doctor d
+            LEFT JOIN d.location loc
+            LEFT JOIN loc.parent reg
             WHERE d.status = 'ACTIVE'
               AND (:hasSpecialty = false OR EXISTS (
                     SELECT 1 FROM DoctorSpecialty ds
                     WHERE ds.doctor.id = d.id AND ds.specialty.slug IN :specialtySlugs
                   ))
+              AND (:hasRegion = false OR reg.slug = :region OR loc.slug = :region)
+              AND (:hasCity = false OR loc.slug = :city)
               AND (:hasQ = false OR GREATEST(
                     function('word_similarity', :q, LOWER(d.fullNameEn)),
                     function('word_similarity', :q, LOWER(d.fullNameKa)),
@@ -56,6 +64,10 @@ interface DoctorRepository : JpaRepository<Doctor, Long> {
         @Param("threshold") threshold: Double,
         @Param("hasSpecialty") hasSpecialty: Boolean,
         @Param("specialtySlugs") specialtySlugs: List<String>,
+        @Param("hasRegion") hasRegion: Boolean,
+        @Param("region") region: String,
+        @Param("hasCity") hasCity: Boolean,
+        @Param("city") city: String,
         pageable: Pageable,
     ): Page<Doctor>
 }

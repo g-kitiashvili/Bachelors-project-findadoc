@@ -25,6 +25,8 @@ class DoctorController(
         @RequestParam(defaultValue = "5") pageSize: Int,
         @RequestParam(required = false) q: String?,
         @RequestParam(required = false) specialty: String?,
+        @RequestParam(required = false) region: String?,
+        @RequestParam(required = false) city: String?,
     ): PageResponseDto<DoctorListItemDto> {
         val safePage = maxOf(page, 1)
         val safePageSize = pageSize.coerceIn(1, 50)
@@ -33,7 +35,9 @@ class DoctorController(
             ?.map { it.trim() }
             ?.filter { it.isNotEmpty() }
             ?: emptyList()
-        return doctorService.list(safePage, safePageSize, trimmedQ, slugs)
+        val regionSlug = region?.trim()?.takeIf { it.isNotEmpty() }
+        val citySlug = city?.trim()?.takeIf { it.isNotEmpty() }
+        return doctorService.list(safePage, safePageSize, trimmedQ, slugs, regionSlug, citySlug)
     }
 
     @Operation(summary = "Get a doctor by slug")

@@ -18,6 +18,8 @@ class DoctorService(
         pageSize: Int,
         q: String?,
         specialtySlugs: List<String>,
+        region: String?,
+        city: String?,
     ): PageResponseDto<DoctorListItemDto> {
         val pageable = PageRequest.of(page - 1, pageSize)
         val result = doctorRepository.findFiltered(
@@ -26,6 +28,10 @@ class DoctorService(
             threshold = FUZZY_THRESHOLD,
             hasSpecialty = specialtySlugs.isNotEmpty(),
             specialtySlugs = specialtySlugs.ifEmpty { listOf("__none__") },
+            hasRegion = region != null,
+            region = region ?: "",
+            hasCity = city != null,
+            city = city ?: "",
             pageable = pageable,
         )
         return PageResponseDto(
