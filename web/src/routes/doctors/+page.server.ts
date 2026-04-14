@@ -38,19 +38,22 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const specialty = (url.searchParams.get("specialty") ?? "").trim();
   const region = (url.searchParams.get("region") ?? "").trim();
   const city = (url.searchParams.get("city") ?? "").trim();
+  const sort = (url.searchParams.get("sort") ?? "").trim();
 
-  const params = new URLSearchParams({ page: String(page), pageSize: "5" });
+  const params = new URLSearchParams({ page: String(page), pageSize: "12" });
   if (q) params.set("q", q);
   if (specialty) params.set("specialty", specialty);
   if (region) params.set("region", region);
   if (city) params.set("city", city);
+  if (sort) params.set("sort", sort);
 
   const res = await fetch(`${API_BASE}/api/v1/doctors?${params.toString()}`);
   const data = res.ok
     ? ((await res.json()) as DoctorPage)
-    : { items: [], page, pageSize: 5, total: 0 };
+    : { items: [], page, pageSize: 12, total: 0 };
 
   const selectedSlugs = specialty ? specialty.split(",").filter(Boolean) : [];
+  const selectedSort = q ? sort || "relevancy" : sort === "ztoa" ? "ztoa" : "atoz";
 
   const specRes = await fetch(`${API_BASE}/api/v1/specialties`);
   const specialties = (
@@ -64,5 +67,5 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
     ? ((await locRes.json()) as { items: LocationRegion[] }).items
     : [];
 
-  return { ...data, q, selectedSlugs, specialties, regions, selectedRegion: region, selectedCity: city };
+  return { ...data, q, selectedSlugs, specialties, regions, selectedRegion: region, selectedCity: city, sort, selectedSort };
 };

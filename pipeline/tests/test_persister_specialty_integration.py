@@ -97,3 +97,29 @@ def test_compound_specialty_writes_primary_and_secondary(persister_db: str) -> N
         )
         rows = cur.fetchall()
         assert rows == [("cardiology", True), ("neurology", False)]
+
+
+def test_first_token_unmapped_still_marks_a_primary(persister_db: str) -> None:
+    matcher = SpecialtyMatcher(dsn=persister_db)
+    persister = Persister(persister_db, specialty_matcher=matcher)
+
+    record = DoctorRecord(
+        source="aversi",
+        source_url="https://example.com/doc/beka",
+        full_name_ka="ბექა ბაკურაძე",
+        specialty_ka="უცნობი, კარდიოლოგია",
+    )
+    record = normalize(record)
+    persister.upsert(record)
+
+    with psycopg.connect(persister_db) as conn, conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT s.slug, ds.is_primary
+            FROM doctor_specialty ds
+            JOIN specialty s ON s.id = ds.specialty_id
+            JOIN doctor d ON d.id = ds.doctor_id
+            WHERE d.full_name_ka = 'ბექა ბაკურაძე'
+            """
+        )
+        assert cur.fetchone() == ("cardiology", True)

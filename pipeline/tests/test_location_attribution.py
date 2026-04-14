@@ -59,3 +59,21 @@ def test_unknown_source_leaves_location_null(seeded_locations: str) -> None:
             "SELECT location_id FROM doctor WHERE last_source_url = 'https://mystery.example/d/1'"
         )
         assert cur.fetchone()[0] is None
+
+
+def test_per_doctor_city_overrides_source_default(seeded_locations: str) -> None:
+    from pipeline.core.location_matcher import LocationMatcher
+    with psycopg.connect(seeded_locations, autocommit=True) as conn:
+        conn.execute(
+            "INSERT INTO location (slug, name_ka, name_en, sort_order) "
+            "VALUES ('batumi', 'ბათუმი', 'Batumi', 20) ON CONFLICT (slug) DO NOTHING"
+        )
+    persister = Persister(seeded_locations, location_matcher=LocationMatcher(dsn=seeded_locations))
+    rec = _record("tsamali", "https://tsamali.ge/d/1").model_copy(update={"city": "ბათუმი"})
+    persister.upsert(rec)
+    with psycopg.connect(seeded_locations) as conn, conn.cursor() as cur:
+        cur.execute(
+            "SELECT l.slug FROM doctor d JOIN location l ON d.location_id=l.id "
+            "WHERE d.last_source_url='https://tsamali.ge/d/1'"
+        )
+        assert cur.fetchone() == ("batumi",)

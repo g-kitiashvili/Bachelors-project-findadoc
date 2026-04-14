@@ -12,6 +12,9 @@ INSERT INTO doctor (slug, full_name_ka, full_name_en, status, is_accepting_new_p
   ('tamar-maisuradze',   'თამარ მაისურაძე',  'Tamar Maisuradze',   'ACTIVE',   true,  false, true,  'https://example.test/t1', now(), NULL,              NULL),
   ('inactive-test',      'ი ნაქტივი',        'Inactive Test',      'INACTIVE', true,  false, true,  'https://example.test/inactive', now(), NULL, NULL);
 
+UPDATE doctor SET family_name_ka = split_part(full_name_ka, ' ', -1),
+                  family_name_en = split_part(full_name_en, ' ', -1);
+
 INSERT INTO specialty (slug, name_ka, name_en, description_ka, description_en, sort_order) VALUES
   ('cardiology',  'კარდიოლოგია',  'Cardiology',  'KA description', 'EN description', 10),
   ('neurology',   'ნევროლოგია',   'Neurology',   'KA description', 'EN description', 70),

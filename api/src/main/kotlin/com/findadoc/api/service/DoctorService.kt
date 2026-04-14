@@ -20,8 +20,11 @@ class DoctorService(
         specialtySlugs: List<String>,
         region: String?,
         city: String?,
+        sort: String?,
     ): PageResponseDto<DoctorListItemDto> {
         val pageable = PageRequest.of(page - 1, pageSize)
+        val sortByRelevancy = q != null && (sort == "relevancy" || sort == null)
+        val sortDescending = sort == "ztoa"
         val result = doctorRepository.findFiltered(
             hasQ = q != null,
             q = q?.lowercase() ?: "",
@@ -32,6 +35,8 @@ class DoctorService(
             region = region ?: "",
             hasCity = city != null,
             city = city ?: "",
+            sortByRelevancy = sortByRelevancy,
+            sortDescending = sortDescending,
             pageable = pageable,
         )
         return PageResponseDto(

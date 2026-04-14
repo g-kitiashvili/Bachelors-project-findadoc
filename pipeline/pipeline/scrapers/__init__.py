@@ -2,3 +2,5 @@
 
 from . import newhospitals  # noqa: F401
 from . import aversi  # noqa: F401
+from . import vivomedical  # noqa: F401
+from . import tsamali  # noqa: F401

@@ -28,6 +28,12 @@ class Doctor(
     @Column(name = "full_name_en", nullable = false)
     val fullNameEn: String,
 
+    @Column(name = "family_name_ka")
+    val familyNameKa: String? = null,
+
+    @Column(name = "family_name_en")
+    val familyNameEn: String? = null,
+
     @Column(name = "gender")
     val gender: String? = null,
 

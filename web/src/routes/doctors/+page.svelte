@@ -3,6 +3,7 @@
   import FilterBar from "$lib/components/FilterBar.svelte";
   import Pagination from "$lib/components/Pagination.svelte";
   import SearchBar from "$lib/components/SearchBar.svelte";
+  import SortSelect from "$lib/components/SortSelect.svelte";
 
   let { data } = $props();
 
@@ -44,8 +45,9 @@
     <p>{headlineSub}</p>
   </div>
   <div class="meta">
+    <SortSelect value={data.selectedSort} hasQuery={hasQuery} />
     {#if data.total > 0}
-      Page {data.page} · {data.pageSize} per page
+      <span class="page-indicator">Page {data.page} · {data.pageSize} per page</span>
     {/if}
   </div>
 </div>
@@ -77,6 +79,7 @@
     specialty={data.selectedSlugs.join(",")}
     region={data.selectedRegion}
     city={data.selectedCity}
+    sort={data.sort}
   />
 </div>
 
@@ -129,6 +132,9 @@
     font-size: 0.95rem;
   }
   .section-head .meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     color: var(--ink-faint);
     font-size: 0.86rem;
     font-weight: 500;

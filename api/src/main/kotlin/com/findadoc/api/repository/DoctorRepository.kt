@@ -30,13 +30,14 @@ interface DoctorRepository : JpaRepository<Doctor, Long> {
                     function('word_similarity', :q, COALESCE(LOWER(d.specialtyKa), ''))
                   ) > :threshold)
             ORDER BY
-              CASE WHEN :hasQ = true THEN GREATEST(
+              CASE WHEN :sortByRelevancy = true THEN GREATEST(
                     function('word_similarity', :q, LOWER(d.fullNameEn)),
                     function('word_similarity', :q, LOWER(d.fullNameKa)),
                     function('word_similarity', :q, COALESCE(LOWER(d.specialtyEn), '')),
                     function('word_similarity', :q, COALESCE(LOWER(d.specialtyKa), ''))
                   ) END DESC,
-              d.fullNameEn ASC,
+              CASE WHEN :sortDescending = true THEN d.familyNameEn END DESC,
+              CASE WHEN :sortDescending = false THEN d.familyNameEn END ASC,
               d.slug ASC
         """,
         countQuery = """
@@ -68,6 +69,8 @@ interface DoctorRepository : JpaRepository<Doctor, Long> {
         @Param("region") region: String,
         @Param("hasCity") hasCity: Boolean,
         @Param("city") city: String,
+        @Param("sortByRelevancy") sortByRelevancy: Boolean,
+        @Param("sortDescending") sortDescending: Boolean,
         pageable: Pageable,
     ): Page<Doctor>
 }

@@ -27,3 +27,4 @@ class DoctorRecord(BaseModel):
     specialty_ka: str | None = None
     specialty_en: str | None = None
     slug_base: str | None = None
+    city: str | None = None

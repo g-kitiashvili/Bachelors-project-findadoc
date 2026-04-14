@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+
+<html data-ng-app="vivo-app">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="/m/css/site.min.css" />
+    <script type="text/javascript" src="/m/js/pre.min.js"></script>
+    <link rel="apple-touch-icon" sizes="180x180" href="/m/i/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/m/i/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/m/i/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/m/i/favicons/manifest.json">
+    <meta name="theme-color" content="#ffffff">
+
+        <title>Vivo Medical</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta property="og:title" content="Vivo Medical" />
+    <meta property="og:description" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://vivomedical.ge/ge/" />
+    <meta property="og:image" content="//vivomedical.ge/m/i/logo-fb.png" />
+
+    <!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+ fbq('init', '804582916382086'); 
+fbq('track', 'PageView');
+</script>
+<noscript>
+ <img height="1" width="1" 
+src="https://www.facebook.com/tr?id=804582916382086&ev=PageView
+&noscript=1"/>
+</noscript>
+<!-- End Facebook Pixel Code -->
+
+</head>
+<body class="homepage ge">
+    <div id="fb-root"></div>
+    <script>
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=1713858565571000";/*TODO: change app id*/
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <script>
+        window.twttr = (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+                t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+
+            t._e = [];
+            t.ready = function (f) {
+                t._e.push(f);
+            };
+
+            return t;
+        }(document, "script", "twitter-wjs"));
+    </script>
+
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                <div class="menu">
+                    <div class="item item--static item--icon">
+                        <a href=""><i class="icon-menu"></i></a>
+                    </div>
+                    <div class="item item--static item--logo">
+                        <a href="//vivomedical.ge/ge/"><img src="/m/i/logo-inner--ge.png" alt=""></a>
+                    </div>
+                        <div class="item">
+                            <a href="//vivomedical.ge/ge/20">ვივო მედიქალ</a>
+                            <div class="submenu">
+                                        <a href="//vivomedical.ge/ge/20">ჩვენ შესახებ</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a href="//vivomedical.ge/ge/16">კლინიკები და მიმართულებები</a>
+                            <div class="submenu">
+                                        <a href="//vivomedical.ge/ge/16">კლინიკების ქსელი</a>
+                                        <a href="//vivomedical.ge/ge/17">სამედიცინო მიმართულებები</a>
+                                        <a href="//vivomedical.ge/ge/19">ექიმები</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a href="//vivomedical.ge/ge/14">პაციენტებზე ზრუნვა</a>
+                            <div class="submenu">
+                                        <a href="//vivomedical.ge/ge/14">ჯანსაღად ცხოვრება</a>
+                                        <a href="//vivomedical.ge/ge/15">პაციენტის ბლოგი</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a href="//vivomedical.ge/ge/23">კარიერა</a>
+                            <div class="submenu">
+                                        <a href="//vivomedical.ge/ge/23">ვაკანსიები</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a href="//vivomedical.ge/ge/24">მედიაცენტრი</a>
+                            <div class="submenu">
+                                        <a href="//vivomedical.ge/ge/24">სიახლეები</a>
+                                        <a href="//vivomedical.ge/ge/25">მედიამასალა</a>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <a href="//vivomedical.ge/ge/12">კონტაქტი</a>
+                            <div class="submenu">
+                            </div>
+                        </div>
+                </div>
+
+
+                <div class="burger">
+                    <a href="" class="menu-trigger"><i class="icon-burger--blue"></i></a>
+                </div>
+                <div class="menu-responsive-wrap">
+                    <div class="menu-responsive">
+                        <div class="item item--static item--icon">
+                            <a href=""><i class="icon-menu"></i></a>
+                        </div>
+                        <div class="item item--static item--logo">
+                            <a href="//vivomedical.ge/ge/"><img src="/m/i/logo-inner--ge.png" alt=""></a>
+                        </div>
+                            <div class="item">
+                                <a href="//vivomedical.ge/ge/20">ვივო მედიქალ</a>
+                                <div class="submenu">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-11 col-md-offset-1 col-sm-12">
+                                                        <a href="//vivomedical.ge/ge/20">ჩვენ შესახებ</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <a href="//vivomedical.ge/ge/16">კლინიკები და მიმართულებები</a>
+                                <div class="submenu">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-11 col-md-offset-1 col-sm-12">
+                                                        <a href="//vivomedical.ge/ge/16">კლინიკების ქსელი</a>
+                                                        <a href="//vivomedical.ge/ge/17">სამედიცინო მიმართულებები</a>
+                                                        <a href="//vivomedical.ge/ge/19">ექიმები</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <a href="//vivomedical.ge/ge/14">პაციენტებზე ზრუნვა</a>
+                                <div class="submenu">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-11 col-md-offset-1 col-sm-12">
+                                                        <a href="//vivomedical.ge/ge/14">ჯანსაღად ცხოვრება</a>
+                                                        <a href="//vivomedical.ge/ge/15">პაციენტის ბლოგი</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <a href="//vivomedical.ge/ge/23">კარიერა</a>
+                                <div class="submenu">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-11 col-md-offset-1 col-sm-12">
+                                                        <a href="//vivomedical.ge/ge/23">ვაკანსიები</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <a href="//vivomedical.ge/ge/24">მედიაცენტრი</a>
+                                <div class="submenu">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-11 col-md-offset-1 col-sm-12">
+                                                        <a href="//vivomedical.ge/ge/24">სიახლეები</a>
+                                                        <a href="//vivomedical.ge/ge/25">მედიამასალა</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <a href="//vivomedical.ge/ge/12">კონტაქტი</a>
+                                <div class="submenu">
+                                </div>
+                            </div>
+                    </div>
+                    <div class="langswitcher">
+                            <a href="https://vivomedical.ge/en/" class="">EN</a>
+                            <a href="https://vivomedical.ge/ge/" class="active">GE</a>
+                    </div>
+                    <form class="responsive-search" action="/search" method="get">
+                        <input type="text" name="q" autocomplete="off" class="js-mobile-search-input" />
+                        <a href="javascript:void(0)" class="js-mobile-search"><i class="icon-search"></i></a>
+                    </form>
+                </div>
+                <form action="/search" method="get" class="search">
+                    <input type="text" name="q" autocomplete="off" class="js-search-input" />
+                    <a href="javascript:void(0)" class="js-search"><i class="icon-search"></i></a>
+                </form>
+                <div class="langswitcher">
+                        <a href="https://vivomedical.ge/en/" class="">EN</a>
+                        <a href="https://vivomedical.ge/ge/" class="active">GE</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+<div class="site">
+
+
+    <div class="homepage-slider">
+            <div class="single-slide">
+                <div class="container slide-container">
+                    <div class="slide-img" style="background-image: url('//vivomedical.ge/file/get/129/NtGi_fyP5k-EdubUAkdHQw')"></div>
+                    <div class="slide-caption">
+                        <div class="text">
+                            <div class="logo">
+                                <a href=""><img src="~/m/i/logo--ge.png" alt=""></a>
+                            </div>
+                            <i class="icon-plus--black"></i>
+                            <h1 class="title">დროა იზრუნოთ თქვენს მომავალზე</h1>
+                            <p class="description">
+                                „Vivo Medical Group”- ის მიზანია არსებული კლინიკებისა და მომსახურეობის მოდერნიზაცია , პაციენტზე მორგებული სამედიცინო პერსონალის პროფესიული განვითარება , მომსახურეობის ზრდა და მუდმივი მონიტორინგი. 
+                            </p>
+                                <a target="_blank" href="https://www.facebook.com/%E1%83%95%E1%83%98%E1%83%95%E1%83%9D-%E1%83%9B%E1%83%94%E1%83%93%E1%83%98%E1%83%A5%E1%83%90%E1%83%9A-%E1%83%AF%E1%83%92%E1%83%A3%E1%83%A4%E1%83%98-Vivo-Medical-Group-682100078644888/" class="more">ვრცლად<i class="icon-arrowright--blue"></i></a>
+                        </div>
+                        <div class="dots">
+                            <div class="dots__row">
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                            </div>
+                            <div class="dots__row">
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                            </div>
+                            <div class="dots__row">
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="single-slide">
+                <div class="container slide-container">
+                    <div class="slide-img" style="background-image: url('//vivomedical.ge/file/get/1449/hQLeFB1d0Uy9ThBySWc7Qw')"></div>
+                    <div class="slide-caption">
+                        <div class="text">
+                            <div class="logo">
+                                <a href=""><img src="~/m/i/logo--ge.png" alt=""></a>
+                            </div>
+                            <i class="icon-plus--black"></i>
+                            <h1 class="title">უახლესი ნეიროქირურგიული საოპერაციო სისტემა </h1>
+                            <p class="description">
+                                თბილისის ცენტრალური საავადმყოფოს ნეიროქირურგიულ დეპარტამენტში უახლესი თაობის ეგზოსკოპის ORBEYE Surgical Microscope -ის გამოყენება დაიწყო 2019 წლის აგვისტოდან. თბილისის ცენტრალური საავადმყოფო მეორე კლინიკაა ევროპაში სადაც აღნიშნული საოპერაციო სისტემა დაინერგა.
+                            </p>
+                                <a target="_blank" href="https://www.facebook.com/TCHospital/photos/a.554625364560134/3845358958820075" class="more">ვრცლად<i class="icon-arrowright--blue"></i></a>
+                        </div>
+                        <div class="dots">
+                            <div class="dots__row">
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                            </div>
+                            <div class="dots__row">
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                            </div>
+                            <div class="dots__row">
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                                <div class="dots__single"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <div class="homepage-sections">
+        <div class="container">
+            <div class="middle-bg" style="background-image: url('/m/u/homebg/home-middle-bg.jpg');">
+                <div class="dots">
+
+                    <div class="dots__row">
+                        <div class="dots__single"></div>
+                        <div class="dots__single"></div>
+                        <div class="dots__single"></div>
+                        <div class="dots__single"></div>
+                    </div>
+
+                    <div class="dots__row">
+                        <div class="dots__single"></div>
+                        <div class="dots__single"></div>
+                        <div class="dots__single"></div>
+                        <div class="dots__single"></div>
+                    </div>
+
+                </div>
+            </div>
+            
+
+            <section class="section section__video">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-xs-12 text-wrapper-col">
+                        <div class="text-wrapper">
+                            <h3 class="title">რა უნდა გააკეთოთ ინსულტის დროს?</h3>
+                            <p>
+                                ინსულტი ვითარდება მაშინ, როცა ტვინს არ მიეწოდება საკმარისი სისხლი, ან ტვინში სისხლძარღვი სკდება. შესაძლებელია ინსულტის რისკის მნიშვნელოვნად შემცირება ცხოვრების სტილის ცვლილებითა და ზოგიერთ შემთხვევაში მედიკამენტების მიღებით. არის რამდენიმე ფაქტორი, რომელიც ადამიანის გაკონტროლებას არ ექვემდებარება და ზრდის ინსულტის რისკს.
+თუ ფიქრობთ, რომ თქვენ ან თქვენს ნაცნობს აქვს ინსულტის ნიშნები, დარეკეთ სასწრაფოში.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12 video-wrapper-col">
+                        <div class="video-wrapper" data-youtube-id="EMSCz-XpWpU">
+                            <a href="javascript:;" data-fancybox data-type="iframe" data-src="https://www.youtube.com/embed/EMSCz-XpWpU?autoplay=1">
+                                <i class="icon-video--blue"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section section__news">
+                <div class="title-wrap">
+                    <h3 class="title title--medium">სიახლეები</h3>
+                    <a href="//vivomedical.ge/ge/24" class="view-all">ყველა სიახლე</a>
+                </div>
+                <div class="body">
+                    <div class="row">
+
+                            <div class="col-md-4 col-sm-6 col-xs-12 ">
+                                <a href="//vivomedical.ge/ge/24/23/tbilisis-tsentraluri-saavadmkopos-sameditsino-konperentsia-„inovatsiebi-da-siakhleebi-neiroqirurgiashi-da-neirointerventsiashi’’" class="news-item">
+                                    <div class="image"><img src="//vivomedical.ge/file/get/1932/u1lu5fo-3ku5vpJr2zz0Fw" alt=""></div>
+                                    <div class="info">
+                                        <h4 class="title">თბილისის ცენტრალური საავადმყოფოს სამედიცინო კონფერენცია „ინოვაციები და სიახლეები ნეიროქირურგიაში და ნეიროინტერვენციაში’’</h4>
+                                        <p class="date"><i class="icon-date--black"></i>02 მარტი 2023</p>
+                                        <p class="description">
+                                            თბილისის ცენტრალური საავადმყოფოს ორგანიზებით და საერთაშორისო პარტნიორების მხარდაჭერით  სამედიცინო კონფერენცია : „ინოვაციები და სიახლეები ნეიროქირურგიაში და ნეიროინტერვენციაში’’ ჩატარდა .ღონისძიება თბილისის ცენტრალური საავადმყოფოს ნეიროქირურგიული მიმართულების ხელმძღვანელის გოგი მაღალაშვილის და მისი გუნდის ორგანიზებით დაიგეგმა.
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 ">
+                                <a href="//vivomedical.ge/ge/24/22/sameditsino-konperentsia-„tanamedrove-mtsire-invaziuri-charevebi-kardiovaskuluri-charevebi“" class="news-item">
+                                    <div class="image"><img src="//vivomedical.ge/file/get/1921/_bKABP9m9E6hh5edM3OvyQ" alt=""></div>
+                                    <div class="info">
+                                        <h4 class="title">სამედიცინო კონფერენცია „თანამედროვე მცირე ინვაზიური ჩარევები კარდიოვასკულური ჩარევები“ </h4>
+                                        <p class="date"><i class="icon-date--black"></i>27 სექტემბერი 2022</p>
+                                        <p class="description">
+                                            
+ნ. ბოხუას სახელობის კარდიოვასკულური ცენტრის ორგანიზებით და საერთაშორისო პარტნიორების მხარდაჭერით 24 სექტემბერს, სასტუმრო რუმს ჰოტელ თბილისში ჩატარდა საერთაშორისო კონფერენცია „თანამედროვე მცირე ინვაზიური კარდიოვასკულური ჩარევები“.
+
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 visible-lg visible-md hidden-sm hidden-xs">
+                                <a href="//vivomedical.ge/ge/24/21/kataraqtis-da-glaukomis-upaso-skrininguli-gamokvlevebi-tbilisis-tsentralur-saavadmkoposhi" class="news-item">
+                                    <div class="image"><img src="//vivomedical.ge/file/get/1918/ru8aK8ntREW_gmI7UU9Glw" alt=""></div>
+                                    <div class="info">
+                                        <h4 class="title">კატარაქტის და გლაუკომის  უფასო სკრინინგული გამოკვლევები თბილისის ცენტრალურ საავადმყოფოში</h4>
+                                        <p class="date"><i class="icon-date--black"></i>22 ივნისი 2022</p>
+                                        <p class="description">
+                                            კატარაქტის და გლაუკომის  უფასო სკრინინგული გამოკვლევები თბილისის ცენტრალურ საავადმყოფოში
+კატარაქტა 
+კატარაქტა თვალის ბროლის შემღვრევაა, რომელიც ასაკოვან ადამიანებში საკმაოდ ხშირად იწვევს მხედველობის დაქვეითებას და სიბრმავესაც კი, თუმცა ეს ის პათოლოგიაა, რომლის დროსაც მედიცინა ყოვლისშემძლეა – კატარაქტის ქირურგიული მკურნალობა ფაქტობრივად ყოველთვის აღმოფხვრის ბროლის შემღვრევით გამოწვეულ ცვლილებებს.
+
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                    </div>
+                </div>
+            </section>
+            <section class="section section__clinics">
+                <div class="title-wrap title-wrap--center">
+                    <h3 class="title title--large">კლინიკები</h3>
+                </div>
+                <div class="body">
+                    <div class="row">
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="single-clinic single-clinic--khakigreen">
+                                    <div class="single-clinic__head">
+                                        <div class="logo"><img src="//vivomedical.ge/file/get/1381/A-_hlxqbS0SAu94y80vTIw" alt="თბილისის ცენტრალური საავადმყოფო "></div>
+                                        
+                                        <div class="video">
+                                            <a href="//vivomedical.ge/ge/16/6/tbilisis-tsentraluri-saavadmkopo">
+                                                დეტალურად
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="single-clinic__body">
+                                        <p class="description">
+                                            თბილისის ცენტრალური საავადმყოფო წამყვანი მულტიპროფილური ცენტრია , სადაც თითქმის ყველა ტიპის გადაუდებელი  და გეგმიური სამედიცინო მომსახურეობა ტარდება .
+
+                                        </p>
+                                        <p class="texticon address"><i class="address__icon"></i><span>ჩაჩავას 1 </span></p>
+                                        <p class="texticon phone"><i class="phone__icon"></i><span>032 2 10 44 44 </span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="single-clinic single-clinic--rose">
+                                    <div class="single-clinic__head">
+                                        <div class="logo"><img src="//vivomedical.ge/file/get/1317/RZSd-WcysUuwmQ67EPhmiw" alt="ბოხუას სახელობის კარდიოვასკულარული ცენტრი"></div>
+                                        
+                                        <div class="video">
+                                            <a href="//vivomedical.ge/ge/16/4/bokhuas-sakhelobis-kardiovaskularuli-tsentri">
+                                                დეტალურად
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="single-clinic__body">
+                                        <p class="description">
+                                            ცენტრი წარმოადგენს საქართველოში წამყვან სამედიცინო დაწესებულებას, სადაც ხორციელდება ყველა სახის სისხლძარღვოვანი და გულის პათოლოგიების სრულფასოვანი დიაგნოსტიკა და მკურნალობა.
+                                        </p>
+                                        <p class="texticon address"><i class="address__icon"></i><span>ჩაჩავას 1</span></p>
+                                        <p class="texticon phone"><i class="phone__icon"></i><span>032 288 09 09</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="single-clinic single-clinic--seagreen">
+                                    <div class="single-clinic__head">
+                                        <div class="logo"><img src="//vivomedical.ge/file/get/1953/ONYDoGDl-EqhFdyOxUM-qQ" alt="ჟორდანიას სამედიცინო ცენტრი "></div>
+                                        
+                                        <div class="video">
+                                            <a href="//vivomedical.ge/ge/16/5/jordanias-sameditsino-tsentri">
+                                                დეტალურად
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="single-clinic__body">
+                                        <p class="description">
+                                            ჟორდანიას სახელობის სამედიცინო ცენტრი წარმოადგენს საერთაშორისო სტანდარტებით აღჭურვილ, მრავალფუნქციურ კლინიკას. 
+
+ჟორდანიას სამედიცინო ცენტრი საქართველოში ერთ-ერთი პირველი სპეციალიზებული გინეკოლოგიური კლინიკაა, რომელიც დღემდე არ კარგავს მოწინავე პოზიციას ამ მიმართულებით. 
+
+პაციენტებს ვთავაზობთ თანამედროვე ტექნოლოგიების გამოყენებით განხორციელებულ სამედიცინო სერვისებს, რომელთა ხარისხიც საერთაშორისო ანალოგებთან სრულ შესაბამისობაშია. 
+                                        </p>
+                                        <p class="texticon address"><i class="address__icon"></i><span>ნუცუბიძე, ერმილე ბედიას ქ. 33</span></p>
+                                        <p class="texticon phone"><i class="phone__icon"></i><span>032 224 32 32</span></p>
+                                            <p class="texticon link"><i class="link__icon"></i><a target="_blank" href="http://zhordaniaclinic.ge/">zhordaniaclinic.ge</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="single-clinic single-clinic--swampgreen">
+                                    <div class="single-clinic__head">
+                                        <div class="logo"><img src="//vivomedical.ge/file/get/1325/vOdknR6L_kOOuOWxRJY9XA" alt="ინოვა"></div>
+                                        
+                                        <div class="video">
+                                            <a href="//vivomedical.ge/ge/16/3/inova">
+                                                დეტალურად
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="single-clinic__body">
+                                        <p class="description">
+                                            ინოვა მრავალპროფილური კლინიკაა, რომელიც თბილისში 2015 წლის ოქტომბრიდან გაიხსნა და პაციენტებს კომფორტულ  სივრცესა და მაღალ პროფესიონალურ მომსახურებას სთავაზობს.  ინოვა დაფუძნდა  წამყვანი ექიმებისა და ბიზნესის სფეროს წარმომადგენლების თანაპარტნიორობის შედეგად.
+                                        </p>
+                                        <p class="texticon address"><i class="address__icon"></i><span>ზ.ანჯაფარიძის II შეს. #6 (ყოფილი სანდრო ეულის ქ.)</span></p>
+                                        <p class="texticon phone"><i class="phone__icon"></i><span>032 2 232 232</span></p>
+                                            <p class="texticon link"><i class="link__icon"></i><a target="_blank" href="http://innovamedical.ge/">innovamedical.ge</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </section>
+            <section class="section section__usercontent">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="title-wrap title-wrap--contentleft">
+                                <h3 class="title title--medium">ჯანსაღად ცხოვრება</h3>
+                                <a href="//vivomedical.ge/ge/14" class="view-all">ყველა პოსტი</a>
+                            </div>
+                            <div class="body">
+                                <a href="//vivomedical.ge/ge/14/18/okupatsiuri-gadatsva" class="item">
+                                    <div class="image">
+                                        <img src="//vivomedical.ge/file/get/1940/T7--TqlB4kShSpJ_vW9tkw" alt="">
+                                    </div>
+                                    <div class="text">
+                                        <h4 class="title">ოკუპაციური გადაწვა </h4>
+                                        <p class="date"><i class="icon-date--black"></i>02 მარტი 2023</p>
+                                        <p class="description">
+                                            მუდმივი სტრესი ,ზოგჯერ თქვენს გრძნობებს აუფერულებს,უმწეობის განცდას აჩენს და გამოფიტულს გტოვებთ.ამ დროს თქვენი ენერგია და სამუშაო პროდუქტიულობაც   მცირდება.ოკუპაციურ გადაწვას შევეხებით. ტერმინი “ Burnout “   გერმანელ-ამერიკელ  ფსიქოთერაპევტს, ჰერბერტ  ფროიდენბერგერს  ეკუთვნის.ის კომპანიაში თანამშრომლებს აკვირდებოდა,რომლებიც, შრომის უნარის  დაქვეითებას და გამოფიტვას უჩიოდნენ.  
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="title-wrap title-wrap--contentleft">
+                                <h3 class="title title--medium">პაციენტების ბლოგი</h3>
+                                <a href="//vivomedical.ge/ge/15" class="view-all">ყველა პოსტი</a>
+                            </div>
+                            <div class="body">
+                                <a href="//vivomedical.ge/ge/15/51/saakhaltslo-dapirebebi" class="item">
+                                    <div class="image">
+                                        <img src="//vivomedical.ge/file/get/1929/FD5Yd6opOESeYEiaCZl9gA" alt="">
+                                    </div>
+                                    <div class="text">
+                                        <h4 class="title">საახალწლო დაპირებები </h4>
+                                        <p class="date"><i class="icon-date--black"></i>09 იანვარი 2023</p>
+                                        <p class="description">
+                                            საახალწლო დაპირებები ჩვენი ტრადიციის და ასპირაციის ნაწილია.თვით მიზნებისთვის მოძრაობა და პერიოდი მოტივაციას გვკარნახობს,  განახლების განცდას გვაძლევს.  მიზნების ეფექტური დასახვა, მენტალური და ფიზიკური ჯანმრთელობის შენარჩუნების, სრულყოფის   საშუალებაა. ახალი წლის რეზოლუციები ხშირად ცხოვრების ჯანსაღ წესს,სწორ კვებას და ძილს  ეხება
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+
+        $('.homepage .section__news .news-item .info .title').equalHeights();
+        $('.homepage .section__news .news-item .info .description').equalHeights();
+
+        $('.homepage .section__clinics .body .single-clinic').equalHeights();
+        $('.homepage .section__clinics .body .single-clinic__body .description').equalHeights();
+        $('.homepage .section__clinics .body .single-clinic__body .address').equalHeights();
+
+        $('.homepage .section__usercontent .body .item .text .title').equalHeights();
+        $('.homepage .section__usercontent .body .item .text .description').equalHeights();
+
+        $('.homepage-slider').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            dots: true,
+            autoplay: true,
+            autoplaySpeed: 3000,
+            infinite: false,
+            centerMode: false,
+            vertical: false,
+            verticalSwiping: false,
+        });
+
+        $('.selectbox--doctor .selectbox__body').niceScroll({
+            cursorcolor: '#78bcde',
+            cursorwidth: '3px',
+            background: 'rgba(255,255,255, 0)',
+            cursorborder: '0',
+            autohidemode: 'leave'
+        });
+
+
+        var doctorid = "";
+        var departmentid = "";
+        var clinicid = "";
+
+        $('.js-doctor').click(function (e) {
+            document.getElementById("js-selected-doctor").innerHTML = this.text;
+            $('.js-select-trigger').removeClass('open');
+            $('.js-select-results').hide();
+            doctorid = $(this).data("doctorid")
+        });
+
+        $('.js-department').click(function (e) {
+            document.getElementById("js-selected-department").innerHTML = this.text;
+            $('.js-select-trigger').removeClass('open');
+            $('.js-select-results').hide();
+            departmentid = $(this).data("departmentid")
+        });
+
+
+        $('.js-clinic-name').click(function (e) {
+            document.getElementById("js-selected-clinic-name").innerHTML = this.text;
+            $('.js-select-trigger').removeClass('open');
+            $('.js-select-results').hide();
+            clinicid = $(this).data("clinictid")
+        });
+
+
+
+        $('.js-search-doctor').click(function (e) {
+
+            var url = '//vivomedical.ge/ge/19';
+            url += "?doctor=" + doctorid;
+            url += "&department=" + departmentid;
+            url += "&clinic=" + clinicid;
+
+            location.href = url;
+        });
+
+        $('.js-search-doctor-input').on('keyup', function () {
+            $('.js-doctor').each(function (index) {
+                var contains = $('.js-doctor')[index].text.includes($('.js-search-doctor-input')[0].value);
+                if (contains) {
+                    $('.js-doctor').eq(index).show();
+                } else {
+                    $('.js-doctor').eq(index).hide();
+                }
+            });
+        });
+
+        $('.video-wrapper[data-youtube-id]').youtubeCoverPhoto({
+            background: true
+        });
+
+
+
+    </script>
+
+
+</div>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-wrap">
+                <div class="logosocial">
+                    <div class="logo">
+                        <a href="//vivomedical.ge/ge/"><img src="/m/i/logo-footer--ge.png" alt=""></a>
+                    </div>
+                    <div class="social">
+                            <a href="https://www.facebook.com/%E1%83%95%E1%83%98%E1%83%95%E1%83%9D-%E1%83%9B%E1%83%94%E1%83%93%E1%83%98%E1%83%A5%E1%83%90%E1%83%9A-%E1%83%AF%E1%83%92%E1%83%A3%E1%83%A4%E1%83%98-Vivo-Medical-Group-682100078644888/" target="_blank" class="fb">
+                                <div class="image" style="background-image: url('/m/i/social/icon-fb--gray.png')"
+                                     data-hoverimage-normal="/m/i/social/icon-fb--gray.png"
+                                     data-hoverimage-hover="/m/i/social/icon-fb--color.png"></div>
+                            </a>
+                                                                    </div>
+                </div>
+                <div class="tree">
+                    <div class="column">
+                        <i class="icon-menu"></i>
+                    </div>
+                        <div class="column">
+                            <h4 class="title"><a href="//vivomedical.ge/ge/20">ვივო მედიქალ</a></h4>
+                                <div class="body">
+                                        <a href="//vivomedical.ge/ge/20" class="item">ჩვენ შესახებ</a>
+                                </div>
+                        </div>
+                        <div class="column">
+                            <h4 class="title"><a href="//vivomedical.ge/ge/16">კლინიკები და მიმართულებები</a></h4>
+                                <div class="body">
+                                        <a href="//vivomedical.ge/ge/16" class="item">კლინიკების ქსელი</a>
+                                        <a href="//vivomedical.ge/ge/17" class="item">სამედიცინო მიმართულებები</a>
+                                        <a href="//vivomedical.ge/ge/19" class="item">ექიმები</a>
+                                </div>
+                        </div>
+                        <div class="column">
+                            <h4 class="title"><a href="//vivomedical.ge/ge/14">პაციენტებზე ზრუნვა</a></h4>
+                                <div class="body">
+                                        <a href="//vivomedical.ge/ge/14" class="item">ჯანსაღად ცხოვრება</a>
+                                        <a href="//vivomedical.ge/ge/15" class="item">პაციენტის ბლოგი</a>
+                                </div>
+                        </div>
+                        <div class="column">
+                            <h4 class="title"><a href="//vivomedical.ge/ge/23">კარიერა</a></h4>
+                                <div class="body">
+                                        <a href="//vivomedical.ge/ge/23" class="item">ვაკანსიები</a>
+                                </div>
+                        </div>
+                        <div class="column">
+                            <h4 class="title"><a href="//vivomedical.ge/ge/24">მედიაცენტრი</a></h4>
+                                <div class="body">
+                                        <a href="//vivomedical.ge/ge/24" class="item">სიახლეები</a>
+                                        <a href="//vivomedical.ge/ge/25" class="item">მედიამასალა</a>
+                                </div>
+                        </div>
+                        <div class="column">
+                            <h4 class="title"><a href="//vivomedical.ge/ge/12">კონტაქტი</a></h4>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src="/m/js/post.min.js"></script>
+    <script src="/m/js/angular.min.js"></script>
+    <script src="/m/js/angular/app.js"></script>
+    <script src="/m/js/angular/controllers/contact-controller.js"></script>
+    <script src="/m/js/angular/controllers/career-controller.js"></script>
+
+    <script>
+        $('body').click(function (e) {
+            var target = $(e.target);
+            if (!target.is('.js-search') && !target.is('.js-search-input')) {
+                if ($('.js-search-input').is(':visible')) {
+                    $('.js-search-input').css({ 'opacity': '0' }).width(0);
+                    $('.header__content').removeClass('notprocessmenuhover');
+                    document.getElementsByClassName("search")[0].removeAttribute("style");
+                    $('.js-search').removeClass('isOpen');
+                }
+            }
+
+            $('.js-select-trigger').removeClass('open');
+            $('.js-select-results').hide();
+        });
+        $('.js-search').click(function (e) {
+            if ($('.js-search').hasClass("isOpen")) {
+                var target = $(e.target);
+                if (target.is('.icon-search') || target.is('.js-search')) {
+                    var url = '//vivomedical.ge/ge/search?q=';
+                    url += $('.js-search-input')[0].value
+                    location.href = url;
+                }
+            }
+            $('.js-search').addClass('isOpen');
+        });
+
+        $('.js-mobile-search').click(function (e) {
+
+            var url = '//vivomedical.ge/ge/search?q=';
+            url += $('.js-mobile-search-input')[0].value
+            location.href = url;
+
+        });
+    </script>
+
+    
+</body>
+</html>

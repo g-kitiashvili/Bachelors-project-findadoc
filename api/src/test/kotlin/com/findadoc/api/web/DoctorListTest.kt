@@ -38,8 +38,8 @@ class DoctorListTest @Autowired constructor(
                 jsonPath("$.total") { value(7) }
                 jsonPath("$.page") { value(1) }
                 jsonPath("$.pageSize") { value(5) }
-                jsonPath("$.items[0].slug") { value("ana-eradze") }
-                jsonPath("$.items[4].slug") { value("mariam-beridze") }
+                jsonPath("$.items[0].slug") { value("mariam-beridze") }
+                jsonPath("$.items[4].slug") { value("nika-kapanadze") }
             }
     }
 
@@ -52,8 +52,8 @@ class DoctorListTest @Autowired constructor(
                 jsonPath("$.items.length()") { value(2) }
                 jsonPath("$.total") { value(7) }
                 jsonPath("$.page") { value(2) }
-                jsonPath("$.items[0].slug") { value("nika-kapanadze") }
-                jsonPath("$.items[1].slug") { value("tamar-maisuradze") }
+                jsonPath("$.items[0].slug") { value("tamar-maisuradze") }
+                jsonPath("$.items[1].slug") { value("giorgi-tsintsadze") }
             }
     }
 
@@ -309,6 +309,93 @@ class DoctorListTest @Autowired constructor(
             .andExpect {
                 status { isOk() }
                 jsonPath("$.total") { value(3) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll sort=atoz returns doctors alphabetically by name`() {
+        mockMvc.get("/api/v1/doctors?sort=atoz&pageSize=50")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(7) }
+                jsonPath("$.items[0].slug") { value("mariam-beridze") }
+                jsonPath("$.items[1].slug") { value("ana-eradze") }
+                jsonPath("$.items[6].slug") { value("giorgi-tsintsadze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll sort=ztoa returns doctors reverse alphabetically by name`() {
+        mockMvc.get("/api/v1/doctors?sort=ztoa&pageSize=50")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(7) }
+                jsonPath("$.items[0].slug") { value("giorgi-tsintsadze") }
+                jsonPath("$.items[1].slug") { value("tamar-maisuradze") }
+                jsonPath("$.items[6].slug") { value("mariam-beridze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll sort=relevancy with query ranks best match first`() {
+        mockMvc.get("/api/v1/doctors") {
+            param("q", "Giorgi")
+            param("sort", "relevancy")
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$.items[0].slug") { value("giorgi-tsintsadze") }
+        }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll sort=relevancy without query falls back to alphabetical`() {
+        mockMvc.get("/api/v1/doctors?sort=relevancy&pageSize=50")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(7) }
+                jsonPath("$.items[0].slug") { value("mariam-beridze") }
+                jsonPath("$.items[6].slug") { value("giorgi-tsintsadze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll sort=atoz with query overrides relevancy ordering`() {
+        mockMvc.get("/api/v1/doctors") {
+            param("q", "shvili")
+            param("sort", "atoz")
+        }.andExpect {
+            status { isOk() }
+            jsonPath("$.total") { value(2) }
+            jsonPath("$.items[0].slug") { value("davit-gelashvili") }
+            jsonPath("$.items[1].slug") { value("luka-javakhishvili") }
+        }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll unknown sort value falls back to default order`() {
+        mockMvc.get("/api/v1/doctors?sort=bogus&pageSize=50")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(7) }
+                jsonPath("$.items[0].slug") { value("mariam-beridze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll page=0 coerces to first page`() {
+        mockMvc.get("/api/v1/doctors?page=0")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.page") { value(1) }
+                jsonPath("$.total") { value(7) }
+                jsonPath("$.items.length()") { value(5) }
             }
     }
 }

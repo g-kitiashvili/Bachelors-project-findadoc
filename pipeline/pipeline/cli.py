@@ -18,6 +18,7 @@ from pathlib import Path
 import structlog
 
 from pipeline.config import Settings
+from pipeline.core.location_matcher import LocationMatcher
 from pipeline.core.persister import Persister
 from pipeline.core.runner import Runner
 from pipeline.core.scheduler import run_blocking_scheduler
@@ -58,7 +59,12 @@ def _configure_logging(level: str) -> None:
 
 def _make_runner(settings: Settings) -> Runner:
     matcher = SpecialtyMatcher(dsn=settings.database_url)
-    persister = Persister(settings.database_url, specialty_matcher=matcher)
+    location_matcher = LocationMatcher(dsn=settings.database_url)
+    persister = Persister(
+        settings.database_url,
+        specialty_matcher=matcher,
+        location_matcher=location_matcher,
+    )
     specialty_seeder = SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH)
     location_seeder = LocationSeeder(dsn=settings.database_url, yaml_path=_LOCATION_YAML_PATH)
     return Runner(
