@@ -68,4 +68,29 @@ class SpecialtyControllerTest @Autowired constructor(
                 status { isNotFound() }
             }
     }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    fun `getAll scopes doctor counts to the region filter`() {
+        mockMvc.get("/api/v1/specialties?region=imereti")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[?(@.slug=='cardiology')].doctorCount") { value(1) }
+            }
+        mockMvc.get("/api/v1/specialties?region=tbilisi")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[?(@.slug=='cardiology')]") { isEmpty() }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    fun `getAll scopes doctor counts to the city filter`() {
+        mockMvc.get("/api/v1/specialties?city=kutaisi")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[?(@.slug=='cardiology')].doctorCount") { value(1) }
+            }
+    }
 }

@@ -55,7 +55,13 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const selectedSlugs = specialty ? specialty.split(",").filter(Boolean) : [];
   const selectedSort = q ? sort || "relevancy" : sort === "ztoa" ? "ztoa" : "atoz";
 
-  const specRes = await fetch(`${API_BASE}/api/v1/specialties`);
+  const specParams = new URLSearchParams();
+  if (region) specParams.set("region", region);
+  if (city) specParams.set("city", city);
+  const specQuery = specParams.toString();
+  const specRes = await fetch(
+    `${API_BASE}/api/v1/specialties${specQuery ? `?${specQuery}` : ""}`,
+  );
   const specialties = (
     specRes.ok
       ? ((await specRes.json()) as { items: Array<SpecialtyRef & { doctorCount: number }> }).items

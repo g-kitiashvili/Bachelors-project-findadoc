@@ -40,4 +40,16 @@ class LocationControllerTest @Autowired constructor(
                 jsonPath("$.items[?(@.slug=='imereti')].cities[0].doctorCount") { value(1) }
             }
     }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    fun `getAll scopes counts to the selected specialty`() {
+        mockMvc.get("/api/v1/locations?specialty=cardiology")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[?(@.slug=='imereti')].doctorCount") { value(1) }
+                jsonPath("$.items[?(@.slug=='imereti')].cities[0].doctorCount") { value(1) }
+                jsonPath("$.items[?(@.slug=='tbilisi')].doctorCount") { value(0) }
+            }
+    }
 }

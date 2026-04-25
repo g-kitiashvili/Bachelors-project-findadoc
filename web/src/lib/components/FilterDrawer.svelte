@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
+  import { untrack } from "svelte";
 
   interface LocationCity { slug: string; nameKa: string; nameEn: string; doctorCount: number }
   interface LocationRegion extends LocationCity { cities: LocationCity[] }
@@ -21,6 +22,16 @@
   let search = $state("");
   let regionDraft = $state(selectedRegion);
   let cityDraft = $state(selectedCity);
+  let liveSpecialties = $state<Props["specialties"]>([...specialties]);
+  let nameBySlug = $state<Record<string, { nameEn: string; nameKa: string }>>(
+    Object.fromEntries(specialties.map((s) => [s.slug, { nameEn: s.nameEn, nameKa: s.nameKa }]))
+  );
+
+  function rememberNames(items: Props["specialties"]) {
+    const acc = { ...untrack(() => nameBySlug) };
+    for (const s of items) acc[s.slug] = { nameEn: s.nameEn, nameKa: s.nameKa };
+    nameBySlug = acc;
+  }
 
   $effect(() => {
     draft = [...selectedSlugs];
@@ -29,17 +40,69 @@
   $effect(() => { regionDraft = selectedRegion; });
   $effect(() => { cityDraft = selectedCity; });
 
+  $effect(() => {
+    if (regionDraft === selectedRegion && cityDraft === selectedCity) {
+      liveSpecialties = [...specialties];
+      rememberNames(specialties);
+      return;
+    }
+    const params = new URLSearchParams();
+    if (regionDraft) params.set("region", regionDraft);
+    if (cityDraft) params.set("city", cityDraft);
+    let cancelled = false;
+    fetch(`/api/specialties?${params.toString()}`)
+      .then((r) => (r.ok ? r.json() : { items: [] }))
+      .then((d: { items: Props["specialties"] }) => {
+        if (cancelled) return;
+        const items = (d.items ?? []).filter((s) => s.doctorCount > 0);
+        liveSpecialties = items;
+        rememberNames(items);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  });
+
+  const withSelected = $derived.by(() => {
+    const present = new Set(liveSpecialties.map((s) => s.slug));
+    const extras = draft
+      .filter((slug) => !present.has(slug))
+      .map((slug) => ({
+        slug,
+        nameEn: nameBySlug[slug]?.nameEn ?? slug,
+        nameKa: nameBySlug[slug]?.nameKa ?? "",
+        doctorCount: 0,
+      }));
+    return [...liveSpecialties, ...extras];
+  });
+
   const filtered = $derived(
     search.trim() === ""
-      ? specialties
-      : specialties.filter((s) =>
+      ? withSelected
+      : withSelected.filter((s) =>
           s.nameEn.toLowerCase().includes(search.toLowerCase()) ||
           s.nameKa.includes(search)
         )
   );
 
+  let liveRegions = $state<LocationRegion[]>([...regions]);
+
+  $effect(() => {
+    if (draft.length === 0) {
+      liveRegions = [...regions];
+      return;
+    }
+    let cancelled = false;
+    fetch(`/api/locations?specialty=${encodeURIComponent(draft.join(","))}`)
+      .then((r) => (r.ok ? r.json() : { items: [] }))
+      .then((d: { items: LocationRegion[] }) => {
+        if (!cancelled) liveRegions = d.items ?? [];
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  });
+
   const cityOptions = $derived(
-    regions.find((r) => r.slug === regionDraft)?.cities ?? []
+    liveRegions.find((r) => r.slug === regionDraft)?.cities ?? []
   );
 
   function toggle(slug: string) {
@@ -90,7 +153,7 @@
       <div class="label">Region</div>
       <select class="search" value={regionDraft} onchange={(e) => onRegionChange(e.currentTarget.value)}>
         <option value="">All regions</option>
-        {#each regions as r (r.slug)}
+        {#each liveRegions as r (r.slug)}
           <option value={r.slug}>{r.nameEn} ({r.doctorCount})</option>
         {/each}
       </select>
@@ -132,7 +195,7 @@
     </div>
 
     <footer>
-      <button class="apply" onclick={apply}>Apply ({draft.length})</button>
+      <button class="apply" onclick={apply}>Apply</button>
       <button class="clear" onclick={clearDraft}>Clear</button>
     </footer>
   </aside>

@@ -11,14 +11,24 @@ interface SpecialtyRepository : JpaRepository<Specialty, Long> {
 
     @Query(
         """
-        SELECT s, COUNT(ds.doctor.id) FROM Specialty s
+        SELECT s, COUNT(d.id) FROM Specialty s
         LEFT JOIN DoctorSpecialty ds ON ds.specialty.id = s.id
-            AND ds.doctor.status = 'ACTIVE'
+        LEFT JOIN ds.doctor d
+        LEFT JOIN d.location loc
+        LEFT JOIN loc.parent reg
+        WHERE (d IS NULL OR d.status = 'ACTIVE')
+          AND (:hasRegion = false OR reg.slug = :region OR loc.slug = :region)
+          AND (:hasCity = false OR loc.slug = :city)
         GROUP BY s
         ORDER BY s.sortOrder ASC, s.nameEn ASC
         """
     )
-    fun findAllWithDoctorCount(): List<Array<Any>>
+    fun findAllWithDoctorCount(
+        @Param("hasRegion") hasRegion: Boolean,
+        @Param("region") region: String,
+        @Param("hasCity") hasCity: Boolean,
+        @Param("city") city: String,
+    ): List<Array<Any>>
 
     @Query(
         """

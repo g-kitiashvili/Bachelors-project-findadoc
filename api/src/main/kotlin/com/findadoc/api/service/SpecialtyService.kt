@@ -10,8 +10,13 @@ import org.springframework.stereotype.Service
 class SpecialtyService(
     private val specialtyRepository: SpecialtyRepository,
 ) {
-    fun listAll(): List<SpecialtyListItemDto> =
-        specialtyRepository.findAllWithDoctorCount().map { row ->
+    fun listAll(region: String?, city: String?): List<SpecialtyListItemDto> =
+        specialtyRepository.findAllWithDoctorCount(
+            hasRegion = region != null,
+            region = region ?: "",
+            hasCity = city != null,
+            city = city ?: "",
+        ).map { row ->
             val specialty = row[0] as Specialty
             SpecialtyListItemDto(
                 slug = specialty.slug,

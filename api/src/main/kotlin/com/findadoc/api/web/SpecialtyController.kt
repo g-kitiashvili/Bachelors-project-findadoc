@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -16,10 +17,16 @@ import org.springframework.web.bind.annotation.RestController
 class SpecialtyController(
     private val specialtyService: SpecialtyService,
 ) {
-    @Operation(summary = "List all specialties with primary-doctor counts")
+    @Operation(summary = "List all specialties with doctor counts, optionally scoped to a region or city")
     @GetMapping
-    fun getAll(): Map<String, List<SpecialtyListItemDto>> =
-        mapOf("items" to specialtyService.listAll())
+    fun getAll(
+        @RequestParam(required = false) region: String?,
+        @RequestParam(required = false) city: String?,
+    ): Map<String, List<SpecialtyListItemDto>> {
+        val regionSlug = region?.trim()?.takeIf { it.isNotEmpty() }
+        val citySlug = city?.trim()?.takeIf { it.isNotEmpty() }
+        return mapOf("items" to specialtyService.listAll(regionSlug, citySlug))
+    }
 
     @Operation(summary = "Get specialty by slug")
     @GetMapping("/{slug}")
