@@ -10,10 +10,7 @@ class LocationService(
     private val locationRepository: LocationRepository,
 ) {
     fun listAll(specialtySlugs: List<String> = emptyList()): List<LocationRegionDto> {
-        val counts = locationRepository.directDoctorCounts(
-            hasSpecialty = specialtySlugs.isNotEmpty(),
-            specialtySlugs = specialtySlugs.ifEmpty { listOf("__none__") },
-        ).associate { (it[0] as Number).toLong() to (it[1] as Number).toLong() }
+        val counts = locationRepository.directDoctorCounts(specialtySlugs).toMap()
         val all = locationRepository.findAllByOrderBySortOrderAscNameEnAsc()
         val citiesByRegion = all.filter { it.parent != null }.groupBy { it.parent!!.id }
 

@@ -1,10 +1,10 @@
 package com.findadoc.api.service
 
 import com.findadoc.api.repository.DoctorRepository
+import com.findadoc.api.repository.jooq.DoctorFilter
 import com.findadoc.api.web.dto.DoctorListItemDto
 import com.findadoc.api.web.dto.DoctorProfileDto
 import com.findadoc.api.web.dto.PageResponseDto
-import com.findadoc.api.web.dto.toListItemDto
 import com.findadoc.api.web.dto.toProfileDto
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -23,24 +23,15 @@ class DoctorService(
         sort: String?,
     ): PageResponseDto<DoctorListItemDto> {
         val pageable = PageRequest.of(page - 1, pageSize)
-        val sortByRelevancy = q != null && (sort == "relevancy" || sort == null)
-        val sortDescending = sort == "ztoa"
-        val result = doctorRepository.findFiltered(
-            hasQ = q != null,
-            q = q?.lowercase() ?: "",
-            threshold = FUZZY_THRESHOLD,
-            hasSpecialty = specialtySlugs.isNotEmpty(),
-            specialtySlugs = specialtySlugs.ifEmpty { listOf("__none__") },
-            hasRegion = region != null,
-            region = region ?: "",
-            hasCity = city != null,
-            city = city ?: "",
-            sortByRelevancy = sortByRelevancy,
-            sortDescending = sortDescending,
-            pageable = pageable,
+        val filter = DoctorFilter(
+            q = q?.lowercase(),
+            specialtySlugs = specialtySlugs,
+            region = region,
+            city = city,
         )
+        val result = doctorRepository.findFiltered(filter, sort, pageable)
         return PageResponseDto(
-            items = result.content.map { it.toListItemDto() },
+            items = result.content,
             page = page,
             pageSize = pageSize,
             total = result.totalElements,
@@ -51,9 +42,5 @@ class DoctorService(
         val doctor = doctorRepository.findBySlug(slug)
             ?: throw DoctorNotFoundException(slug)
         return doctor.toProfileDto()
-    }
-
-    companion object {
-        private const val FUZZY_THRESHOLD = 0.30
     }
 }

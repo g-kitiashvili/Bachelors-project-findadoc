@@ -2,6 +2,8 @@ package com.findadoc.api.service
 
 import com.findadoc.api.repository.DoctorRepository
 import com.findadoc.api.repository.SpecialtyRepository
+import com.findadoc.api.repository.jooq.DoctorFilter
+import com.findadoc.api.repository.jooq.FUZZY_THRESHOLD
 import com.findadoc.api.web.dto.AutocompleteResponseDto
 import com.findadoc.api.web.dto.toSuggestionDto
 import org.springframework.data.domain.PageRequest
@@ -21,29 +23,17 @@ class AutocompleteService(
         val limit = PageRequest.of(0, GROUP_CAP)
 
         val doctors = doctorRepository.findFiltered(
-            hasQ = true,
-            q = lower,
-            threshold = FUZZY_THRESHOLD,
-            hasSpecialty = false,
-            specialtySlugs = listOf("__none__"),
-            hasRegion = false,
-            region = "",
-            hasCity = false,
-            city = "",
-            sortByRelevancy = true,
-            sortDescending = false,
+            filter = DoctorFilter(q = lower),
+            sort = "relevancy",
             pageable = limit,
         ).content.map { it.toSuggestionDto() }
 
-        val specialties = specialtyRepository
-            .autocomplete(lower, FUZZY_THRESHOLD, limit)
-            .map { it.toSuggestionDto() }
+        val specialties = specialtyRepository.autocomplete(lower, FUZZY_THRESHOLD, GROUP_CAP)
 
         return AutocompleteResponseDto(doctors = doctors, specialties = specialties)
     }
 
     companion object {
-        private const val FUZZY_THRESHOLD = 0.30
         private const val MIN_QUERY_LENGTH = 2
         private const val GROUP_CAP = 5
     }
