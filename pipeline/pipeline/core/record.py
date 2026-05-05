@@ -7,6 +7,16 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 
+class ClinicRef(BaseModel):
+    model_config = ConfigDict(frozen=True, str_strip_whitespace=True)
+
+    source_url: HttpUrl
+    name_ka: str = Field(..., min_length=1)
+    address: str | None = None
+    phone: str | None = None
+    website: HttpUrl | None = None
+
+
 class DoctorRecord(BaseModel):
     """One doctor as observed from a single source page.
 
@@ -28,3 +38,4 @@ class DoctorRecord(BaseModel):
     specialty_en: str | None = None
     slug_base: str | None = None
     city: str | None = None
+    clinics: tuple[ClinicRef, ...] = ()

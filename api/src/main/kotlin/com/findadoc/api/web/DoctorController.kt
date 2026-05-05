@@ -28,6 +28,7 @@ class DoctorController(
         @RequestParam(required = false) region: String?,
         @RequestParam(required = false) city: String?,
         @RequestParam(required = false) sort: String?,
+        @RequestParam(required = false) clinic: String?,
     ): PageResponseDto<DoctorListItemDto> {
         val safePage = maxOf(page, 1)
         val safePageSize = pageSize.coerceIn(1, 50)
@@ -39,7 +40,8 @@ class DoctorController(
         val regionSlug = region?.trim()?.takeIf { it.isNotEmpty() }
         val citySlug = city?.trim()?.takeIf { it.isNotEmpty() }
         val sortMode = sort?.trim()?.lowercase()?.takeIf { it == "relevancy" || it == "atoz" || it == "ztoa" }
-        return doctorService.list(safePage, safePageSize, trimmedQ, slugs, regionSlug, citySlug, sortMode)
+        val clinicSlugs = clinic?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+        return doctorService.list(safePage, safePageSize, trimmedQ, slugs, regionSlug, citySlug, sortMode, clinicSlugs)
     }
 
     @Operation(summary = "Get a doctor by slug")

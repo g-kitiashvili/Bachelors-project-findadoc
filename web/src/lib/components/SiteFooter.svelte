@@ -14,7 +14,7 @@
         <li><a href="/doctors">All doctors</a></li>
         <li><a href="/specialties">By specialty</a></li>
         <li><a href="/conditions">By condition</a></li>
-        <li><a href="/clinics">By clinic</a></li>
+        <li><span class="soon" title="Coming soon">By clinic</span></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -94,6 +94,11 @@
   }
   .footer-col a:hover {
     color: white;
+  }
+  .footer-col .soon {
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 0.92rem;
+    cursor: not-allowed;
   }
   .footer-bottom {
     max-width: 1280px;

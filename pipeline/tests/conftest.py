@@ -41,5 +41,5 @@ def postgres_container():
 @pytest.fixture()
 def clean_doctor_table(postgres_container):
     with psycopg.connect(postgres_container, autocommit=True) as conn:
-        conn.execute("TRUNCATE doctor_specialty, doctor RESTART IDENTITY")
+        conn.execute("TRUNCATE doctor_clinic, doctor_specialty, doctor RESTART IDENTITY")
     yield postgres_container

@@ -41,6 +41,14 @@ def test_extract_returns_none_for_non_profile(scraper):
     assert scraper.extract(_read("non_profile.html"), "https://tsamali.ge/") is None
 
 
+def test_extract_includes_clinics(scraper):
+    record = scraper.extract(
+        _read("profile_1.html"), "https://tsamali.ge/eqimi/zviad-matoshvili/kardiologi"
+    )
+    assert record is not None and len(record.clinics) >= 1
+    assert all(c.source_url.path.startswith("/klinika/") for c in record.clinics)
+
+
 def test_extract_reads_city_from_discovery_map():
     scraper = TsamaliScraper()
     url = "https://tsamali.ge/eqimi/gela-xozrevanidze/otorinolaringologi"

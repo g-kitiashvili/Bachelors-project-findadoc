@@ -8,6 +8,13 @@ export interface SpecialtyRef {
   nameEn: string;
 }
 
+export interface ClinicRef {
+  slug: string;
+  nameKa: string;
+  nameEn: string;
+  doctorCount: number;
+}
+
 export interface LocationCity { slug: string; nameKa: string; nameEn: string; doctorCount: number }
 export interface LocationRegion extends LocationCity { cities: LocationCity[] }
 
@@ -22,6 +29,7 @@ interface DoctorListItem {
   specialtyKa: string | null;
   specialtyEn: string | null;
   primarySpecialty: SpecialtyRef | null;
+  primaryClinic: { slug: string; nameKa: string; nameEn: string; address: string | null } | null;
 }
 
 interface DoctorPage {
@@ -39,6 +47,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const region = (url.searchParams.get("region") ?? "").trim();
   const city = (url.searchParams.get("city") ?? "").trim();
   const sort = (url.searchParams.get("sort") ?? "").trim();
+  const clinic = (url.searchParams.get("clinic") ?? "").trim();
 
   const params = new URLSearchParams({ page: String(page), pageSize: "12" });
   if (q) params.set("q", q);
@@ -46,6 +55,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   if (region) params.set("region", region);
   if (city) params.set("city", city);
   if (sort) params.set("sort", sort);
+  if (clinic) params.set("clinic", clinic);
 
   const res = await fetch(`${API_BASE}/api/v1/doctors?${params.toString()}`);
   const data = res.ok
@@ -58,6 +68,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const specParams = new URLSearchParams();
   if (region) specParams.set("region", region);
   if (city) specParams.set("city", city);
+  if (clinic) specParams.set("clinic", clinic);
   const specQuery = specParams.toString();
   const specRes = await fetch(
     `${API_BASE}/api/v1/specialties${specQuery ? `?${specQuery}` : ""}`,
@@ -68,10 +79,22 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
       : []
   ).filter((s) => s.doctorCount > 0);
 
-  const locRes = await fetch(`${API_BASE}/api/v1/locations`);
+  const locParams = new URLSearchParams();
+  if (specialty) locParams.set("specialty", specialty);
+  if (clinic) locParams.set("clinic", clinic);
+  const locRes = await fetch(`${API_BASE}/api/v1/locations${locParams.toString() ? `?${locParams}` : ""}`);
   const regions = locRes.ok
     ? ((await locRes.json()) as { items: LocationRegion[] }).items
     : [];
 
-  return { ...data, q, selectedSlugs, specialties, regions, selectedRegion: region, selectedCity: city, sort, selectedSort };
+  const clinicParams = new URLSearchParams();
+  if (region) clinicParams.set("region", region);
+  if (city) clinicParams.set("city", city);
+  if (specialty) clinicParams.set("specialty", specialty);
+  const clinicsRes = await fetch(`${API_BASE}/api/v1/clinics${clinicParams.toString() ? `?${clinicParams}` : ""}`);
+  const clinics = clinicsRes.ok
+    ? ((await clinicsRes.json()) as { items: ClinicRef[] }).items
+    : [];
+
+  return { ...data, q, selectedSlugs, specialties, regions, selectedRegion: region, selectedCity: city, sort, selectedSort, clinics, selectedClinics: clinic ? clinic.split(",").filter(Boolean) : [] };
 };

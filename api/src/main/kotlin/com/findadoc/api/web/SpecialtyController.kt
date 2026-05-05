@@ -22,10 +22,12 @@ class SpecialtyController(
     fun getAll(
         @RequestParam(required = false) region: String?,
         @RequestParam(required = false) city: String?,
+        @RequestParam(required = false) clinic: String?,
     ): Map<String, List<SpecialtyListItemDto>> {
         val regionSlug = region?.trim()?.takeIf { it.isNotEmpty() }
         val citySlug = city?.trim()?.takeIf { it.isNotEmpty() }
-        return mapOf("items" to specialtyService.listAll(regionSlug, citySlug))
+        val clinicSlugs = clinic?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+        return mapOf("items" to specialtyService.listAll(regionSlug, citySlug, clinicSlugs))
     }
 
     @Operation(summary = "Get specialty by slug")

@@ -1,5 +1,6 @@
 package com.findadoc.api.web
 
+import com.findadoc.api.service.ClinicNotFoundException
 import com.findadoc.api.service.DoctorNotFoundException
 import com.findadoc.api.service.SpecialtyNotFoundException
 import org.springframework.http.HttpStatus
@@ -19,6 +20,17 @@ class GlobalExceptionHandler {
         ).apply {
             type = URI.create("https://findadoc.example.com/problems/doctor-not-found")
             title = "Doctor not found"
+            setProperty("slug", ex.slug)
+        }
+
+    @ExceptionHandler(ClinicNotFoundException::class)
+    fun handleClinicNotFound(ex: ClinicNotFoundException): ProblemDetail =
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.NOT_FOUND,
+            "Clinic with slug '${ex.slug}' not found",
+        ).apply {
+            type = URI.create("https://findadoc.example.com/problems/clinic-not-found")
+            title = "Clinic not found"
             setProperty("slug", ex.slug)
         }
 

@@ -51,7 +51,11 @@ class SpecialtyRepositoryImpl(
             }
     }
 
-    override fun findAllWithDoctorCount(region: String?, city: String?): List<SpecialtyListItemDto> {
+    override fun findAllWithDoctorCount(
+        region: String?,
+        city: String?,
+        clinicSlugs: List<String>,
+    ): List<SpecialtyListItemDto> {
         val conditions = mutableListOf<Condition>(
             DSL.field("d.id").isNull.or(DSL.field("d.status").eq("ACTIVE"))
         )
@@ -60,6 +64,13 @@ class SpecialtyRepositoryImpl(
         }
         if (city != null) {
             conditions += DSL.field("loc.slug").eq(city)
+        }
+        if (clinicSlugs.isNotEmpty()) {
+            conditions += DSL.exists(
+                DSL.selectOne().from("doctor_clinic dc").join("clinic c").on("c.id = dc.clinic_id")
+                    .where(DSL.field("dc.doctor_id").eq(DSL.field("d.id")))
+                    .and(DSL.field("c.slug").`in`(clinicSlugs)),
+            )
         }
 
         return dsl.select(

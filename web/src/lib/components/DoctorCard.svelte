@@ -12,6 +12,7 @@
     specialtyKa: string | null;
     specialtyEn: string | null;
     primarySpecialty: SpecialtyRef | null;
+    primaryClinic: { slug: string; nameKa: string; nameEn: string; address: string | null } | null;
   }
 
   let { doctor }: { doctor: Doctor } = $props();
@@ -52,6 +53,9 @@
       </a>
     {:else if doctor.specialtyEn}
       <span class="specialty-pill specialty-pill--raw">{doctor.specialtyEn}</span>
+    {/if}
+    {#if doctor.primaryClinic}
+      <a class="clinic-pill" href={`/clinics/${doctor.primaryClinic.slug}`}>{doctor.primaryClinic.nameEn}</a>
     {/if}
     <div class="meta">
       {#if doctor.treatsAdults}
@@ -204,6 +208,25 @@
     background: var(--bg-soft);
     border-color: var(--line);
     color: var(--ink-muted);
+  }
+  .clinic-pill {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    background: transparent;
+    border: 1px dashed var(--line-strong);
+    border-radius: 100px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.76rem;
+    color: var(--ink-muted);
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    text-decoration: none;
+    align-self: flex-start;
+  }
+  .clinic-pill:hover {
+    background: var(--bg-soft);
+    border-color: var(--ink-muted);
+    color: var(--ink);
   }
   .meta {
     display: flex;

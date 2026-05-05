@@ -10,6 +10,7 @@ data class DoctorFilter(
     val specialtySlugs: List<String> = emptyList(),
     val region: String? = null,
     val city: String? = null,
+    val clinicSlugs: List<String> = emptyList(),
 )
 
 const val FUZZY_THRESHOLD = 0.30
@@ -24,7 +25,11 @@ fun relevance(q: String): Field<Double> = DSL.greatest(
     DSL.field("word_similarity({0}, coalesce(lower(d.specialty_ka), ''))", SQLDataType.DOUBLE, DSL.`val`(q)),
 )
 
-fun doctorConditions(f: DoctorFilter, excludeSpecialty: Boolean = false): List<Condition> = buildList {
+fun doctorConditions(
+    f: DoctorFilter,
+    excludeSpecialty: Boolean = false,
+    excludeClinic: Boolean = false,
+): List<Condition> = buildList {
     add(DSL.field("d.status").eq("ACTIVE"))
     f.region?.let { add(DSL.field("reg.slug").eq(it).or(DSL.field("loc.slug").eq(it))) }
     f.city?.let { add(DSL.field("loc.slug").eq(it)) }
@@ -34,6 +39,15 @@ fun doctorConditions(f: DoctorFilter, excludeSpecialty: Boolean = false): List<C
                 DSL.selectOne().from("doctor_specialty ds").join("specialty s").on("s.id = ds.specialty_id")
                     .where(DSL.field("ds.doctor_id").eq(DSL.field("d.id")))
                     .and(DSL.field("s.slug").`in`(f.specialtySlugs)),
+            ),
+        )
+    }
+    if (!excludeClinic && f.clinicSlugs.isNotEmpty()) {
+        add(
+            DSL.exists(
+                DSL.selectOne().from("doctor_clinic dc").join("clinic c").on("c.id = dc.clinic_id")
+                    .where(DSL.field("dc.doctor_id").eq(DSL.field("d.id")))
+                    .and(DSL.field("c.slug").`in`(f.clinicSlugs)),
             ),
         )
     }

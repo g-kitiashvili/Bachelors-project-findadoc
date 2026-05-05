@@ -17,8 +17,10 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 from pipeline.core.fetcher import FetchError, PlaywrightFetcher
-from pipeline.core.record import DoctorRecord
+from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
+
+_BRAND_CLINIC = ClinicRef(source_url="https://aversi.ge", name_ka="ავერსის კლინიკა")
 
 
 class AversiScraper:
@@ -100,6 +102,7 @@ class AversiScraper:
                 photo_url=photo_url,
                 bio_en=primary_bio,
                 specialty_en=primary_specialty,
+                clinics=[_BRAND_CLINIC],
             )
 
         # Normal path: url is a KA URL. Try the EN counterpart opportunistically.
@@ -137,6 +140,7 @@ class AversiScraper:
             bio_en=bio_en,
             specialty_ka=primary_specialty,
             specialty_en=specialty_en,
+            clinics=[_BRAND_CLINIC],
         )
 
     @staticmethod

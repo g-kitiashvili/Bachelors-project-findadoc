@@ -7,9 +7,11 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
-from pipeline.core.record import DoctorRecord
+from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
 from pipeline.core.static_scraper import StaticHtmlScraper
+
+_BRAND_CLINIC = ClinicRef(source_url="https://newhospitals.ge", name_ka="ნიუ ჰოსპიტალსი")
 
 
 class NewhospitalsScraper(StaticHtmlScraper):
@@ -49,6 +51,7 @@ class NewhospitalsScraper(StaticHtmlScraper):
             photo_url=photo_url,
             bio_ka=bio_ka,
             specialty_ka=specialty_ka,
+            clinics=[_BRAND_CLINIC],
         )
 
 

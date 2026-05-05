@@ -16,6 +16,7 @@ data class DoctorProfileDto(
     val specialtyKa: String?,
     val specialtyEn: String?,
     val specialties: List<SpecialtyRefWithFlagDto>,
+    val clinics: List<ClinicRefDto>,
 )
 
 fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
@@ -40,4 +41,8 @@ fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
             nameEn = it.specialty.nameEn,
             isPrimary = it.isPrimary,
         ) },
+    clinics = doctorClinics
+        .map { it.clinic }
+        .sortedBy { it.nameEn }
+        .map { ClinicRefDto(slug = it.slug, nameKa = it.nameKa, nameEn = it.nameEn, address = it.address) },
 )

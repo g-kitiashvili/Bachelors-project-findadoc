@@ -37,7 +37,7 @@
   </div>
 </div>
 
-<FilterBar selectedSlugs={data.selectedSlugs} specialties={data.specialties} regions={data.regions} selectedRegion={data.selectedRegion} selectedCity={data.selectedCity} />
+<FilterBar selectedSlugs={data.selectedSlugs} specialties={data.specialties} regions={data.regions} selectedRegion={data.selectedRegion} selectedCity={data.selectedCity} clinics={data.clinics} selectedClinics={data.selectedClinics} />
 
 <div class="section-head">
   <div>

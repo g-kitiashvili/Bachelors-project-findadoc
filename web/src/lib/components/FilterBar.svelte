@@ -4,6 +4,7 @@
   import FilterDrawer from "./FilterDrawer.svelte";
 
   interface SpecialtyOption { slug: string; nameKa: string; nameEn: string; doctorCount: number }
+  interface ClinicOption { slug: string; nameKa: string; nameEn: string; doctorCount: number }
   interface LocationCity { slug: string; nameKa: string; nameEn: string; doctorCount: number }
   interface LocationRegion extends LocationCity { cities: LocationCity[] }
 
@@ -13,9 +14,11 @@
     regions: LocationRegion[];
     selectedRegion: string;
     selectedCity: string;
+    clinics: ClinicOption[];
+    selectedClinics: string[];
   }
 
-  let { selectedSlugs, specialties, regions, selectedRegion, selectedCity }: Props = $props();
+  let { selectedSlugs, specialties, regions, selectedRegion, selectedCity, clinics, selectedClinics }: Props = $props();
 
   let drawerOpen = $state(false);
 
@@ -23,6 +26,12 @@
     selectedSlugs
       .map((slug) => specialties.find((s) => s.slug === slug))
       .filter((s): s is SpecialtyOption => s !== undefined)
+  );
+
+  const selectedClinicOptions = $derived(
+    selectedClinics
+      .map((slug) => clinics.find((c) => c.slug === slug))
+      .filter((c): c is ClinicOption => c !== undefined)
   );
 
   const regionLabel = $derived(regions.find((r) => r.slug === selectedRegion)?.nameEn ?? "");
@@ -42,6 +51,18 @@
     goto(url.pathname + url.search);
   }
 
+  function removeClinic(slug: string) {
+    const next = selectedClinics.filter((s) => s !== slug);
+    const url = new URL($page.url);
+    if (next.length > 0) {
+      url.searchParams.set("clinic", next.join(","));
+    } else {
+      url.searchParams.delete("clinic");
+    }
+    url.searchParams.delete("page");
+    goto(url.pathname + url.search);
+  }
+
   function clearLocation(kind: "region" | "city") {
     const url = new URL($page.url);
     if (kind === "region") { url.searchParams.delete("region"); url.searchParams.delete("city"); }
@@ -55,6 +76,7 @@
     url.searchParams.delete("specialty");
     url.searchParams.delete("region");
     url.searchParams.delete("city");
+    url.searchParams.delete("clinic");
     url.searchParams.delete("page");
     goto(url.pathname + url.search);
   }
@@ -82,9 +104,15 @@
         <span>{cityLabel}</span><span class="x">✕</span>
       </button>
     {/if}
+    {#each selectedClinicOptions as c (c.slug)}
+      <button class="chip" onclick={() => removeClinic(c.slug)} aria-label={`Remove ${c.nameEn} filter`}>
+        <span>{c.nameEn}</span>
+        <span class="x">✕</span>
+      </button>
+    {/each}
   </div>
 
-  {#if selectedSlugs.length > 0 || regionLabel || cityLabel}
+  {#if selectedSlugs.length > 0 || regionLabel || cityLabel || selectedClinics.length > 0}
     <button class="clear" onclick={clearAll}>Clear all</button>
   {/if}
 </div>
@@ -97,6 +125,8 @@
   {regions}
   {selectedRegion}
   {selectedCity}
+  {clinics}
+  {selectedClinics}
 />
 
 <style>

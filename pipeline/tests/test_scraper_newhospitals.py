@@ -32,6 +32,15 @@ def test_extract_returns_none_for_non_profile(scraper):
     assert record is None
 
 
+def test_extract_includes_brand_clinic(scraper):
+    record = scraper.extract(
+        _read("profile_1.html"), "https://newhospitals.ge/ka/doctor/aleko-turiashvili_ka"
+    )
+    assert record is not None
+    assert len(record.clinics) == 1
+    assert record.clinics[0].name_ka == "ნიუ ჰოსპიტალსი"
+
+
 def test_extract_populates_photo_when_present(scraper):
     photos = []
     for n in (1, 2, 3):

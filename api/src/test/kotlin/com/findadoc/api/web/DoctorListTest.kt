@@ -304,6 +304,31 @@ class DoctorListTest @Autowired constructor(
 
     @Test
     @Sql("/sql/locations-test-fixture.sql")
+    @Sql("/sql/clinics-test-fixture.sql")
+    fun `getAll clinic filter returns only doctors at that clinic`() {
+        mockMvc.get("/api/v1/doctors?clinic=alpha-clinic")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("doc-kutaisi") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    @Sql("/sql/clinics-test-fixture.sql")
+    fun `getAll item exposes primaryClinic for a doctor with a clinic`() {
+        mockMvc.get("/api/v1/doctors?clinic=alpha-clinic")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[0].slug") { value("doc-kutaisi") }
+                jsonPath("$.items[0].primaryClinic.slug") { value("alpha-clinic") }
+                jsonPath("$.items[0].primaryClinic.nameEn") { value("Alpha Clinic") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
     fun `getAll without location filter includes doctors with no location`() {
         mockMvc.get("/api/v1/doctors?pageSize=50")
             .andExpect {

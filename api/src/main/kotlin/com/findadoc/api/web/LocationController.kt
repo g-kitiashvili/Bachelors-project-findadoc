@@ -19,11 +19,13 @@ class LocationController(
     @GetMapping
     fun getAll(
         @RequestParam(required = false) specialty: String?,
+        @RequestParam(required = false) clinic: String?,
     ): Map<String, List<LocationRegionDto>> {
         val slugs = specialty?.split(',')
             ?.map { it.trim() }
             ?.filter { it.isNotEmpty() }
             ?: emptyList()
-        return mapOf("items" to locationService.listAll(slugs))
+        val clinicSlugs = clinic?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+        return mapOf("items" to locationService.listAll(slugs, clinicSlugs))
     }
 }

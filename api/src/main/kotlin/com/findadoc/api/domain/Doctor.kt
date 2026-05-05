@@ -76,6 +76,9 @@ class Doctor(
     @OneToMany(mappedBy = "doctor")
     val doctorSpecialties: List<DoctorSpecialty> = emptyList(),
 
+    @OneToMany(mappedBy = "doctor")
+    val doctorClinics: List<DoctorClinic> = emptyList(),
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     val location: Location? = null,

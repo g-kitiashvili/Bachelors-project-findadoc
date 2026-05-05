@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterator
+from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
-from pipeline.core.record import DoctorRecord
+from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
 from pipeline.core.static_scraper import StaticHtmlScraper
 
@@ -25,6 +26,27 @@ class VivomedicalScraper(StaticHtmlScraper):
 
     def __init__(self, fetcher=None) -> None:
         super().__init__(fetcher, rate_per_sec=2.0)
+
+    _CLINIC_LINK_SELECTOR = "a[href*='/ge/16/']"
+    _CLINIC_NAME_SELECTOR = "h4.title"
+    _CLINIC_ADDRESS_SELECTOR = "p.texticon.address span"
+    _CLINIC_PHONE_SELECTOR = "p.texticon.phone span"
+
+    def _clinics(self, soup: BeautifulSoup, url: str) -> list[ClinicRef]:
+        link = soup.select_one(self._CLINIC_LINK_SELECTOR)
+        if link is None:
+            return []
+        href = link.get("href")
+        name_el = link.select_one(self._CLINIC_NAME_SELECTOR)
+        name = name_el.get_text(" ", strip=True) if name_el else link.get_text(" ", strip=True)
+        if not name or not href:
+            return []
+        clinic_url = urljoin("https:" if href.startswith("//") else url, href)
+        addr_el = link.select_one(self._CLINIC_ADDRESS_SELECTOR)
+        address = addr_el.get_text(" ", strip=True) if addr_el else None
+        phone_el = link.select_one(self._CLINIC_PHONE_SELECTOR)
+        phone = phone_el.get_text(" ", strip=True) if phone_el else None
+        return [ClinicRef(source_url=clinic_url, name_ka=name, address=address or None, phone=phone or None)]
 
     def index_urls(self) -> Iterator[str]:
         soup = BeautifulSoup(self.fetcher.get(self._INDEX_URL), "lxml")
@@ -57,6 +79,7 @@ class VivomedicalScraper(StaticHtmlScraper):
             full_name_ka=name_el.get_text(strip=True),
             specialty_ka=specialty_el.get_text(strip=True) if specialty_el else None,
             photo_url=photo_url or None,
+            clinics=self._clinics(soup, url),
         )
 
 

@@ -13,10 +13,15 @@ data class DoctorListItemDto(
     val specialtyKa: String?,
     val specialtyEn: String?,
     val primarySpecialty: SpecialtyRefDto?,
+    val primaryClinic: ClinicRefDto?,
 )
 
 fun Doctor.toListItemDto(): DoctorListItemDto {
     val primary = doctorSpecialties.firstOrNull { it.isPrimary }?.specialty?.toRefDto()
+    val primaryClinic = doctorClinics
+        .map { it.clinic }
+        .minByOrNull { it.nameEn }
+        ?.let { ClinicRefDto(slug = it.slug, nameKa = it.nameKa, nameEn = it.nameEn, address = it.address) }
     return DoctorListItemDto(
         slug = slug,
         fullNameKa = fullNameKa,
@@ -28,5 +33,6 @@ fun Doctor.toListItemDto(): DoctorListItemDto {
         specialtyKa = specialtyKa,
         specialtyEn = specialtyEn,
         primarySpecialty = primary,
+        primaryClinic = primaryClinic,
     )
 }

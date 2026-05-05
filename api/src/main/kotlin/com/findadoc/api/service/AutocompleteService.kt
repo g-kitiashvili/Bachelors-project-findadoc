@@ -1,5 +1,6 @@
 package com.findadoc.api.service
 
+import com.findadoc.api.repository.ClinicRepository
 import com.findadoc.api.repository.DoctorRepository
 import com.findadoc.api.repository.SpecialtyRepository
 import com.findadoc.api.repository.jooq.DoctorFilter
@@ -13,11 +14,12 @@ import org.springframework.stereotype.Service
 class AutocompleteService(
     private val doctorRepository: DoctorRepository,
     private val specialtyRepository: SpecialtyRepository,
+    private val clinicRepository: ClinicRepository,
 ) {
     fun suggest(q: String?): AutocompleteResponseDto {
         val term = q?.trim()
         if (term == null || term.length < MIN_QUERY_LENGTH) {
-            return AutocompleteResponseDto(doctors = emptyList(), specialties = emptyList())
+            return AutocompleteResponseDto(doctors = emptyList(), specialties = emptyList(), clinics = emptyList())
         }
         val lower = term.lowercase()
         val limit = PageRequest.of(0, GROUP_CAP)
@@ -30,7 +32,9 @@ class AutocompleteService(
 
         val specialties = specialtyRepository.autocomplete(lower, FUZZY_THRESHOLD, GROUP_CAP)
 
-        return AutocompleteResponseDto(doctors = doctors, specialties = specialties)
+        val clinics = clinicRepository.autocomplete(lower, FUZZY_THRESHOLD, GROUP_CAP)
+
+        return AutocompleteResponseDto(doctors = doctors, specialties = specialties, clinics = clinics)
     }
 
     companion object {

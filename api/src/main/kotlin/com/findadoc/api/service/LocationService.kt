@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service
 class LocationService(
     private val locationRepository: LocationRepository,
 ) {
-    fun listAll(specialtySlugs: List<String> = emptyList()): List<LocationRegionDto> {
-        val counts = locationRepository.directDoctorCounts(specialtySlugs).toMap()
+    fun listAll(
+        specialtySlugs: List<String> = emptyList(),
+        clinicSlugs: List<String> = emptyList(),
+    ): List<LocationRegionDto> {
+        val counts = locationRepository.directDoctorCounts(specialtySlugs, clinicSlugs).toMap()
         val all = locationRepository.findAllByOrderBySortOrderAscNameEnAsc()
         val citiesByRegion = all.filter { it.parent != null }.groupBy { it.parent!!.id }
 

@@ -25,7 +25,7 @@ from urllib.parse import urljoin, urlparse
 import structlog
 from bs4 import BeautifulSoup
 
-from pipeline.core.record import DoctorRecord
+from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
 from pipeline.core.static_scraper import StaticHtmlScraper
 
@@ -104,6 +104,33 @@ class TsamaliScraper(StaticHtmlScraper):
                     advertised=advertised,
                 )
 
+    def _clinics(self, soup: BeautifulSoup, url: str) -> list[ClinicRef]:
+        clinics: list[ClinicRef] = []
+        seen: set[str] = set()
+        for block in soup.select("div.clinic_link"):
+            link = block.select_one("a[href*='/klinika/']")
+            if link is None:
+                continue
+            href = link.get("href")
+            name = link.get_text(strip=True)
+            if not href or not name:
+                continue
+            parts = urlparse(urljoin(url, href)).path.strip("/").split("/")
+            if len(parts) < 2 or parts[0] != "klinika":
+                continue
+            clinic_url = f"{self._BASE}/klinika/{parts[1]}"
+            if clinic_url in seen:
+                continue
+            seen.add(clinic_url)
+            addr_el = block.select_one("div.clinic_link_div2")
+            address = (
+                addr_el.get_text(" ", strip=True).replace("(რუკის ჩვენება)", "").strip() or None
+                if addr_el is not None
+                else None
+            )
+            clinics.append(ClinicRef(source_url=clinic_url, name_ka=name, address=address))
+        return clinics
+
     def parse(self, soup: BeautifulSoup, url: str) -> DoctorRecord | None:
         if not urlparse(url).path.startswith("/eqimi/"):
             return None
@@ -120,6 +147,7 @@ class TsamaliScraper(StaticHtmlScraper):
             specialty_ka=specialty_el.get_text(strip=True) if specialty_el else None,
             photo_url=urljoin(url, photo_url) if photo_url else None,
             city=self._city_by_url.get(url),  # populated by discover() before this url is yielded
+            clinics=self._clinics(soup, url),
         )
 
 

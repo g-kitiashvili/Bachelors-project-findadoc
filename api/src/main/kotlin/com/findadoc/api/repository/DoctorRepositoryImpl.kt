@@ -3,6 +3,7 @@ package com.findadoc.api.repository
 import com.findadoc.api.repository.jooq.DoctorFilter
 import com.findadoc.api.repository.jooq.doctorConditions
 import com.findadoc.api.repository.jooq.relevance
+import com.findadoc.api.web.dto.ClinicRefDto
 import com.findadoc.api.web.dto.DoctorListItemDto
 import com.findadoc.api.web.dto.SpecialtyRefDto
 import org.jooq.DSLContext
@@ -34,6 +35,10 @@ class DoctorRepositoryImpl(
             DSL.field("ps.slug").`as`("ps_slug"),
             DSL.field("ps.name_ka").`as`("ps_name_ka"),
             DSL.field("ps.name_en").`as`("ps_name_en"),
+            DSL.field("(select c.slug from doctor_clinic dc join clinic c on c.id = dc.clinic_id where dc.doctor_id = d.id order by c.name_en asc limit 1)").`as`("pc_slug"),
+            DSL.field("(select c.name_ka from doctor_clinic dc join clinic c on c.id = dc.clinic_id where dc.doctor_id = d.id order by c.name_en asc limit 1)").`as`("pc_name_ka"),
+            DSL.field("(select c.name_en from doctor_clinic dc join clinic c on c.id = dc.clinic_id where dc.doctor_id = d.id order by c.name_en asc limit 1)").`as`("pc_name_en"),
+            DSL.field("(select c.address from doctor_clinic dc join clinic c on c.id = dc.clinic_id where dc.doctor_id = d.id order by c.name_en asc limit 1)").`as`("pc_address"),
         )
             .from("doctor d")
             .leftJoin("location loc").on("loc.id = d.location_id")
@@ -46,6 +51,7 @@ class DoctorRepositoryImpl(
             .offset(pageable.offset)
             .fetch { r ->
                 val psSlug = r.get("ps_slug", String::class.java)
+                val pcSlug = r.get("pc_slug", String::class.java)
                 DoctorListItemDto(
                     slug = r.get("d.slug", String::class.java),
                     fullNameKa = r.get("d.full_name_ka", String::class.java),
@@ -61,6 +67,14 @@ class DoctorRepositoryImpl(
                             slug = it,
                             nameKa = r.get("ps_name_ka", String::class.java),
                             nameEn = r.get("ps_name_en", String::class.java),
+                        )
+                    },
+                    primaryClinic = pcSlug?.let {
+                        ClinicRefDto(
+                            slug = it,
+                            nameKa = r.get("pc_name_ka", String::class.java),
+                            nameEn = r.get("pc_name_en", String::class.java),
+                            address = r.get("pc_address", String::class.java),
                         )
                     },
                 )

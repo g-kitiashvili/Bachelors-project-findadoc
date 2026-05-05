@@ -21,6 +21,7 @@ class DoctorService(
         region: String?,
         city: String?,
         sort: String?,
+        clinicSlugs: List<String> = emptyList(),
     ): PageResponseDto<DoctorListItemDto> {
         val pageable = PageRequest.of(page - 1, pageSize)
         val filter = DoctorFilter(
@@ -28,6 +29,7 @@ class DoctorService(
             specialtySlugs = specialtySlugs,
             region = region,
             city = city,
+            clinicSlugs = clinicSlugs,
         )
         val result = doctorRepository.findFiltered(filter, sort, pageable)
         return PageResponseDto(

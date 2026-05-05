@@ -93,4 +93,20 @@ class SpecialtyControllerTest @Autowired constructor(
                 jsonPath("$.items[?(@.slug=='cardiology')].doctorCount") { value(1) }
             }
     }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    @Sql("/sql/clinics-test-fixture.sql")
+    fun `getAll scopes doctor counts to the clinic filter`() {
+        mockMvc.get("/api/v1/specialties?clinic=alpha-clinic")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[?(@.slug=='cardiology')].doctorCount") { value(1) }
+            }
+        mockMvc.get("/api/v1/specialties?clinic=beta-clinic")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items[?(@.slug=='cardiology')]") { isEmpty() }
+            }
+    }
 }

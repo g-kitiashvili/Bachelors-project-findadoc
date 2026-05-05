@@ -1,6 +1,17 @@
 import pytest
-from pipeline.core.translit import kartuli_to_latin, slugify, next_slug_candidate, normalize
+from pipeline.core.translit import kartuli_to_latin, slugify, next_slug_candidate, normalize, clinic_name_to_en
 from pipeline.core.record import DoctorRecord
+
+
+@pytest.mark.parametrize("input_,expected", [
+    ("ჟორდანიას სამედიცინო ცენტრი", "Zhordanias Medical Center"),
+    ("თბილისის ცენტრალური საავადმყოფო", "Tbilisis Central Hospital"),
+    ("ბოხუას სახელობის კარდიოვასკულარული ცენტრი", "Bokhuas Cardiovascular Center"),
+    ("გაგუას კლინიკა", "Gaguas Clinic"),
+    ("ნიუ ჰოსპიტალსი", "New Hospitals"),
+])
+def test_clinic_name_translates_common_words_and_transliterates_proper_nouns(input_, expected):
+    assert clinic_name_to_en(input_) == expected
 
 
 @pytest.mark.parametrize(

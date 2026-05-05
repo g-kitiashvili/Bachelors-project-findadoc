@@ -73,4 +73,28 @@ class DoctorBySlugTest @Autowired constructor(
                 jsonPath("$.specialties.length()") { value(0) }
             }
     }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    @Sql("/sql/clinics-test-fixture.sql")
+    fun `getBySlug returns clinics array for a doctor with a clinic`() {
+        mockMvc.get("/api/v1/doctors/doc-kutaisi")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.clinics") { isArray() }
+                jsonPath("$.clinics.length()") { value(1) }
+                jsonPath("$.clinics[0].slug") { value("alpha-clinic") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    fun `getBySlug returns empty clinics array when doctor has no clinic`() {
+        mockMvc.get("/api/v1/doctors/doc-tbilisi")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.clinics") { isArray() }
+                jsonPath("$.clinics.length()") { value(0) }
+            }
+    }
 }

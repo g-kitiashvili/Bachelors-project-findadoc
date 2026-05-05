@@ -121,6 +121,17 @@ class AutocompleteControllerTest @Autowired constructor(
     }
 
     @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    @Sql("/sql/clinics-test-fixture.sql")
+    fun `getSuggestions matches clinic by english name`() {
+        mockMvc.get("/api/v1/autocomplete") { param("q", "alpha") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.clinics[?(@.slug=='alpha-clinic')]") { exists() }
+            }
+    }
+
+    @Test
     @Sql("/sql/doctors-test-fixture.sql")
     fun `getSuggestions doctor shape carries slug and english name`() {
         mockMvc.get("/api/v1/autocomplete") { param("q", "Giorgi") }

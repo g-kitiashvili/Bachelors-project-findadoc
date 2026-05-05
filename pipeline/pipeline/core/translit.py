@@ -29,9 +29,57 @@ _BRAND_OVERRIDES: dict[str, str] = {
     "მედკლუბი":  "MedClub",
     "მედალფა":   "Medalpha",
     "ჰელსიკორი": "Helsicore",
+    "ნიუ":        "New",
+    "ჰოსპიტალსი": "Hospitals",
+    "ვივო":       "Vivo",
+    "მედიქალ":    "Medical",
 }
 
 
+# Common Georgian clinic words are translated (not transliterated) so EN names
+# read naturally; proper nouns fall through to romanization. "სახელობის"
+# ("named after") is dropped for readable English word order.
+_CLINIC_WORD_OVERRIDES: dict[str, str] = {
+    "სამედიცინო": "Medical",
+    "ცენტრი": "Center",
+    "ცენტრალური": "Central",
+    "კლინიკა": "Clinic",
+    "კლინიკური": "Clinical",
+    "საავადმყოფო": "Hospital",
+    "ჰოსპიტალი": "Hospital",
+    "პოლიკლინიკა": "Polyclinic",
+    "სახელობის": "",
+    "კარდიოვასკულარული": "Cardiovascular",
+    "რეპროდუქციული": "Reproductive",
+    "ეკოსისტემა": "Ecosystem",
+    "სამკურნალო": "Treatment",
+    "საკონსულტაციო": "Consultation",
+    "კაბინეტი": "Office",
+    "ჯანმრთელობის": "Health",
+    "სექსუალური": "Sexual",
+    "საუნივერსიტეტო": "University",
+    "რესპუბლიკური": "Republican",
+    "ეროვნული": "National",
+    "უროლოგიის": "Urology",
+    "დიაგნოსტიკური": "Diagnostic",
+    "სტომატოლოგიური": "Dental",
+    "სტომატოლოგია": "Dentistry",
+    "სამშობიარო": "Maternity",
+    "ინსტიტუტი": "Institute",
+    "და": "and",
+    "ქირურგია": "Surgery",
+    "ქირურგიის": "Surgery",
+    "ექსპერიმენტული": "Experimental",
+    "რეპროდუქტოლოგია": "Reproductive",
+    "რეპროდუქტოლოგიის": "Reproductive",
+    "ლაბორატორია": "Laboratory",
+    "ლაბორატორიული": "Laboratory",
+    "ბავშვთა": "Children's",
+    "ქალთა": "Women's",
+    "ონკოლოგიური": "Oncology",
+}
+
+_KARTULI_WORD = re.compile(r"[ა-ჰ]+")
 _NON_SLUG = re.compile(r"[^a-z0-9-]+")
 _DASH_RUN = re.compile(r"-+")
 # Hyphen included so "ციტო-ს" splits and the prefix can match _BRAND_OVERRIDES.
@@ -74,6 +122,19 @@ def next_slug_candidate(base: str, attempt: int) -> str:
     if attempt == 1:
         return base
     return f"{base}-{attempt}"
+
+
+def _title_word(word: str) -> str:
+    for i, ch in enumerate(word):
+        if ch.isalpha():
+            return word[:i] + ch.upper() + word[i + 1 :]
+    return word
+
+
+def clinic_name_to_en(name_ka: str) -> str:
+    translated = _KARTULI_WORD.sub(lambda m: _CLINIC_WORD_OVERRIDES.get(m.group(0), m.group(0)), name_ka)
+    latin = kartuli_to_latin(translated).strip()
+    return " ".join(_title_word(w) for w in latin.split()) or name_ka
 
 
 def normalize(record: DoctorRecord) -> DoctorRecord:

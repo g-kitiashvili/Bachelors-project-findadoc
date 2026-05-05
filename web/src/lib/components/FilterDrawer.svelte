@@ -14,9 +14,11 @@
     regions: LocationRegion[];
     selectedRegion: string;
     selectedCity: string;
+    clinics: Array<{ slug: string; nameKa: string; nameEn: string; doctorCount: number }>;
+    selectedClinics: string[];
   }
 
-  let { open, selectedSlugs, specialties, onClose, regions, selectedRegion, selectedCity }: Props = $props();
+  let { open, selectedSlugs, specialties, onClose, regions, selectedRegion, selectedCity, clinics, selectedClinics }: Props = $props();
 
   let draft = $state<string[]>([...selectedSlugs]);
   let search = $state("");
@@ -27,21 +29,42 @@
     Object.fromEntries(specialties.map((s) => [s.slug, { nameEn: s.nameEn, nameKa: s.nameKa }]))
   );
 
+  let clinicDraft = $state<string[]>([...selectedClinics]);
+  let clinicSearch = $state("");
+  let liveClinics = $state<Props["clinics"]>([...clinics]);
+  let clinicNameBySlug = $state<Record<string, { nameEn: string; nameKa: string }>>(
+    Object.fromEntries(clinics.map((c) => [c.slug, { nameEn: c.nameEn, nameKa: c.nameKa }]))
+  );
+
   function rememberNames(items: Props["specialties"]) {
     const acc = { ...untrack(() => nameBySlug) };
     for (const s of items) acc[s.slug] = { nameEn: s.nameEn, nameKa: s.nameKa };
     nameBySlug = acc;
   }
 
+  function rememberClinicNames(items: Props["clinics"]) {
+    const acc = { ...untrack(() => clinicNameBySlug) };
+    for (const c of items) acc[c.slug] = { nameEn: c.nameEn, nameKa: c.nameKa };
+    clinicNameBySlug = acc;
+  }
+
   $effect(() => {
     draft = [...selectedSlugs];
+  });
+
+  $effect(() => {
+    clinicDraft = [...selectedClinics];
   });
 
   $effect(() => { regionDraft = selectedRegion; });
   $effect(() => { cityDraft = selectedCity; });
 
   $effect(() => {
-    if (regionDraft === selectedRegion && cityDraft === selectedCity) {
+    if (
+      regionDraft === selectedRegion &&
+      cityDraft === selectedCity &&
+      clinicDraft.join(",") === selectedClinics.join(",")
+    ) {
       liveSpecialties = [...specialties];
       rememberNames(specialties);
       return;
@@ -49,6 +72,7 @@
     const params = new URLSearchParams();
     if (regionDraft) params.set("region", regionDraft);
     if (cityDraft) params.set("city", cityDraft);
+    if (clinicDraft.length > 0) params.set("clinic", clinicDraft.join(","));
     let cancelled = false;
     fetch(`/api/specialties?${params.toString()}`)
       .then((r) => (r.ok ? r.json() : { items: [] }))
@@ -87,12 +111,15 @@
   let liveRegions = $state<LocationRegion[]>([...regions]);
 
   $effect(() => {
-    if (draft.length === 0) {
+    if (draft.length === 0 && clinicDraft.length === 0) {
       liveRegions = [...regions];
       return;
     }
+    const params = new URLSearchParams();
+    if (draft.length > 0) params.set("specialty", draft.join(","));
+    if (clinicDraft.length > 0) params.set("clinic", clinicDraft.join(","));
     let cancelled = false;
-    fetch(`/api/locations?specialty=${encodeURIComponent(draft.join(","))}`)
+    fetch(`/api/locations?${params.toString()}`)
       .then((r) => (r.ok ? r.json() : { items: [] }))
       .then((d: { items: LocationRegion[] }) => {
         if (!cancelled) liveRegions = d.items ?? [];
@@ -105,11 +132,68 @@
     liveRegions.find((r) => r.slug === regionDraft)?.cities ?? []
   );
 
+  $effect(() => {
+    if (
+      regionDraft === selectedRegion &&
+      cityDraft === selectedCity &&
+      draft.join(",") === selectedSlugs.join(",")
+    ) {
+      liveClinics = [...clinics];
+      rememberClinicNames(clinics);
+      return;
+    }
+    const params = new URLSearchParams();
+    if (regionDraft) params.set("region", regionDraft);
+    if (cityDraft) params.set("city", cityDraft);
+    if (draft.length > 0) params.set("specialty", draft.join(","));
+    let cancelled = false;
+    fetch(`/api/clinics?${params.toString()}`)
+      .then((r) => (r.ok ? r.json() : { items: [] }))
+      .then((d: { items: Props["clinics"] }) => {
+        if (cancelled) return;
+        const items = (d.items ?? []).filter((c) => c.doctorCount > 0);
+        liveClinics = items;
+        rememberClinicNames(items);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  });
+
+  const withSelectedClinics = $derived.by(() => {
+    const present = new Set(liveClinics.map((c) => c.slug));
+    const extras = clinicDraft
+      .filter((slug) => !present.has(slug))
+      .map((slug) => ({
+        slug,
+        nameEn: clinicNameBySlug[slug]?.nameEn ?? slug,
+        nameKa: clinicNameBySlug[slug]?.nameKa ?? "",
+        doctorCount: 0,
+      }));
+    return [...liveClinics, ...extras];
+  });
+
+  const filteredClinics = $derived(
+    clinicSearch.trim() === ""
+      ? withSelectedClinics
+      : withSelectedClinics.filter((c) =>
+          c.nameEn.toLowerCase().includes(clinicSearch.toLowerCase()) ||
+          c.nameKa.includes(clinicSearch)
+        )
+  );
+
   function toggle(slug: string) {
     if (draft.includes(slug)) {
       draft = draft.filter((s) => s !== slug);
     } else {
       draft = [...draft, slug];
+    }
+  }
+
+  function toggleClinic(slug: string) {
+    if (clinicDraft.includes(slug)) {
+      clinicDraft = clinicDraft.filter((s) => s !== slug);
+    } else {
+      clinicDraft = [...clinicDraft, slug];
     }
   }
 
@@ -129,6 +213,8 @@
     else url.searchParams.delete("region");
     if (cityDraft) url.searchParams.set("city", cityDraft);
     else url.searchParams.delete("city");
+    if (clinicDraft.length > 0) url.searchParams.set("clinic", clinicDraft.join(","));
+    else url.searchParams.delete("clinic");
     url.searchParams.delete("page");
     goto(url.pathname + url.search);
     onClose();
@@ -138,6 +224,7 @@
     draft = [];
     regionDraft = "";
     cityDraft = "";
+    clinicDraft = [];
   }
 </script>
 
@@ -188,6 +275,31 @@
               />
               <span class="name">{s.nameEn}</span>
               <span class="count">({s.doctorCount})</span>
+            </label>
+          </li>
+        {/each}
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="label">Clinic</div>
+      <input
+        class="search"
+        type="text"
+        placeholder="Search clinics..."
+        bind:value={clinicSearch}
+      />
+      <ul class="checklist">
+        {#each filteredClinics as c (c.slug)}
+          <li>
+            <label>
+              <input
+                type="checkbox"
+                checked={clinicDraft.includes(c.slug)}
+                onchange={() => toggleClinic(c.slug)}
+              />
+              <span class="name">{c.nameEn}</span>
+              <span class="count">({c.doctorCount})</span>
             </label>
           </li>
         {/each}

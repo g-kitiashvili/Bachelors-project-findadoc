@@ -36,6 +36,12 @@ def test_extract_returns_none_for_non_profile(scraper):
     assert scraper.extract(_read("non_profile.html"), "https://vivomedical.ge/ge/") is None
 
 
+def test_extract_includes_clinic(scraper):
+    record = scraper.extract(_read("profile_1.html"), "https://vivomedical.ge/ge/19/61/x")
+    assert record is not None and len(record.clinics) == 1
+    assert record.clinics[0].name_ka
+
+
 def test_extract_populates_specialty_ka(scraper):
     record = scraper.extract(_read("profile_1.html"), "https://vivomedical.ge/ge/19/61/konstantine-kipiani")
     assert record is not None and record.specialty_ka

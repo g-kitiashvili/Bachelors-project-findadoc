@@ -20,6 +20,7 @@
     specialtyKa: string | null;
     specialtyEn: string | null;
     specialties: SpecialtyRef[];
+    clinics: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null }>;
   }
 
   let { doctor }: { doctor: Doctor } = $props();
@@ -92,6 +93,16 @@
     {:else if doctor.specialtyEn}
       <div class="specialty-row">
         <span class="profile-specialty-pill profile-specialty-pill--raw">{doctor.specialtyEn}</span>
+      </div>
+    {/if}
+
+    {#if doctor.clinics && doctor.clinics.length > 0}
+      <div class="clinic-row">
+        {#each doctor.clinics as c (c.slug)}
+          <a class="profile-clinic-pill" href={`/clinics/${c.slug}`}>
+            {c.nameEn}{#if c.address} · <span class="clinic-addr">{c.address}</span>{/if}
+          </a>
+        {/each}
       </div>
     {/if}
 
@@ -266,6 +277,18 @@
   .profile-specialty-pill--raw { color: var(--ink-muted); cursor: default; }
   .profile-specialty-pill--raw:hover { background: var(--bg-soft); border-color: var(--line); color: var(--ink-muted); }
   .primary-dot { color: var(--accent); font-size: 0.6rem; }
+
+  .clinic-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.6rem; }
+  .profile-clinic-pill {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: transparent; border: 1px dashed var(--line-strong);
+    border-radius: 100px; padding: 0.4rem 0.95rem;
+    font-size: 0.86rem; color: var(--ink-muted); font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .profile-clinic-pill:hover { background: var(--bg-soft); border-color: var(--ink-muted); color: var(--ink); }
+  .clinic-addr { color: var(--ink-faint); font-size: 0.8rem; }
 
   .quick-meta {
     display: flex;

@@ -24,6 +24,7 @@ interface DoctorProfile {
   specialtyKa: string | null;
   specialtyEn: string | null;
   specialties: SpecialtyRef[];
+  clinics: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null }>;
 }
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
