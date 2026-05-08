@@ -9,6 +9,8 @@ from pipeline.core.record import DoctorRecord
     ("ბოხუას სახელობის კარდიოვასკულარული ცენტრი", "Bokhuas Cardiovascular Center"),
     ("გაგუას კლინიკა", "Gaguas Clinic"),
     ("ნიუ ჰოსპიტალსი", "New Hospitals"),
+    ("ევექსის კლინიკა ვარკეთილში", "Evex Clinic Varketilshi"),
+    ("ავერსის კლინიკა", "Aversi Clinic"),
 ])
 def test_clinic_name_translates_common_words_and_transliterates_proper_nouns(input_, expected):
     assert clinic_name_to_en(input_) == expected

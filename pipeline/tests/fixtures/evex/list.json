@@ -1,0 +1,1654 @@
+{
+  "data": {
+    "title": {
+      "en": "Our Doctors",
+      "ka": "ჩვენი ექიმები"
+    },
+    "seo": {
+      "seo_title": {
+        "ka": "ჩვენი ექიმები",
+        "en": "Our Doctors"
+      },
+      "meta_description": {
+        "ka": "",
+        "en": ""
+      },
+      "sm_title": {
+        "ka": "ჩვენი ექიმები",
+        "en": "Our Doctors"
+      },
+      "sm_description": {
+        "ka": "",
+        "en": ""
+      },
+      "sm_image": null
+    },
+    "description": [],
+    "slug": {
+      "en": "doctors",
+      "ka": "chveni-ekimebi"
+    },
+    "model_type": "App\\Models\\Doctor",
+    "items": [
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ზოგადი ქირურგი, ონკო ქირურგი",
+            "en": "General Surgeon, Oncological Surgeon"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2009 წლიდან. წევრობა: ვისერული ქირურგიის ასოციაციის გამგეობის წევრი",
+            "en": "Experience: Working as a doctor since 2009. Membership: Member of the Board of the Association of Visceral Surgery"
+          },
+          "sm_title": {
+            "ka": "ზოგადი ქირურგი, ონკო ქირურგი",
+            "en": "General Surgeon, Oncological Surgeon"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2009 წლიდან. წევრობა: ვისერული ქირურგიის ასოციაციის გამგეობის წევრი",
+            "en": "Experience: Working as a doctor since 2009. Membership: Member of the Board of the Association of Visceral Surgery"
+          },
+          "sm_image": "https://admin.evex.ge/storage/doctors/0x80BD005056B972E511E623F00883DE2A_6a0a7a1383cf3.webp"
+        },
+        "id": 1205,
+        "slug": {
+          "en": "avtandil-dgebuadze",
+          "ka": "avtandil-dgebuadze"
+        },
+        "name": {
+          "en": "Avtandil Dgebuadze",
+          "ka": "ავთანდილ დგებუაძე"
+        },
+        "title": {
+          "en": "General Surgeon, Oncological Surgeon",
+          "ka": "ზოგადი ქირურგი, ონკო ქირურგი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Working as a doctor since 2009. Membership: Member of the Board of the Association of Visceral Surgery",
+          "ka": "გამოცდილება: ექიმად მუშაობს 2009 წლიდან. წევრობა: ვისერული ქირურგიის ასოციაციის გამგეობის წევრი"
+        },
+        "image": "https://admin.evex.ge/storage/doctors/0x80BD005056B972E511E623F00883DE2A_6a0a7a1383cf3.webp",
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა დიდ დიღომში",
+                "en": "Evex Didgori Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა დიდ დიღომში",
+                "en": "Evex Didgori Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76Y9TTJY6K96DY0XC334Y3.jpg"
+            },
+            "id": 24,
+            "title": {
+              "en": "Evex Didgori Clinic",
+              "ka": "ევექსის კლინიკა დიდ დიღომში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-didi-digomi",
+              "ka": "ss-eveksi-didi-dighmis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Near Ioane Petrits' #16a",
+              "ka": "იოანე პეტრიწის #16ა-ს მიმდებარედ"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76Y9TTJY6K96DY0XC334Y3.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH18GY6GMS756FVG4JZ2AFF1.jpg",
+            "coordinates": {
+              "lat": 41.79239,
+              "lng": 44.75613
+            },
+            "components": [],
+            "global_components": []
+          },
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა დადიანზე",
+                "en": "Evex Clinic on Dadiani"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა დადიანზე",
+                "en": "Evex Clinic on Dadiani"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ7767DFN5RMK8042AK2Z1TA.jpg"
+            },
+            "id": 28,
+            "title": {
+              "en": "Evex Clinic on Dadiani",
+              "ka": "ევექსის კლინიკა დადიანზე"
+            },
+            "slug": {
+              "en": "evex-clinic-on-dadiani",
+              "ka": "shps-mkurnali-2002-dadianis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "09:00 - 18:00",
+                "Tuesday": "09:00 - 18:00",
+                "Wednesday": "09:00 - 18:00",
+                "Thursday": "09:00 - 18:00",
+                "Friday": "09:00 - 18:00",
+                "Saturday": "09:00 - 14:00"
+              },
+              "ka": {
+                "ორშაბათი": "09:00 - 18:00",
+                "სამშაბათი": "09:00 - 18:00",
+                "ოთხშაბათი": "09:00 - 18:00",
+                "ხუთშაბათი": "09:00 - 18:00",
+                "პარასკევი": "09:00 - 18:00",
+                "შაბათი": "09:00 - 14:00"
+              }
+            },
+            "address": {
+              "en": "Ts. Dadiani St. 87",
+              "ka": "ც. დადიანის ქ. 87"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ7767DFN5RMK8042AK2Z1TA.jpg",
+            "hero_image": null,
+            "coordinates": {
+              "lat": 41.72,
+              "lng": 44.79
+            },
+            "components": [],
+            "global_components": []
+          },
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა გლდანში",
+                "en": "Evex Gldani Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა გლდანში",
+                "en": "Evex Gldani Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76TWXTB5M481EGFQK4131C.jpg"
+            },
+            "id": 21,
+            "title": {
+              "en": "Evex Gldani Clinic",
+              "ka": "ევექსის კლინიკა გლდანში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-gldani",
+              "ka": "ss-eveksi-gldanis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Gldani, I Microdistrict near the Cartographic Factory",
+              "ka": "გლდანი, I მიკრორაიონი კარტოგრაფიული ფაბრიკის მიმდებარედ"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76TWXTB5M481EGFQK4131C.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH180PSTSH4XF1GNF7M75J3T.jpg",
+            "coordinates": {
+              "lat": 41.79104,
+              "lng": 44.81901
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ტრავმატოლოგ-ორთოპედი",
+            "en": "Traumatologist-Orthopedist"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 1965 წლიდან. წევრობა: საქართველოს ტრავმატოლოგთა და ორთოპედთა ასოციაციის წევრი",
+            "en": "Experience: Working as a doctor since 1965. Membership: Member of the Georgian Association of Traumatologists and Orthopedists"
+          },
+          "sm_title": {
+            "ka": "ტრავმატოლოგ-ორთოპედი",
+            "en": "Traumatologist-Orthopedist"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 1965 წლიდან. წევრობა: საქართველოს ტრავმატოლოგთა და ორთოპედთა ასოციაციის წევრი",
+            "en": "Experience: Working as a doctor since 1965. Membership: Member of the Georgian Association of Traumatologists and Orthopedists"
+          },
+          "sm_image": "https://admin.evex.ge/storage/doctors/0x80D1005056B997AA11E7BA4BE48FEB1F_6a0a7a1153b2c.webp"
+        },
+        "id": 1204,
+        "slug": {
+          "en": "avtandil-diasamidze",
+          "ka": "avtandil-diasamidze"
+        },
+        "name": {
+          "en": "Avtandil Diasamidze",
+          "ka": "ავთანდილ დიასამიძე"
+        },
+        "title": {
+          "en": "Traumatologist-Orthopedist",
+          "ka": "ტრავმატოლოგ-ორთოპედი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Working as a doctor since 1965. Membership: Member of the Georgian Association of Traumatologists and Orthopedists",
+          "ka": "გამოცდილება: ექიმად მუშაობს 1965 წლიდან. წევრობა: საქართველოს ტრავმატოლოგთა და ორთოპედთა ასოციაციის წევრი"
+        },
+        "image": "https://admin.evex.ge/storage/doctors/0x80D1005056B997AA11E7BA4BE48FEB1F_6a0a7a1153b2c.webp",
+        "global_components": [],
+        "city": {
+          "id": 2,
+          "name": {
+            "en": "Batumi",
+            "ka": "ბათუმი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა ბათუმში",
+                "en": "Evex Clinic in Batumi"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა ბათუმში",
+                "en": "Evex Clinic in Batumi"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ775G6MTKTT3EZMCHVM45C8.jpg"
+            },
+            "id": 27,
+            "title": {
+              "en": "Evex Clinic in Batumi",
+              "ka": "ევექსის კლინიკა ბათუმში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-batumi",
+              "ka": "ss-eveksi-batumis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 14:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 14:00",
+                "კვირა": "09:00 - 14:00"
+              }
+            },
+            "address": {
+              "en": "Batumi, Selim Khimshiashvili St. N 20"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 2,
+            "image": "https://admin.evex.ge/storage/01KQ775G6MTKTT3EZMCHVM45C8.jpg",
+            "hero_image": null,
+            "coordinates": [],
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ოტორინოლარინგოლოგი",
+            "en": "Otorhinolaryngologist"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2021  წლიდან",
+            "en": "Experience: Works as a doctor since 2021."
+          },
+          "sm_title": {
+            "ka": "ოტორინოლარინგოლოგი",
+            "en": "Otorhinolaryngologist"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2021  წლიდან",
+            "en": "Experience: Works as a doctor since 2021."
+          },
+          "sm_image": "https://admin.evex.ge/storage/doctors/0x80DF005056B997AA11E8BA64D683A3DF_6a0a7b2a373fe.webp"
+        },
+        "id": 1575,
+        "slug": {
+          "en": "aleksandre-bakuradze",
+          "ka": "aleksandre-bakuradze"
+        },
+        "name": {
+          "en": "Aleksandre  Bakuradze",
+          "ka": "ალექსანდრე  ბაკურაძე"
+        },
+        "title": {
+          "en": "Otorhinolaryngologist",
+          "ka": "ოტორინოლარინგოლოგი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Works as a doctor since 2021.",
+          "ka": "გამოცდილება: ექიმად მუშაობს 2021  წლიდან"
+        },
+        "image": "https://admin.evex.ge/storage/doctors/0x80DF005056B997AA11E8BA64D683A3DF_6a0a7b2a373fe.webp",
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა ვარკეთილში",
+                "en": "Evex Varketili Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა ვარკეთილში",
+                "en": "Evex Varketili Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76MECXZ741YPN52QB4YDQX.jpg"
+            },
+            "id": 18,
+            "title": {
+              "en": "Evex Varketili Clinic",
+              "ka": "ევექსის კლინიკა ვარკეთილში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-varketili",
+              "ka": "ss-eveksi-varketilis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Javakheti Street N76",
+              "ka": "ჯავახეთის ქუჩა N76"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76MECXZ741YPN52QB4YDQX.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH17YKXFWW7ZQM9P4R046N15.jpg",
+            "coordinates": {
+              "lat": 41.68915,
+              "lng": 44.87038
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ფიზიკური მედიცინის, რეაბილიტაციისა და კურორტოლოგიის სპეციალისტი",
+            "en": "Specialist in Physical Medicine, Rehabilitation, and Balneology"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2024 წლიდან",
+            "en": "Experience: Working as a doctor since 2024"
+          },
+          "sm_title": {
+            "ka": "ფიზიკური მედიცინის, რეაბილიტაციისა და კურორტოლოგიის სპეციალისტი",
+            "en": "Specialist in Physical Medicine, Rehabilitation, and Balneology"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2024 წლიდან",
+            "en": "Experience: Working as a doctor since 2024"
+          },
+          "sm_image": "https://admin.evex.ge/storage/doctors/0x80C6005056B0E14C11EF0C7F9D80B120_6a0a7a9e9f0b7.webp"
+        },
+        "id": 1436,
+        "slug": {
+          "en": "aleksandre-gagoshidze",
+          "ka": "aleksandre-gagoshidze"
+        },
+        "name": {
+          "en": "Aleksandre Gagoshidze",
+          "ka": "ალექსანდრე გაგოშიძე"
+        },
+        "title": {
+          "en": "Specialist in Physical Medicine, Rehabilitation, and Balneology",
+          "ka": "ფიზიკური მედიცინის, რეაბილიტაციისა და კურორტოლოგიის სპეციალისტი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Working as a doctor since 2024",
+          "ka": "გამოცდილება: ექიმად მუშაობს 2024 წლიდან"
+        },
+        "image": "https://admin.evex.ge/storage/doctors/0x80C6005056B0E14C11EF0C7F9D80B120_6a0a7a9e9f0b7.webp",
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა ვარკეთილში",
+                "en": "Evex Varketili Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა ვარკეთილში",
+                "en": "Evex Varketili Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76MECXZ741YPN52QB4YDQX.jpg"
+            },
+            "id": 18,
+            "title": {
+              "en": "Evex Varketili Clinic",
+              "ka": "ევექსის კლინიკა ვარკეთილში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-varketili",
+              "ka": "ss-eveksi-varketilis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Javakheti Street N76",
+              "ka": "ჯავახეთის ქუჩა N76"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76MECXZ741YPN52QB4YDQX.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH17YKXFWW7ZQM9P4R046N15.jpg",
+            "coordinates": {
+              "lat": 41.68915,
+              "lng": 44.87038
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ყბა-სახის ქირურგი",
+            "en": "Oral and Maxillofacial Surgeon"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2023 წლიდან. წევრობა: ESMO-სა და EACMFS-ს წევრი",
+            "en": "Experience: Working as a doctor since 2023. Membership: Member of ESMO and EACMFS."
+          },
+          "sm_title": {
+            "ka": "ყბა-სახის ქირურგი",
+            "en": "Oral and Maxillofacial Surgeon"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2023 წლიდან. წევრობა: ESMO-სა და EACMFS-ს წევრი",
+            "en": "Experience: Working as a doctor since 2023. Membership: Member of ESMO and EACMFS."
+          },
+          "sm_image": "https://admin.evex.ge/storage/doctors/0x80E6005056B997AA11EA00993A10A755_6a0a79f68a05a.webp"
+        },
+        "id": 1141,
+        "slug": {
+          "en": "aleksandre-gogadze",
+          "ka": "aleksandre-gogadze"
+        },
+        "name": {
+          "en": "Aleksandre Gogadze",
+          "ka": "ალექსანდრე გოგაძე"
+        },
+        "title": {
+          "en": "Oral and Maxillofacial Surgeon",
+          "ka": "ყბა-სახის ქირურგი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Working as a doctor since 2023. Membership: Member of ESMO and EACMFS.",
+          "ka": "გამოცდილება: ექიმად მუშაობს 2023 წლიდან. წევრობა: ESMO-სა და EACMFS-ს წევრი"
+        },
+        "image": "https://admin.evex.ge/storage/doctors/0x80E6005056B997AA11EA00993A10A755_6a0a79f68a05a.webp",
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა ვარკეთილში",
+                "en": "Evex Varketili Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა ვარკეთილში",
+                "en": "Evex Varketili Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76MECXZ741YPN52QB4YDQX.jpg"
+            },
+            "id": 18,
+            "title": {
+              "en": "Evex Varketili Clinic",
+              "ka": "ევექსის კლინიკა ვარკეთილში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-varketili",
+              "ka": "ss-eveksi-varketilis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Javakheti Street N76",
+              "ka": "ჯავახეთის ქუჩა N76"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76MECXZ741YPN52QB4YDQX.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH17YKXFWW7ZQM9P4R046N15.jpg",
+            "coordinates": {
+              "lat": 41.68915,
+              "lng": 44.87038
+            },
+            "components": [],
+            "global_components": []
+          },
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა ისანში",
+                "en": "Evex Isani Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა ისანში",
+                "en": "Evex Isani Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76WE9QSJ4G1A817P91NGKS.jpg"
+            },
+            "id": 22,
+            "title": {
+              "en": "Evex Isani Clinic",
+              "ka": "ევექსის კლინიკა ისანში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-isani",
+              "ka": "ss-eveksi-isnis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Patardzeuli Alley N44",
+              "ka": "პატარძეულის შესახვევი N44"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76WE9QSJ4G1A817P91NGKS.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH18E8AGGVB5DV0D5AQMK795.jpg",
+            "coordinates": {
+              "lat": 41.68586,
+              "lng": 44.8366
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ფიზიკური მედიცინის, რეაბილიტაციისა და კურორტოლოგიის სპეციალისტი",
+            "en": "Specialist in Physical Medicine, Rehabilitation, and Balneology"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2023 წლიდან",
+            "en": "Experience: Working as a doctor since 2023"
+          },
+          "sm_title": {
+            "ka": "ფიზიკური მედიცინის, რეაბილიტაციისა და კურორტოლოგიის სპეციალისტი",
+            "en": "Specialist in Physical Medicine, Rehabilitation, and Balneology"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2023 წლიდან",
+            "en": "Experience: Working as a doctor since 2023"
+          },
+          "sm_image": "https://admin.evex.ge/storage/doctors/0x8112005056B997AA11EE100BB3AD695D_6a0a79fe2dd75.webp"
+        },
+        "id": 1079,
+        "slug": {
+          "en": "aleksandre-zhvania",
+          "ka": "aleksandre-zhvania"
+        },
+        "name": {
+          "en": "Aleksandre Zhvania",
+          "ka": "ალექსანდრე ჟვანია"
+        },
+        "title": {
+          "en": "Specialist in Physical Medicine, Rehabilitation, and Balneology",
+          "ka": "ფიზიკური მედიცინის, რეაბილიტაციისა და კურორტოლოგიის სპეციალისტი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Working as a doctor since 2023",
+          "ka": "გამოცდილება: ექიმად მუშაობს 2023 წლიდან"
+        },
+        "image": "https://admin.evex.ge/storage/doctors/0x8112005056B997AA11EE100BB3AD695D_6a0a79fe2dd75.webp",
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა დიდუბეში",
+                "en": "Evex Didube Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა დიდუბეში",
+                "en": "Evex Didube Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76S8YBM3EHJ52XVJMYJ4E7.jpg"
+            },
+            "id": 20,
+            "title": {
+              "en": "Evex Didube Clinic",
+              "ka": "ევექსის კლინიკა დიდუბეში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-didube",
+              "ka": "ss-eveksi-didubis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Tsereteli Avenue N123",
+              "ka": "წერეთლის გამზირი N123"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76S8YBM3EHJ52XVJMYJ4E7.jpg",
+            "hero_image": null,
+            "coordinates": {
+              "lat": 41.7475,
+              "lng": 44.77815
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "დერმატოლოგი",
+            "en": "Dermatologist"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 1981 წლიდან. წევრობა: დერმატოლოგთა ასოციაცია",
+            "en": "Experience: Working as a doctor since 1981. Membership: Association of Dermatologists"
+          },
+          "sm_title": {
+            "ka": "დერმატოლოგი",
+            "en": "Dermatologist"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 1981 წლიდან. წევრობა: დერმატოლოგთა ასოციაცია",
+            "en": "Experience: Working as a doctor since 1981. Membership: Association of Dermatologists"
+          },
+          "sm_image": null
+        },
+        "id": 1513,
+        "slug": {
+          "en": "aleksandre-tkemaladze",
+          "ka": "aleksandre-tqemaladze"
+        },
+        "name": {
+          "en": "Aleksandre Tkemaladze",
+          "ka": "ალექსანდრე ტყემალაძე"
+        },
+        "title": {
+          "en": "Dermatologist",
+          "ka": "დერმატოლოგი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Working as a doctor since 1981. Membership: Association of Dermatologists",
+          "ka": "გამოცდილება: ექიმად მუშაობს 1981 წლიდან. წევრობა: დერმატოლოგთა ასოციაცია"
+        },
+        "image": null,
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა გურამიშვილზე",
+                "en": "Evex Guramishvili Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა გურამიშვილზე",
+                "en": "Evex Guramishvili Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76XA3PQ41FA07YQHWNC5GA.jpg"
+            },
+            "id": 23,
+            "title": {
+              "en": "Evex Guramishvili Clinic",
+              "ka": "ევექსის კლინიკა გურამიშვილზე"
+            },
+            "slug": {
+              "en": "evex-clinic-on-guramishvili",
+              "ka": "ss-eveksi-guramishvilis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "D. Guramishvili #64",
+              "ka": "დ.გურამიშვილის #64"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76XA3PQ41FA07YQHWNC5GA.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH18FF7MSRNS4RVXM6D0BEH0.jpg",
+            "coordinates": {
+              "lat": 41.725608,
+              "lng": 44.745015
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "უროლოგი",
+            "en": "Urologist"
+          },
+          "meta_description": {
+            "ka": "ექიმ ალექსანდრე შიოშვილს სამედიცინო სფეროში 22 წლიანი სამუშაო გამოცდილება აქვ. მან განათლება ლატვიის სამედიცინო აკადემიაში მიიღო.",
+            "en": "Doctor Aleksandre Shioshvili has 22 years of work experience in the medical field. He received his education at the Latvian Medical Academy."
+          },
+          "sm_title": {
+            "ka": "უროლოგი",
+            "en": "Urologist"
+          },
+          "sm_description": {
+            "ka": "ექიმ ალექსანდრე შიოშვილს სამედიცინო სფეროში 22 წლიანი სამუშაო გამოცდილება აქვ. მან განათლება ლატვიის სამედიცინო აკადემიაში მიიღო.",
+            "en": "Doctor Aleksandre Shioshvili has 22 years of work experience in the medical field. He received his education at the Latvian Medical Academy."
+          },
+          "sm_image": null
+        },
+        "id": 1251,
+        "slug": {
+          "en": "aleksandre-shioshvili",
+          "ka": "aleksandre-shioshvili"
+        },
+        "name": {
+          "en": "Aleksandre Shioshvili",
+          "ka": "ალექსანდრე შიოშვილი"
+        },
+        "title": {
+          "en": "Urologist",
+          "ka": "უროლოგი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Doctor Aleksandre Shioshvili has 22 years of work experience in the medical field. He received his education at the Latvian Medical Academy.",
+          "ka": "ექიმ ალექსანდრე შიოშვილს სამედიცინო სფეროში 22 წლიანი სამუშაო გამოცდილება აქვ. მან განათლება ლატვიის სამედიცინო აკადემიაში მიიღო."
+        },
+        "image": null,
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა ვაჟა-ფშაველაზე",
+                "en": "Evex Vaja-Pshavela Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა ვაჟა-ფშაველაზე",
+                "en": "Evex Vaja-Pshavela Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76JCR7WDBXCQTGM563WAR8.jpg"
+            },
+            "id": 17,
+            "title": {
+              "en": "Evex Vaja-Pshavela Clinic",
+              "ka": "ევექსის კლინიკა ვაჟა-ფშაველაზე"
+            },
+            "slug": {
+              "en": "evex-clinic-on-vaja-pshavela",
+              "ka": "ss-eveksi-saburtalos-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Vaja-Pshavela Avenue N40",
+              "ka": "ვაჟა-ფშაველას გამზირი N40"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76JCR7WDBXCQTGM563WAR8.jpg",
+            "hero_image": null,
+            "coordinates": {
+              "lat": 41.725608,
+              "lng": 44.745015
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ბავშვთა კარდიოლოგი, ბავშვთა ექოკარდიოსკოპისტი",
+            "en": "Pediatric Cardiologist, Pediatric Echocardiographer"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2013 წლიდან",
+            "en": "Experience: Working as a doctor since 2013"
+          },
+          "sm_title": {
+            "ka": "ბავშვთა კარდიოლოგი, ბავშვთა ექოკარდიოსკოპისტი",
+            "en": "Pediatric Cardiologist, Pediatric Echocardiographer"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2013 წლიდან",
+            "en": "Experience: Working as a doctor since 2013"
+          },
+          "sm_image": null
+        },
+        "id": 1265,
+        "slug": {
+          "en": "ana-bliadze",
+          "ka": "ana-bliadze"
+        },
+        "name": {
+          "en": "Ana Bliadze",
+          "ka": "ანა ბლიაძე"
+        },
+        "title": {
+          "en": "Pediatric Cardiologist, Pediatric Echocardiographer",
+          "ka": "ბავშვთა კარდიოლოგი, ბავშვთა ექოკარდიოსკოპისტი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Working as a doctor since 2013",
+          "ka": "გამოცდილება: ექიმად მუშაობს 2013 წლიდან"
+        },
+        "image": null,
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა გურამიშვილზე",
+                "en": "Evex Guramishvili Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა გურამიშვილზე",
+                "en": "Evex Guramishvili Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76XA3PQ41FA07YQHWNC5GA.jpg"
+            },
+            "id": 23,
+            "title": {
+              "en": "Evex Guramishvili Clinic",
+              "ka": "ევექსის კლინიკა გურამიშვილზე"
+            },
+            "slug": {
+              "en": "evex-clinic-on-guramishvili",
+              "ka": "ss-eveksi-guramishvilis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "D. Guramishvili #64",
+              "ka": "დ.გურამიშვილის #64"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76XA3PQ41FA07YQHWNC5GA.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH18FF7MSRNS4RVXM6D0BEH0.jpg",
+            "coordinates": {
+              "lat": 41.725608,
+              "lng": 44.745015
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ენდოსკოპისტი",
+            "en": "Endoscopist"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "ენდოსკოპისტი",
+            "en": "Endoscopist"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": null
+        },
+        "id": 1723,
+        "slug": {
+          "en": "ana-bukhrashvili",
+          "ka": "ana-bukhrashvili"
+        },
+        "name": {
+          "en": "Ana Bukhrashvili",
+          "ka": "ანა ბუხრაშვილი"
+        },
+        "title": {
+          "en": "Endoscopist",
+          "ka": "ენდოსკოპისტი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": [],
+        "image": null,
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა ვარკეთილში",
+                "en": "Evex Varketili Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა ვარკეთილში",
+                "en": "Evex Varketili Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76MECXZ741YPN52QB4YDQX.jpg"
+            },
+            "id": 18,
+            "title": {
+              "en": "Evex Varketili Clinic",
+              "ka": "ევექსის კლინიკა ვარკეთილში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-varketili",
+              "ka": "ss-eveksi-varketilis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Javakheti Street N76",
+              "ka": "ჯავახეთის ქუჩა N76"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76MECXZ741YPN52QB4YDQX.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH17YKXFWW7ZQM9P4R046N15.jpg",
+            "coordinates": {
+              "lat": 41.68915,
+              "lng": 44.87038
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ექოკარდიოსკოპისტი",
+            "en": "Echocardiographer"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2013 წლიდან",
+            "en": "Experience: Working as a doctor since 2013."
+          },
+          "sm_title": {
+            "ka": "ექოკარდიოსკოპისტი",
+            "en": "Echocardiographer"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2013 წლიდან",
+            "en": "Experience: Working as a doctor since 2013."
+          },
+          "sm_image": "https://admin.evex.ge/storage/doctors/0x80EB005056B997AA11EA620E861345A0_6a0a7b6a6964a.webp"
+        },
+        "id": 1660,
+        "slug": {
+          "en": "ana-gotsadze",
+          "ka": "ana-gotsadze"
+        },
+        "name": {
+          "en": "Ana Gotsadze",
+          "ka": "ანა გოცაძე"
+        },
+        "title": {
+          "en": "Echocardiographer",
+          "ka": "ექოკარდიოსკოპისტი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Working as a doctor since 2013.",
+          "ka": "გამოცდილება: ექიმად მუშაობს 2013 წლიდან"
+        },
+        "image": "https://admin.evex.ge/storage/doctors/0x80EB005056B997AA11EA620E861345A0_6a0a7b6a6964a.webp",
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა გლდანში",
+                "en": "Evex Gldani Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა გლდანში",
+                "en": "Evex Gldani Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76TWXTB5M481EGFQK4131C.jpg"
+            },
+            "id": 21,
+            "title": {
+              "en": "Evex Gldani Clinic",
+              "ka": "ევექსის კლინიკა გლდანში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-gldani",
+              "ka": "ss-eveksi-gldanis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Gldani, I Microdistrict near the Cartographic Factory",
+              "ka": "გლდანი, I მიკრორაიონი კარტოგრაფიული ფაბრიკის მიმდებარედ"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76TWXTB5M481EGFQK4131C.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH180PSTSH4XF1GNF7M75J3T.jpg",
+            "coordinates": {
+              "lat": 41.79104,
+              "lng": 44.81901
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ბავშვთა ენდოკრინოლოგი",
+            "en": "Pediatric Endocrinologist"
+          },
+          "meta_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2015 წლიდან. წევრობა: ევროპის ბავშვთა ენდოკრინოლოგიის საზოგადოების წევრი",
+            "en": "Experience: Working as a doctor since 2015. Membership: Member of the European Society of Pediatric Endocrinology."
+          },
+          "sm_title": {
+            "ka": "ბავშვთა ენდოკრინოლოგი",
+            "en": "Pediatric Endocrinologist"
+          },
+          "sm_description": {
+            "ka": "გამოცდილება: ექიმად მუშაობს 2015 წლიდან. წევრობა: ევროპის ბავშვთა ენდოკრინოლოგიის საზოგადოების წევრი",
+            "en": "Experience: Working as a doctor since 2015. Membership: Member of the European Society of Pediatric Endocrinology."
+          },
+          "sm_image": null
+        },
+        "id": 1311,
+        "slug": {
+          "en": "ana-kokhreidze",
+          "ka": "ana-kokhreidze"
+        },
+        "name": {
+          "en": "Ana Kokhreidze",
+          "ka": "ანა კოხრეიძე"
+        },
+        "title": {
+          "en": "Pediatric Endocrinologist",
+          "ka": "ბავშვთა ენდოკრინოლოგი"
+        },
+        "education": [],
+        "experience": [],
+        "membership": [],
+        "description": {
+          "en": "Experience: Working as a doctor since 2015. Membership: Member of the European Society of Pediatric Endocrinology.",
+          "ka": "გამოცდილება: ექიმად მუშაობს 2015 წლიდან. წევრობა: ევროპის ბავშვთა ენდოკრინოლოგიის საზოგადოების წევრი"
+        },
+        "image": null,
+        "global_components": [],
+        "city": {
+          "id": 1,
+          "name": {
+            "en": "Tbilisi",
+            "ka": "თბილისი"
+          }
+        },
+        "clinics": [
+          {
+            "seo": {
+              "seo_title": {
+                "ka": "ევექსის კლინიკა დიდ დიღომში",
+                "en": "Evex Didgori Clinic"
+              },
+              "meta_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_title": {
+                "ka": "ევექსის კლინიკა დიდ დიღომში",
+                "en": "Evex Didgori Clinic"
+              },
+              "sm_description": {
+                "ka": "",
+                "en": ""
+              },
+              "sm_image": "https://admin.evex.ge/storage/01KQ76Y9TTJY6K96DY0XC334Y3.jpg"
+            },
+            "id": 24,
+            "title": {
+              "en": "Evex Didgori Clinic",
+              "ka": "ევექსის კლინიკა დიდ დიღომში"
+            },
+            "slug": {
+              "en": "evex-clinic-in-didi-digomi",
+              "ka": "ss-eveksi-didi-dighmis-poliklinika"
+            },
+            "description": [],
+            "working_hours": {
+              "en": {
+                "Monday": "08:30 - 20:00",
+                "Tuesday": "08:30 - 20:00",
+                "Wednesday": "08:30 - 20:00",
+                "Thursday": "08:30 - 20:00",
+                "Friday": "08:30 - 20:00",
+                "Saturday": "08:30 - 16:00"
+              },
+              "ka": {
+                "ორშაბათი": "08:30 - 20:00",
+                "სამშაბათი": "08:30 - 20:00",
+                "ოთხშაბათი": "08:30 - 20:00",
+                "ხუთშაბათი": "08:30 - 20:00",
+                "პარასკევი": "08:30 - 20:00",
+                "შაბათი": "08:30 - 16:00"
+              }
+            },
+            "address": {
+              "en": "Near Ioane Petrits' #16a",
+              "ka": "იოანე პეტრიწის #16ა-ს მიმდებარედ"
+            },
+            "email": "info-evex@evex.ge",
+            "phone": "+995 32 255 05 05",
+            "city_id": 1,
+            "image": "https://admin.evex.ge/storage/01KQ76Y9TTJY6K96DY0XC334Y3.jpg",
+            "hero_image": "https://admin.evex.ge/storage/01KH18GY6GMS756FVG4JZ2AFF1.jpg",
+            "coordinates": {
+              "lat": 41.79239,
+              "lng": 44.75613
+            },
+            "components": [],
+            "global_components": []
+          }
+        ]
+      }
+    ],
+    "pagination": {
+      "current_page": 1,
+      "per_page": 12,
+      "total": 686,
+      "last_page": 58,
+      "from": 1,
+      "to": 12,
+      "links": {
+        "first": "https://admin.evex.ge/api/archives/chveni-ekimebi?page=1",
+        "last": "https://admin.evex.ge/api/archives/chveni-ekimebi?page=58",
+        "prev": null,
+        "next": "https://admin.evex.ge/api/archives/chveni-ekimebi?page=2"
+      }
+    },
+    "image": null,
+    "components": [
+      {
+        "id": 539,
+        "component": "cta",
+        "props": {
+          "url": {
+            "en": null,
+            "ka": null
+          },
+          "title": {
+            "en": "Book Online",
+            "ka": "დაჯავშნე ონლაინ"
+          },
+          "className": null,
+          "button_text": {
+            "en": "Now",
+            "ka": "დაჯავშნა"
+          },
+          "button_type": "url",
+          "description": {
+            "en": "Schedule a Doctor’s Appointment.",
+            "ka": "ჩაეწერე ექიმთან"
+          }
+        }
+      }
+    ]
+  }
+}

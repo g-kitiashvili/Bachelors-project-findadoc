@@ -66,6 +66,12 @@ class HttpxFetcher:
         except _TransientHttpError as e:
             raise FetchError(str(e), status_code=None) from e
 
+    def post(self, url: str, data: dict[str, object], headers: dict[str, str] | None = None) -> str:
+        try:
+            return self._post_with_retry(url, data, headers)
+        except _TransientHttpError as e:
+            raise FetchError(str(e), status_code=None) from e
+
     @retry(
         retry=retry_if_exception_type(_TransientHttpError),
         stop=stop_after_attempt(3),
@@ -78,7 +84,24 @@ class HttpxFetcher:
             response = self._client.get(url)
         except (httpx.TimeoutException, httpx.TransportError) as e:
             raise _TransientHttpError(f"transport error: {e}") from e
+        return self._body(response)
 
+    @retry(
+        retry=retry_if_exception_type(_TransientHttpError),
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=1, max=4),
+        reraise=True,
+    )
+    def _post_with_retry(self, url: str, data: dict[str, object], headers: dict[str, str] | None) -> str:
+        self._rate.wait()
+        try:
+            response = self._client.post(url, data=data, headers=headers)
+        except (httpx.TimeoutException, httpx.TransportError) as e:
+            raise _TransientHttpError(f"transport error: {e}") from e
+        return self._body(response)
+
+    @staticmethod
+    def _body(response: httpx.Response) -> str:
         if 500 <= response.status_code < 600:
             raise _TransientHttpError(f"server error {response.status_code}")
         if 400 <= response.status_code < 500:

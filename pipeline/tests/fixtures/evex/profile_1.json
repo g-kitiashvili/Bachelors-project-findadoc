@@ -1,0 +1,443 @@
+{
+  "data": {
+    "seo": {
+      "seo_title": {
+        "ka": "ზოგადი ქირურგი, ონკო ქირურგი",
+        "en": "General Surgeon, Oncological Surgeon"
+      },
+      "meta_description": {
+        "ka": "გამოცდილება: ექიმად მუშაობს 2009 წლიდან. წევრობა: ვისერული ქირურგიის ასოციაციის გამგეობის წევრი",
+        "en": "Experience: Working as a doctor since 2009. Membership: Member of the Board of the Association of Visceral Surgery"
+      },
+      "sm_title": {
+        "ka": "ზოგადი ქირურგი, ონკო ქირურგი",
+        "en": "General Surgeon, Oncological Surgeon"
+      },
+      "sm_description": {
+        "ka": "გამოცდილება: ექიმად მუშაობს 2009 წლიდან. წევრობა: ვისერული ქირურგიის ასოციაციის გამგეობის წევრი",
+        "en": "Experience: Working as a doctor since 2009. Membership: Member of the Board of the Association of Visceral Surgery"
+      },
+      "sm_image": "https://admin.evex.ge/storage/doctors/0x80BD005056B972E511E623F00883DE2A_6a0a7a1383cf3.webp"
+    },
+    "id": 1205,
+    "slug": {
+      "en": "avtandil-dgebuadze",
+      "ka": "avtandil-dgebuadze"
+    },
+    "name": {
+      "en": "Avtandil Dgebuadze",
+      "ka": "ავთანდილ დგებუაძე"
+    },
+    "title": {
+      "en": "General Surgeon, Oncological Surgeon",
+      "ka": "ზოგადი ქირურგი, ონკო ქირურგი"
+    },
+    "education": [],
+    "experience": [],
+    "membership": [],
+    "description": {
+      "en": "Experience: Working as a doctor since 2009. Membership: Member of the Board of the Association of Visceral Surgery",
+      "ka": "გამოცდილება: ექიმად მუშაობს 2009 წლიდან. წევრობა: ვისერული ქირურგიის ასოციაციის გამგეობის წევრი"
+    },
+    "image": "https://admin.evex.ge/storage/doctors/0x80BD005056B972E511E623F00883DE2A_6a0a7a1383cf3.webp",
+    "global_components": [
+      {
+        "id": 539,
+        "component": "cta",
+        "props": {
+          "url": {
+            "en": null,
+            "ka": null
+          },
+          "title": {
+            "en": "Book Online",
+            "ka": "დაჯავშნე ონლაინ"
+          },
+          "className": null,
+          "button_text": {
+            "en": "Now",
+            "ka": "დაჯავშნა"
+          },
+          "button_type": "url",
+          "description": {
+            "en": "Schedule a Doctor’s Appointment.",
+            "ka": "ჩაეწერე ექიმთან"
+          }
+        }
+      }
+    ],
+    "city": {
+      "id": 1,
+      "name": {
+        "en": "Tbilisi",
+        "ka": "თბილისი"
+      }
+    },
+    "clinics": [
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ევექსის კლინიკა დიდ დიღომში",
+            "en": "Evex Didgori Clinic"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "ევექსის კლინიკა დიდ დიღომში",
+            "en": "Evex Didgori Clinic"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": "https://admin.evex.ge/storage/01KQ76Y9TTJY6K96DY0XC334Y3.jpg"
+        },
+        "id": 24,
+        "title": {
+          "en": "Evex Didgori Clinic",
+          "ka": "ევექსის კლინიკა დიდ დიღომში"
+        },
+        "slug": {
+          "en": "evex-clinic-in-didi-digomi",
+          "ka": "ss-eveksi-didi-dighmis-poliklinika"
+        },
+        "description": [],
+        "working_hours": {
+          "en": {
+            "Monday": "08:30 - 20:00",
+            "Tuesday": "08:30 - 20:00",
+            "Wednesday": "08:30 - 20:00",
+            "Thursday": "08:30 - 20:00",
+            "Friday": "08:30 - 20:00",
+            "Saturday": "08:30 - 16:00"
+          },
+          "ka": {
+            "ორშაბათი": "08:30 - 20:00",
+            "სამშაბათი": "08:30 - 20:00",
+            "ოთხშაბათი": "08:30 - 20:00",
+            "ხუთშაბათი": "08:30 - 20:00",
+            "პარასკევი": "08:30 - 20:00",
+            "შაბათი": "08:30 - 16:00"
+          }
+        },
+        "address": {
+          "en": "Near Ioane Petrits' #16a",
+          "ka": "იოანე პეტრიწის #16ა-ს მიმდებარედ"
+        },
+        "email": "info-evex@evex.ge",
+        "phone": "+995 32 255 05 05",
+        "city_id": 1,
+        "image": "https://admin.evex.ge/storage/01KQ76Y9TTJY6K96DY0XC334Y3.jpg",
+        "hero_image": "https://admin.evex.ge/storage/01KH18GY6GMS756FVG4JZ2AFF1.jpg",
+        "coordinates": {
+          "lat": 41.79239,
+          "lng": 44.75613
+        },
+        "components": [],
+        "global_components": []
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ევექსის კლინიკა დადიანზე",
+            "en": "Evex Clinic on Dadiani"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "ევექსის კლინიკა დადიანზე",
+            "en": "Evex Clinic on Dadiani"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": "https://admin.evex.ge/storage/01KQ7767DFN5RMK8042AK2Z1TA.jpg"
+        },
+        "id": 28,
+        "title": {
+          "en": "Evex Clinic on Dadiani",
+          "ka": "ევექსის კლინიკა დადიანზე"
+        },
+        "slug": {
+          "en": "evex-clinic-on-dadiani",
+          "ka": "shps-mkurnali-2002-dadianis-poliklinika"
+        },
+        "description": [],
+        "working_hours": {
+          "en": {
+            "Monday": "09:00 - 18:00",
+            "Tuesday": "09:00 - 18:00",
+            "Wednesday": "09:00 - 18:00",
+            "Thursday": "09:00 - 18:00",
+            "Friday": "09:00 - 18:00",
+            "Saturday": "09:00 - 14:00"
+          },
+          "ka": {
+            "ორშაბათი": "09:00 - 18:00",
+            "სამშაბათი": "09:00 - 18:00",
+            "ოთხშაბათი": "09:00 - 18:00",
+            "ხუთშაბათი": "09:00 - 18:00",
+            "პარასკევი": "09:00 - 18:00",
+            "შაბათი": "09:00 - 14:00"
+          }
+        },
+        "address": {
+          "en": "Ts. Dadiani St. 87",
+          "ka": "ც. დადიანის ქ. 87"
+        },
+        "email": "info-evex@evex.ge",
+        "phone": "+995 32 255 05 05",
+        "city_id": 1,
+        "image": "https://admin.evex.ge/storage/01KQ7767DFN5RMK8042AK2Z1TA.jpg",
+        "hero_image": null,
+        "coordinates": {
+          "lat": 41.72,
+          "lng": 44.79
+        },
+        "components": [],
+        "global_components": []
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ევექსის კლინიკა გლდანში",
+            "en": "Evex Gldani Clinic"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "ევექსის კლინიკა გლდანში",
+            "en": "Evex Gldani Clinic"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": "https://admin.evex.ge/storage/01KQ76TWXTB5M481EGFQK4131C.jpg"
+        },
+        "id": 21,
+        "title": {
+          "en": "Evex Gldani Clinic",
+          "ka": "ევექსის კლინიკა გლდანში"
+        },
+        "slug": {
+          "en": "evex-clinic-in-gldani",
+          "ka": "ss-eveksi-gldanis-poliklinika"
+        },
+        "description": [],
+        "working_hours": {
+          "en": {
+            "Monday": "08:30 - 20:00",
+            "Tuesday": "08:30 - 20:00",
+            "Wednesday": "08:30 - 20:00",
+            "Thursday": "08:30 - 20:00",
+            "Friday": "08:30 - 20:00",
+            "Saturday": "08:30 - 16:00"
+          },
+          "ka": {
+            "ორშაბათი": "08:30 - 20:00",
+            "სამშაბათი": "08:30 - 20:00",
+            "ოთხშაბათი": "08:30 - 20:00",
+            "ხუთშაბათი": "08:30 - 20:00",
+            "პარასკევი": "08:30 - 20:00",
+            "შაბათი": "08:30 - 16:00"
+          }
+        },
+        "address": {
+          "en": "Gldani, I Microdistrict near the Cartographic Factory",
+          "ka": "გლდანი, I მიკრორაიონი კარტოგრაფიული ფაბრიკის მიმდებარედ"
+        },
+        "email": "info-evex@evex.ge",
+        "phone": "+995 32 255 05 05",
+        "city_id": 1,
+        "image": "https://admin.evex.ge/storage/01KQ76TWXTB5M481EGFQK4131C.jpg",
+        "hero_image": "https://admin.evex.ge/storage/01KH180PSTSH4XF1GNF7M75J3T.jpg",
+        "coordinates": {
+          "lat": 41.79104,
+          "lng": 44.81901
+        },
+        "components": [],
+        "global_components": []
+      }
+    ],
+    "services": [
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "დეფექტური ფრჩხილის პლასტიკა",
+            "en": "Defective Nail Plastic Surgery"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "დეფექტური ფრჩხილის პლასტიკა",
+            "en": "Defective Nail Plastic Surgery"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": null
+        },
+        "id": 415,
+        "slug": {
+          "en": "defective-nail-plastic-surgery",
+          "ka": "depekturi-prchkhilis-plastika"
+        },
+        "title": {
+          "en": "Defective Nail Plastic Surgery",
+          "ka": "დეფექტური ფრჩხილის პლასტიკა"
+        },
+        "name": {
+          "en": "Defective Nail Plastic Surgery",
+          "ka": "დეფექტური ფრჩხილის პლასტიკა"
+        }
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ნაკერების ამოღება",
+            "en": "Suture removal"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "ნაკერების ამოღება",
+            "en": "Suture removal"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": null
+        },
+        "id": 719,
+        "slug": {
+          "en": "suture-removal",
+          "ka": "nakerebis-amogheba"
+        },
+        "title": {
+          "en": "Suture removal",
+          "ka": "ნაკერების ამოღება"
+        },
+        "name": {
+          "en": "Suture removal",
+          "ka": "ნაკერების ამოღება"
+        }
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ონკო-ქირურგის კონსულტაცია",
+            "en": "Onco-surgeon consultation"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "ონკო-ქირურგის კონსულტაცია",
+            "en": "Onco-surgeon consultation"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": null
+        },
+        "id": 750,
+        "slug": {
+          "en": "onco-surgeon-consultation",
+          "ka": "onko-kirurgis-konsultatsia"
+        },
+        "title": {
+          "en": "Onco-surgeon consultation",
+          "ka": "ონკო-ქირურგის კონსულტაცია"
+        },
+        "name": {
+          "en": "Onco-surgeon consultation",
+          "ka": "ონკო-ქირურგის კონსულტაცია"
+        }
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "რბილი ქსოვილების წარმონაქმნების (ათერომა,ლიპომა, ჰიგრომა)ამოკვეთა",
+            "en": "Excision of Soft Tissue Tumors (Atheroma, Lipoma, Hygroma)"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "რბილი ქსოვილების წარმონაქმნების (ათერომა,ლიპომა, ჰიგრომა)ამოკვეთა",
+            "en": "Excision of Soft Tissue Tumors (Atheroma, Lipoma, Hygroma)"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": null
+        },
+        "id": 839,
+        "slug": {
+          "en": "excision-of-soft-tissue-tumors-atheroma-lipoma-hygroma",
+          "ka": "rbili-ksovilebis-tsarmonakmnebis-ateromalipoma-higromaamokveta"
+        },
+        "title": {
+          "en": "Excision of Soft Tissue Tumors (Atheroma, Lipoma, Hygroma)",
+          "ka": "რბილი ქსოვილების წარმონაქმნების (ათერომა,ლიპომა, ჰიგრომა)ამოკვეთა"
+        },
+        "name": {
+          "en": "Excision of Soft Tissue Tumors (Atheroma, Lipoma, Hygroma)",
+          "ka": "რბილი ქსოვილების წარმონაქმნების (ათერომა,ლიპომა, ჰიგრომა)ამოკვეთა"
+        }
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ქირურგის კონსულტაცია",
+            "en": "Surgeon consultation"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "ქირურგის კონსულტაცია",
+            "en": "Surgeon consultation"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": null
+        },
+        "id": 1079,
+        "slug": {
+          "en": "surgeon-consultation",
+          "ka": "kirurgis-konsultatsia"
+        },
+        "title": {
+          "en": "Surgeon consultation",
+          "ka": "ქირურგის კონსულტაცია"
+        },
+        "name": {
+          "en": "Surgeon consultation",
+          "ka": "ქირურგის კონსულტაცია"
+        }
+      }
+    ]
+  }
+}

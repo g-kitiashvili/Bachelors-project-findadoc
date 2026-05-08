@@ -25,7 +25,9 @@ _KARTULI_TO_LATIN: dict[str, str] = {
 _BRAND_OVERRIDES: dict[str, str] = {
     "ციტო":      "Cito",
     "ავერსი":    "Aversi",
+    "ავერსის":   "Aversi",
     "ევექსი":    "Evex",
+    "ევექსის":   "Evex",
     "მედკლუბი":  "MedClub",
     "მედალფა":   "Medalpha",
     "ჰელსიკორი": "Helsicore",

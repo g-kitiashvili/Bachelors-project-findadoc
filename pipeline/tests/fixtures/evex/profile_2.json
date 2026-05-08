@@ -1,0 +1,210 @@
+{
+  "data": {
+    "seo": {
+      "seo_title": {
+        "ka": "ტრავმატოლოგ-ორთოპედი",
+        "en": "Traumatologist-Orthopedist"
+      },
+      "meta_description": {
+        "ka": "გამოცდილება: ექიმად მუშაობს 1965 წლიდან. წევრობა: საქართველოს ტრავმატოლოგთა და ორთოპედთა ასოციაციის წევრი",
+        "en": "Experience: Working as a doctor since 1965. Membership: Member of the Georgian Association of Traumatologists and Orthopedists"
+      },
+      "sm_title": {
+        "ka": "ტრავმატოლოგ-ორთოპედი",
+        "en": "Traumatologist-Orthopedist"
+      },
+      "sm_description": {
+        "ka": "გამოცდილება: ექიმად მუშაობს 1965 წლიდან. წევრობა: საქართველოს ტრავმატოლოგთა და ორთოპედთა ასოციაციის წევრი",
+        "en": "Experience: Working as a doctor since 1965. Membership: Member of the Georgian Association of Traumatologists and Orthopedists"
+      },
+      "sm_image": "https://admin.evex.ge/storage/doctors/0x80D1005056B997AA11E7BA4BE48FEB1F_6a0a7a1153b2c.webp"
+    },
+    "id": 1204,
+    "slug": {
+      "en": "avtandil-diasamidze",
+      "ka": "avtandil-diasamidze"
+    },
+    "name": {
+      "en": "Avtandil Diasamidze",
+      "ka": "ავთანდილ დიასამიძე"
+    },
+    "title": {
+      "en": "Traumatologist-Orthopedist",
+      "ka": "ტრავმატოლოგ-ორთოპედი"
+    },
+    "education": [],
+    "experience": [],
+    "membership": [],
+    "description": {
+      "en": "Experience: Working as a doctor since 1965. Membership: Member of the Georgian Association of Traumatologists and Orthopedists",
+      "ka": "გამოცდილება: ექიმად მუშაობს 1965 წლიდან. წევრობა: საქართველოს ტრავმატოლოგთა და ორთოპედთა ასოციაციის წევრი"
+    },
+    "image": "https://admin.evex.ge/storage/doctors/0x80D1005056B997AA11E7BA4BE48FEB1F_6a0a7a1153b2c.webp",
+    "global_components": [
+      {
+        "id": 539,
+        "component": "cta",
+        "props": {
+          "url": {
+            "en": null,
+            "ka": null
+          },
+          "title": {
+            "en": "Book Online",
+            "ka": "დაჯავშნე ონლაინ"
+          },
+          "className": null,
+          "button_text": {
+            "en": "Now",
+            "ka": "დაჯავშნა"
+          },
+          "button_type": "url",
+          "description": {
+            "en": "Schedule a Doctor’s Appointment.",
+            "ka": "ჩაეწერე ექიმთან"
+          }
+        }
+      }
+    ],
+    "city": {
+      "id": 2,
+      "name": {
+        "en": "Batumi",
+        "ka": "ბათუმი"
+      }
+    },
+    "clinics": [
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ევექსის კლინიკა ბათუმში",
+            "en": "Evex Clinic in Batumi"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "ევექსის კლინიკა ბათუმში",
+            "en": "Evex Clinic in Batumi"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": "https://admin.evex.ge/storage/01KQ775G6MTKTT3EZMCHVM45C8.jpg"
+        },
+        "id": 27,
+        "title": {
+          "en": "Evex Clinic in Batumi",
+          "ka": "ევექსის კლინიკა ბათუმში"
+        },
+        "slug": {
+          "en": "evex-clinic-in-batumi",
+          "ka": "ss-eveksi-batumis-poliklinika"
+        },
+        "description": [],
+        "working_hours": {
+          "en": {
+            "Monday": "08:30 - 20:00",
+            "Tuesday": "08:30 - 20:00",
+            "Wednesday": "08:30 - 20:00",
+            "Thursday": "08:30 - 20:00",
+            "Friday": "08:30 - 20:00",
+            "Saturday": "08:30 - 14:00"
+          },
+          "ka": {
+            "ორშაბათი": "08:30 - 20:00",
+            "სამშაბათი": "08:30 - 20:00",
+            "ოთხშაბათი": "08:30 - 20:00",
+            "ხუთშაბათი": "08:30 - 20:00",
+            "პარასკევი": "08:30 - 20:00",
+            "შაბათი": "08:30 - 14:00",
+            "კვირა": "09:00 - 14:00"
+          }
+        },
+        "address": {
+          "en": "Batumi, Selim Khimshiashvili St. N 20"
+        },
+        "email": "info-evex@evex.ge",
+        "phone": "+995 32 255 05 05",
+        "city_id": 2,
+        "image": "https://admin.evex.ge/storage/01KQ775G6MTKTT3EZMCHVM45C8.jpg",
+        "hero_image": null,
+        "coordinates": [],
+        "components": [],
+        "global_components": []
+      }
+    ],
+    "services": [
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "ორთოპედ-ტრავმატოლოგის კონსულტაცია",
+            "en": "Orthopedic-Traumatologist Consultation"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "ორთოპედ-ტრავმატოლოგის კონსულტაცია",
+            "en": "Orthopedic-Traumatologist Consultation"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": null
+        },
+        "id": 760,
+        "slug": {
+          "en": "orthopedic-traumatologist-consultation",
+          "ka": "ortoped-travmatologis-konsultatsia"
+        },
+        "title": {
+          "en": "Orthopedic-Traumatologist Consultation",
+          "ka": "ორთოპედ-ტრავმატოლოგის კონსულტაცია"
+        },
+        "name": {
+          "en": "Orthopedic-Traumatologist Consultation",
+          "ka": "ორთოპედ-ტრავმატოლოგის კონსულტაცია"
+        }
+      },
+      {
+        "seo": {
+          "seo_title": {
+            "ka": "სახსარშიდა ინექცია-ნებისმიერი სახსარი",
+            "en": "Intra-articular injection - any joint"
+          },
+          "meta_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_title": {
+            "ka": "სახსარშიდა ინექცია-ნებისმიერი სახსარი",
+            "en": "Intra-articular injection - any joint"
+          },
+          "sm_description": {
+            "ka": "",
+            "en": ""
+          },
+          "sm_image": null
+        },
+        "id": 938,
+        "slug": {
+          "en": "intra-articular-injection-any-joint",
+          "ka": "sakhsarshida-inektsia-nebismieri-sakhsari"
+        },
+        "title": {
+          "en": "Intra-articular injection - any joint",
+          "ka": "სახსარშიდა ინექცია-ნებისმიერი სახსარი"
+        },
+        "name": {
+          "en": "Intra-articular injection - any joint",
+          "ka": "სახსარშიდა ინექცია-ნებისმიერი სახსარი"
+        }
+      }
+    ]
+  }
+}
