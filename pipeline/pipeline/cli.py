@@ -6,6 +6,7 @@ Subcommands:
   scheduler           → long-running APScheduler loop
   seed-specialties    → upsert the specialty taxonomy from YAML and exit
   seed-locations      → upsert the region/city taxonomy from YAML and exit
+  remap-specialties   → re-map every doctor's specialties from stored data and exit
 """
 
 from __future__ import annotations
@@ -19,16 +20,26 @@ import structlog
 
 from pipeline.config import Settings
 from pipeline.core.location_matcher import LocationMatcher
+from pipeline.core.location_seeder import LocationSeeder
+from pipeline.core.non_providers import NonProviderList
 from pipeline.core.persister import Persister
+from pipeline.core.remapper import RemapRegression, Remapper
 from pipeline.core.runner import Runner
 from pipeline.core.scheduler import run_blocking_scheduler
 from pipeline.core.specialty_matcher import SpecialtyMatcher
-from pipeline.core.location_seeder import LocationSeeder
 from pipeline.core.specialty_seeder import SpecialtySeeder
+from pipeline.core.taxonomy import build_alias_index, load_specialties
 
+log = structlog.get_logger("pipeline.cli")
 
 _SPECIALTY_YAML_PATH = Path(__file__).parent / "data" / "specialties.yaml"
 _LOCATION_YAML_PATH = Path(__file__).parent / "data" / "locations.yaml"
+_NON_PROVIDERS_YAML_PATH = Path(__file__).parent / "data" / "non_providers.yaml"
+
+
+def _build_matcher(database_url: str) -> SpecialtyMatcher:
+    aliases = build_alias_index(load_specialties(_SPECIALTY_YAML_PATH))
+    return SpecialtyMatcher(dsn=database_url, aliases=aliases)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -43,6 +54,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("scheduler", help="Long-running scheduler loop.")
     sub.add_parser("seed-specialties", help="Upsert the specialty taxonomy from YAML.")
     sub.add_parser("seed-locations", help="Upsert the region/city taxonomy from YAML.")
+    sub.add_parser("remap-specialties", help="Re-map all doctors' specialties from stored data.")
     return parser
 
 
@@ -58,12 +70,13 @@ def _configure_logging(level: str) -> None:
 
 
 def _make_runner(settings: Settings) -> Runner:
-    matcher = SpecialtyMatcher(dsn=settings.database_url)
+    matcher = _build_matcher(settings.database_url)
     location_matcher = LocationMatcher(dsn=settings.database_url)
     persister = Persister(
         settings.database_url,
         specialty_matcher=matcher,
         location_matcher=location_matcher,
+        non_providers=NonProviderList.load(_NON_PROVIDERS_YAML_PATH),
     )
     specialty_seeder = SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH)
     location_seeder = LocationSeeder(dsn=settings.database_url, yaml_path=_LOCATION_YAML_PATH)
@@ -88,6 +101,16 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "seed-locations":
         LocationSeeder(dsn=settings.database_url, yaml_path=_LOCATION_YAML_PATH).seed()
+        return 0
+
+    if args.cmd == "remap-specialties":
+        SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH).seed()
+        matcher = _build_matcher(settings.database_url)
+        non_providers = NonProviderList.load(_NON_PROVIDERS_YAML_PATH)
+        try:
+            Remapper(settings.database_url, matcher=matcher, non_providers=non_providers).remap_all()
+        except RemapRegression:
+            return 1
         return 0
 
     runner = _make_runner(settings)

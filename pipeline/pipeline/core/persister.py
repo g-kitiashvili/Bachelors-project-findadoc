@@ -17,8 +17,10 @@ import structlog
 from psycopg.errors import UniqueViolation
 
 from pipeline.core.location_matcher import LocationMatcher
+from pipeline.core.non_providers import NonProviderList
 from pipeline.core.record import ClinicRef, DoctorRecord
-from pipeline.core.specialty_matcher import SpecialtyMatcher, infer_age_groups, tokenize
+from pipeline.core.specialty_matcher import SpecialtyMatcher, infer_age_groups
+from pipeline.core.specialty_writer import maybe_deactivate, write_doctor_specialties
 from pipeline.core.translit import clinic_name_to_en, next_slug_candidate, slugify
 
 
@@ -56,13 +58,6 @@ ON CONFLICT (last_source_url) DO UPDATE SET
 RETURNING id, (xmax = 0) AS inserted
 """
 
-_UPSERT_DOCTOR_SPECIALTY_SQL = """
-INSERT INTO doctor_specialty (doctor_id, specialty_id, is_primary)
-VALUES (%(doctor_id)s, %(specialty_id)s, %(is_primary)s)
-ON CONFLICT (doctor_id, specialty_id) DO UPDATE
-SET is_primary = doctor_specialty.is_primary OR EXCLUDED.is_primary
-"""
-
 _UPSERT_CLINIC_SQL = """
 INSERT INTO clinic (slug, name_ka, name_en, address, phone, website, last_source_url, last_updated_at, status)
 VALUES (%(slug)s, %(name_ka)s, %(name_en)s, %(address)s, %(phone)s, %(website)s, %(source_url)s, NOW(), 'ACTIVE')
@@ -95,10 +90,12 @@ class Persister:
         *,
         specialty_matcher: SpecialtyMatcher | None = None,
         location_matcher: LocationMatcher | None = None,
+        non_providers: NonProviderList | None = None,
     ) -> None:
         self._dsn = dsn
         self._matcher = specialty_matcher
         self._location_matcher = location_matcher
+        self._non_providers = non_providers
         self._location_cache: dict[str, int | None] = {}
 
     def upsert(self, record: DoctorRecord) -> Literal["inserted", "updated"]:
@@ -132,7 +129,11 @@ class Persister:
                 with psycopg.connect(self._dsn, autocommit=True) as conn, conn.cursor() as cur:
                     cur.execute(_UPSERT_DOCTOR_SQL, params)
                     doctor_id, inserted = cur.fetchone()
-                    self._write_specialties(cur, doctor_id, record)
+                    mapped = self._write_specialties(cur, doctor_id, record)
+                    maybe_deactivate(
+                        cur, doctor_id, record.specialty_ka, record.specialty_en,
+                        self._non_providers, mapped,
+                    )
                     self._write_clinics(cur, doctor_id, record)
                     return "inserted" if inserted else "updated"
             except UniqueViolation as e:
@@ -188,37 +189,9 @@ class Persister:
             clinic_id = self._upsert_clinic(cur, clinic)
             cur.execute(_UPSERT_DOCTOR_CLINIC_SQL, {"doctor_id": doctor_id, "clinic_id": clinic_id})
 
-    def _write_specialties(self, cur: psycopg.Cursor, doctor_id: int, record: DoctorRecord) -> None:
+    def _write_specialties(self, cur: psycopg.Cursor, doctor_id: int, record: DoctorRecord) -> int:
         if self._matcher is None:
-            return
-
-        ka_tokens = tokenize(record.specialty_ka)
-        en_tokens = tokenize(record.specialty_en)
-        max_len = max(len(ka_tokens), len(en_tokens))
-        if max_len == 0:
-            return
-
-        seen_specialty_ids: set[int] = set()
-        for i in range(max_len):
-            tk = ka_tokens[i] if i < len(ka_tokens) else None
-            te = en_tokens[i] if i < len(en_tokens) else None
-            result = self._matcher.match(token_ka=tk, token_en=te)
-            if result is None:
-                log.warning(
-                    "specialty_unmapped",
-                    doctor_id=doctor_id,
-                    raw_string_ka=record.specialty_ka,
-                    raw_string_en=record.specialty_en,
-                    token_ka=tk,
-                    token_en=te,
-                    threshold=0.45,
-                )
-                continue
-            if result.id in seen_specialty_ids:
-                continue
-            is_primary = len(seen_specialty_ids) == 0
-            seen_specialty_ids.add(result.id)
-            cur.execute(
-                _UPSERT_DOCTOR_SPECIALTY_SQL,
-                {"doctor_id": doctor_id, "specialty_id": result.id, "is_primary": is_primary},
-            )
+            return 0
+        return write_doctor_specialties(
+            cur, doctor_id, record.specialty_ka, record.specialty_en, self._matcher
+        )

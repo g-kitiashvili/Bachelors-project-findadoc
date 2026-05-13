@@ -171,7 +171,7 @@
     top: 6rem;
   }
   .photo {
-    aspect-ratio: 4 / 3.5;
+    aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -182,6 +182,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 25%;
   }
   .photo .initial {
     font-family: var(--display);

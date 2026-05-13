@@ -4,6 +4,7 @@
 - slug: cardiology
   name_ka: კარდიოლოგია
   name_en: Cardiology
+  aliases: [არითმოლოგი, არითმოლოგიის]
   sort_order: 10
   description_ka: |
     კარდიოლოგია არის სამედიცინო სპეციალობა, რომელიც სწავლობს გულისა და
@@ -53,6 +54,7 @@
 - slug: surgery
   name_ka: ქირურგია
   name_en: Surgery
+  aliases: [ტრანსპლანტოლოგი]
   sort_order: 50
   description_ka: |
     ქირურგია არის სამედიცინო სპეციალობა, რომელიც იყენებს ოპერაციულ
@@ -64,6 +66,7 @@
 - slug: internal-medicine
   name_ka: შინაგანი მედიცინა
   name_en: Internal Medicine
+  aliases: [თერაპევტი, აკადემიური თერაპევტი]
   sort_order: 60
   description_ka: |
     შინაგანი მედიცინა არის სამედიცინო სპეციალობა, რომელიც ეხება
@@ -99,6 +102,7 @@
 - slug: orthopedics
   name_ka: ორთოპედია
   name_en: Orthopedics
+  aliases: [ვერტებროლოგი]
   sort_order: 90
   description_ka: |
     ორთოპედია არის სამედიცინო სპეციალობა, რომელიც ეხება ძვალ-კუნთოვანი
@@ -110,6 +114,7 @@
 - slug: family-medicine
   name_ka: საოჯახო მედიცინა
   name_en: Family Medicine
+  aliases: [ოჯახის ექიმი, საოჯახო ექიმი, ზოგადი ექიმი, ზოგადი პროფილის ექიმი, პირადი ექიმი]
   sort_order: 100
   description_ka: |
     საოჯახო მედიცინა არის სამედიცინო სპეციალობა, რომელიც უზრუნველყოფს
@@ -131,6 +136,7 @@
 - slug: oncology
   name_ka: ონკოლოგია
   name_en: Oncology
+  aliases: [ქიმიოთერაპევტი]
   sort_order: 130
 
 - slug: endocrinology
@@ -156,6 +162,7 @@
 - slug: pulmonology
   name_ka: პულმონოლოგია
   name_en: Pulmonology
+  aliases: [რესპირაციული]
   sort_order: 180
 
 - slug: nephrology
@@ -171,6 +178,7 @@
 - slug: infectious-diseases
   name_ka: ინფექციური დაავადებები
   name_en: Infectious Diseases
+  aliases: [ინფექციონისტი, ექიმი ინფექციონისტი, ბავშვთა ინფექციონისტი]
   sort_order: 210
 
 - slug: allergology
@@ -211,16 +219,19 @@
 - slug: radiology
   name_ka: რადიოლოგია
   name_en: Radiology
+  aliases: [რენტგენოლოგი, რენტგენის ტექნიკოსი]
   sort_order: 290
 
 - slug: pathology
   name_ka: პათოლოგია
   name_en: Pathology
+  aliases: [ციტოლოგი, მორფოლოგი, პათომორფოლოგი]
   sort_order: 300
 
 - slug: laboratory-medicine
   name_ka: ლაბორატორიული მედიცინა
   name_en: Laboratory Medicine
+  aliases: [ლაბორანტი, ქიმიკოსი, ბაქტერიოლოგი]
   sort_order: 310
 
 - slug: emergency-medicine
@@ -236,6 +247,7 @@
 - slug: physical-medicine
   name_ka: ფიზიკური მედიცინა
   name_en: Physical Medicine
+  aliases: [ფიზიოთერაპევტი, რეაბილიტოლოგი, ფიზიო პროცედურების სპეციალისტი, მანუალური თერაპევტი, ოკუპაციური თერაპევტი, სარეაბილიტაციო ცენტრი]
   sort_order: 340
 
 - slug: sports-medicine
@@ -322,3 +334,123 @@
   name_ka: რეანიმატოლოგია
   name_en: Reanimatology
   sort_order: 510
+
+- slug: angiology
+  name_ka: ანგიოლოგია
+  name_en: Angiology
+  sort_order: 1000
+  aliases: [ანგიოლოგი, ლიმფოლოგი]
+
+- slug: ultrasound-diagnostics
+  name_ka: ულტრაბგერითი დიაგნოსტიკა
+  name_en: Ultrasound Diagnostics
+  sort_order: 1000
+  aliases: [ექოსკოპისტი, ნეიროსონოსკოპისტი, ულტრაბგერითი დიაგნოსტიკის სპეციალისტი]
+
+- slug: endoscopy
+  name_ka: ენდოსკოპია
+  name_en: Endoscopy
+  sort_order: 1000
+  aliases: [ენდოსკოპისტი, ენდოსკოპიური, ლაპარასკოპისტი]
+
+- slug: proctology
+  name_ka: პროქტოლოგია
+  name_en: Proctology
+  sort_order: 1000
+  aliases: [პროქტოლოგი]
+
+- slug: cosmetology
+  name_ka: კოსმეტოლოგია
+  name_en: Cosmetology
+  sort_order: 1000
+  aliases: [კოსმეტოლოგი, ლაზეროთერაპევტი, ლაზერული თერაპიის სპეციალისტი]
+
+- slug: massage-therapy
+  name_ka: სამკურნალო მასაჟი
+  name_en: Massage Therapy
+  sort_order: 1000
+  aliases: [მასაჟისტი]
+
+- slug: embryology
+  name_ka: ემბრიოლოგია
+  name_en: Embryology
+  sort_order: 1000
+  aliases: [ემბრიოლოგი]
+
+- slug: mammology
+  name_ka: მამოლოგია
+  name_en: Mammology
+  sort_order: 1000
+  aliases: [მამოლოგი]
+
+- slug: reproductology
+  name_ka: რეპროდუქტოლოგია
+  name_en: Reproductology
+  sort_order: 1000
+  aliases: [რეპროდუქტოლოგი]
+
+- slug: toxicology
+  name_ka: ტოქსიკოლოგია
+  name_en: Toxicology
+  sort_order: 1000
+  aliases: [ტოქსიკოლოგი]
+
+- slug: psychology
+  name_ka: ფსიქოლოგია
+  name_en: Psychology
+  sort_order: 1000
+  aliases: [ფსიქოლოგი, ფსიქოთერაპევტი, ნეიროფსიქოლოგი, ბავშვთა ფსიქოლოგი]
+
+- slug: genetics
+  name_ka: გენეტიკა
+  name_en: Medical Genetics
+  sort_order: 1000
+  aliases: [გენეტიკოსი]
+
+- slug: narcology
+  name_ka: ნარკოლოგია
+  name_en: Narcology
+  sort_order: 1000
+  aliases: [ნარკოლოგი]
+
+- slug: reflexology
+  name_ka: რეფლექსოთერაპია
+  name_en: Reflexology
+  sort_order: 1000
+  aliases: [რეფლექსოთერაპევტი]
+
+- slug: transfusiology
+  name_ka: ტრანსფუზიოლოგია
+  name_en: Transfusiology
+  sort_order: 1000
+  aliases: [ტრანსფუზიოლოგი, ტრანსფუზილოგი]
+
+- slug: phthisiology
+  name_ka: ფტიზიატრია
+  name_en: Phthisiology
+  sort_order: 1000
+  aliases: [ფტიზიატრი]
+
+- slug: homeopathy
+  name_ka: ჰომეოპათია
+  name_en: Homeopathy
+  sort_order: 1000
+  aliases: [ჰომეოპათი]
+
+- slug: podiatry
+  name_ka: პოდიატრია
+  name_en: Podiatry
+  sort_order: 1000
+  aliases: [პოდიატრი, პოდოლოგი]
+
+- slug: epidemiology
+  name_ka: ეპიდემიოლოგია
+  name_en: Epidemiology
+  sort_order: 1000
+  aliases: [ეპიდემიოლოგი]
+
+- slug: speech-therapy
+  name_ka: ლოგოპედია
+  name_en: Speech Therapy
+  sort_order: 1000
+  aliases: [ლოგოპედი, ფონოპედი]

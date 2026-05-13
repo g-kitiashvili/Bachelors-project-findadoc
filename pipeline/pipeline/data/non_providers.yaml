@@ -1,0 +1,16 @@
+# Roles that are not findable medical providers. A doctor whose raw specialty
+# matches one of these AND maps to no canonical specialty is set INACTIVE.
+# `substring` is reserved for unambiguous role nouns; title words that could
+# co-occur with a real specialty are matched as whole (exact) entries.
+- text: ექთანი            # nurse
+  match: substring
+- text: ვეტერინარი        # veterinarian (not a human-medicine provider)
+  match: substring
+- text: სამედიცინო დირექტორი
+  match: exact
+- text: კლინიკური მენეჯერი
+  match: exact
+- text: მეთოდისტი
+  match: exact
+- text: იმუნიზაციაზე პასუხისმგებელი პირი
+  match: exact

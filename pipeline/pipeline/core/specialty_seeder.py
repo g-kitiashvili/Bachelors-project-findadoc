@@ -10,7 +10,8 @@ from pathlib import Path
 
 import psycopg
 import structlog
-import yaml
+
+from pipeline.core.taxonomy import load_specialties
 
 
 _UPSERT_SQL = """
@@ -34,9 +35,7 @@ class SpecialtySeeder:
         self._yaml_path = Path(yaml_path)
 
     def seed(self) -> int:
-        rows = yaml.safe_load(self._yaml_path.read_text(encoding="utf-8")) or []
-        if not isinstance(rows, list):
-            raise ValueError(f"{self._yaml_path} must contain a YAML list at the top level")
+        rows = load_specialties(self._yaml_path)
 
         params_list = [
             {

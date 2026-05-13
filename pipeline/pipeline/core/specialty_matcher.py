@@ -1,5 +1,6 @@
 """Specialty mapping — tokenize scraped specialty strings and match against the
-canonical taxonomy via pg_trgm `similarity`."""
+canonical taxonomy. A curated alias index (exact match) is tried first; tokens
+that miss it fall back to pg_trgm `similarity`."""
 
 from __future__ import annotations
 
@@ -7,20 +8,43 @@ import re
 from dataclasses import dataclass
 
 import psycopg
+import structlog
+
+from pipeline.core.taxonomy import normalize_alias
+
+log = structlog.get_logger("pipeline.specialty_matcher")
 
 
-_DELIMITER_RE = re.compile(r",|;|/|-| და | and ", flags=re.UNICODE)
+_DELIMITER_RE = re.compile(r",|;|/|–|—|-| და | and ", flags=re.UNICODE)
 
 DEFAULT_THRESHOLD = 0.45
 
 _PEDIATRIC_MARKERS = ("პედიატ", "ბავშვთა", "ნეონ", "pediatr", "paediatr", "neonat", "child")
 
+# Job-title fragments stripped before tokenizing so an embedded specialty surfaces
+# (e.g. "არითმოლოგიის ცენტრის ხელმძღვანელი" -> "არითმოლოგიის").
+_ADMIN_PHRASE_RE = re.compile(
+    r"\s*(ცენტრის ხელმძღვანელი"
+    r"|სამსახურის (უფროსი|ხელმძღვანელი)"
+    r"|განყოფილების ხელმძღვანელი"
+    r"|მიმართულების ხელმძღვანელი)",
+    flags=re.UNICODE,
+)
+
+# Academic-degree / honorific tokens that carry no specialty signal.
+_DEGREE_TOKENS = frozenset({
+    "md", "phd", "m.d", "ph.d", "msc", "dsc", "დოქტორი", "პროფესორი",
+    "მედიცინის აკადემიური დოქტორი", "მედიცინის მეცნიერებათა დოქტორი",
+})
+
 
 def tokenize(raw: str | None) -> list[str]:
     if raw is None:
         return []
-    parts = _DELIMITER_RE.split(raw)
-    return [p.strip().lower() for p in parts if p and p.strip()]
+    cleaned = _ADMIN_PHRASE_RE.sub("", raw)
+    parts = _DELIMITER_RE.split(cleaned)
+    tokens = [p.strip().lower() for p in parts if p and p.strip()]
+    return [t for t in tokens if t not in _DEGREE_TOKENS]
 
 
 def _is_pediatric(token: str) -> bool:
@@ -53,13 +77,41 @@ class MatchResult:
 
 
 class SpecialtyMatcher:
-    def __init__(self, *, dsn: str, threshold: float = DEFAULT_THRESHOLD) -> None:
+    def __init__(
+        self,
+        *,
+        dsn: str,
+        threshold: float = DEFAULT_THRESHOLD,
+        aliases: dict[str, str] | None = None,
+    ) -> None:
         self._dsn = dsn
         self._threshold = threshold
+        self._aliases = aliases or {}
+        self._slug_to_id: dict[str, int] | None = None  # lazily loaded
+
+    def _resolve_alias(self, token: str | None) -> MatchResult | None:
+        if not token:
+            return None
+        slug = self._aliases.get(normalize_alias(token))
+        if slug is None:
+            return None
+        if self._slug_to_id is None:
+            with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+                cur.execute("SELECT slug, id FROM specialty")
+                self._slug_to_id = {s: i for s, i in cur.fetchall()}
+        specialty_id = self._slug_to_id.get(slug)
+        if specialty_id is None:
+            log.warning("alias_slug_missing", token=token, slug=slug)
+            return None
+        return MatchResult(id=specialty_id, slug=slug, score=1.0)
 
     def match(self, *, token_ka: str | None, token_en: str | None) -> MatchResult | None:
         if not token_ka and not token_en:
             return None
+        for token in (token_ka, token_en):
+            hit = self._resolve_alias(token)
+            if hit is not None:
+                return hit
         with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
             cur.execute(
                 """

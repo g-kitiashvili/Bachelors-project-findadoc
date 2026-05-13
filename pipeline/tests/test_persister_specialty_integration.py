@@ -123,3 +123,60 @@ def test_first_token_unmapped_still_marks_a_primary(persister_db: str) -> None:
             """
         )
         assert cur.fetchone() == ("cardiology", True)
+
+
+from pipeline.core.non_providers import NonProviderList, _Rule
+from pipeline.core.taxonomy import normalize_alias
+
+
+def test_alias_maps_doctor_to_specialty(persister_db: str) -> None:
+    matcher = SpecialtyMatcher(dsn=persister_db, aliases={normalize_alias("ოჯახის ექიმი"): "cardiology"})
+    persister = Persister(persister_db, specialty_matcher=matcher)
+    record = normalize(DoctorRecord(
+        source="cmc",
+        source_url="https://example.com/doc/family",
+        full_name_ka="ნინო ფამილი",
+        specialty_ka="ოჯახის ექიმი",
+    ))
+    persister.upsert(record)
+    with psycopg.connect(persister_db) as conn, conn.cursor() as cur:
+        cur.execute(
+            "SELECT s.slug FROM doctor_specialty ds JOIN specialty s ON s.id = ds.specialty_id "
+            "JOIN doctor d ON d.id = ds.doctor_id WHERE d.full_name_ka = 'ნინო ფამილი'"
+        )
+        assert cur.fetchall() == [("cardiology",)]
+
+
+def test_non_provider_doctor_is_deactivated(persister_db: str) -> None:
+    matcher = SpecialtyMatcher(dsn=persister_db)
+    non_providers = NonProviderList([_Rule(text=normalize_alias("კლინიკური მენეჯერი"), substring=False)])
+    persister = Persister(persister_db, specialty_matcher=matcher, non_providers=non_providers)
+    record = normalize(DoctorRecord(
+        source="cmc",
+        source_url="https://example.com/doc/manager",
+        full_name_ka="დათო მენეჯერი",
+        specialty_ka="კლინიკური მენეჯერი",
+    ))
+    persister.upsert(record)
+    with psycopg.connect(persister_db) as conn, conn.cursor() as cur:
+        cur.execute("SELECT status FROM doctor WHERE full_name_ka = 'დათო მენეჯერი'")
+        assert cur.fetchone() == ("INACTIVE",)
+        cur.execute("SELECT count(*) FROM doctor_specialty ds JOIN doctor d ON d.id = ds.doctor_id "
+                    "WHERE d.full_name_ka = 'დათო მენეჯერი'")
+        assert cur.fetchone()[0] == 0
+
+
+def test_real_specialty_with_admin_title_not_deactivated(persister_db: str) -> None:
+    matcher = SpecialtyMatcher(dsn=persister_db)
+    non_providers = NonProviderList([_Rule(text=normalize_alias("კლინიკური მენეჯერი"), substring=False)])
+    persister = Persister(persister_db, specialty_matcher=matcher, non_providers=non_providers)
+    record = normalize(DoctorRecord(
+        source="cmc",
+        source_url="https://example.com/doc/both",
+        full_name_ka="მარი ორმაგი",
+        specialty_ka="კარდიოლოგია, კლინიკური მენეჯერი",
+    ))
+    persister.upsert(record)
+    with psycopg.connect(persister_db) as conn, conn.cursor() as cur:
+        cur.execute("SELECT status FROM doctor WHERE full_name_ka = 'მარი ორმაგი'")
+        assert cur.fetchone() == ("ACTIVE",)

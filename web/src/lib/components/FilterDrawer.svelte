@@ -2,6 +2,7 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import { untrack } from "svelte";
+  import MultiSelect from "./MultiSelect.svelte";
 
   interface LocationCity { slug: string; nameKa: string; nameEn: string; doctorCount: number }
   interface LocationRegion extends LocationCity { cities: LocationCity[] }
@@ -21,7 +22,6 @@
   let { open, selectedSlugs, specialties, onClose, regions, selectedRegion, selectedCity, clinics, selectedClinics }: Props = $props();
 
   let draft = $state<string[]>([...selectedSlugs]);
-  let search = $state("");
   let regionDraft = $state(selectedRegion);
   let cityDraft = $state(selectedCity);
   let liveSpecialties = $state<Props["specialties"]>([...specialties]);
@@ -30,7 +30,6 @@
   );
 
   let clinicDraft = $state<string[]>([...selectedClinics]);
-  let clinicSearch = $state("");
   let liveClinics = $state<Props["clinics"]>([...clinics]);
   let clinicNameBySlug = $state<Record<string, { nameEn: string; nameKa: string }>>(
     Object.fromEntries(clinics.map((c) => [c.slug, { nameEn: c.nameEn, nameKa: c.nameKa }]))
@@ -48,14 +47,8 @@
     clinicNameBySlug = acc;
   }
 
-  $effect(() => {
-    draft = [...selectedSlugs];
-  });
-
-  $effect(() => {
-    clinicDraft = [...selectedClinics];
-  });
-
+  $effect(() => { draft = [...selectedSlugs]; });
+  $effect(() => { clinicDraft = [...selectedClinics]; });
   $effect(() => { regionDraft = selectedRegion; });
   $effect(() => { cityDraft = selectedCity; });
 
@@ -86,27 +79,13 @@
     return () => { cancelled = true; };
   });
 
-  const withSelected = $derived.by(() => {
+  const specialtyOptions = $derived.by(() => {
     const present = new Set(liveSpecialties.map((s) => s.slug));
     const extras = draft
       .filter((slug) => !present.has(slug))
-      .map((slug) => ({
-        slug,
-        nameEn: nameBySlug[slug]?.nameEn ?? slug,
-        nameKa: nameBySlug[slug]?.nameKa ?? "",
-        doctorCount: 0,
-      }));
-    return [...liveSpecialties, ...extras];
+      .map((slug) => ({ slug, nameEn: nameBySlug[slug]?.nameEn ?? slug, doctorCount: 0 }));
+    return [...liveSpecialties, ...extras].map((s) => ({ value: s.slug, label: s.nameEn, count: s.doctorCount }));
   });
-
-  const filtered = $derived(
-    search.trim() === ""
-      ? withSelected
-      : withSelected.filter((s) =>
-          s.nameEn.toLowerCase().includes(search.toLowerCase()) ||
-          s.nameKa.includes(search)
-        )
-  );
 
   let liveRegions = $state<LocationRegion[]>([...regions]);
 
@@ -128,9 +107,16 @@
     return () => { cancelled = true; };
   });
 
-  const cityOptions = $derived(
-    liveRegions.find((r) => r.slug === regionDraft)?.cities ?? []
-  );
+  const cityList = $derived(liveRegions.find((r) => r.slug === regionDraft)?.cities ?? []);
+
+  const regionOptions = $derived([
+    { value: "", label: "All regions" },
+    ...liveRegions.map((r) => ({ value: r.slug, label: r.nameEn, count: r.doctorCount })),
+  ]);
+  const cityOptions = $derived([
+    { value: "", label: "All cities" },
+    ...cityList.map((c) => ({ value: c.slug, label: c.nameEn, count: c.doctorCount })),
+  ]);
 
   $effect(() => {
     if (
@@ -159,43 +145,13 @@
     return () => { cancelled = true; };
   });
 
-  const withSelectedClinics = $derived.by(() => {
+  const clinicOptions = $derived.by(() => {
     const present = new Set(liveClinics.map((c) => c.slug));
     const extras = clinicDraft
       .filter((slug) => !present.has(slug))
-      .map((slug) => ({
-        slug,
-        nameEn: clinicNameBySlug[slug]?.nameEn ?? slug,
-        nameKa: clinicNameBySlug[slug]?.nameKa ?? "",
-        doctorCount: 0,
-      }));
-    return [...liveClinics, ...extras];
+      .map((slug) => ({ slug, nameEn: clinicNameBySlug[slug]?.nameEn ?? slug, doctorCount: 0 }));
+    return [...liveClinics, ...extras].map((c) => ({ value: c.slug, label: c.nameEn, count: c.doctorCount }));
   });
-
-  const filteredClinics = $derived(
-    clinicSearch.trim() === ""
-      ? withSelectedClinics
-      : withSelectedClinics.filter((c) =>
-          c.nameEn.toLowerCase().includes(clinicSearch.toLowerCase()) ||
-          c.nameKa.includes(clinicSearch)
-        )
-  );
-
-  function toggle(slug: string) {
-    if (draft.includes(slug)) {
-      draft = draft.filter((s) => s !== slug);
-    } else {
-      draft = [...draft, slug];
-    }
-  }
-
-  function toggleClinic(slug: string) {
-    if (clinicDraft.includes(slug)) {
-      clinicDraft = clinicDraft.filter((s) => s !== slug);
-    } else {
-      clinicDraft = [...clinicDraft, slug];
-    }
-  }
 
   function onRegionChange(value: string) {
     regionDraft = value;
@@ -204,11 +160,8 @@
 
   function apply() {
     const url = new URL($page.url);
-    if (draft.length > 0) {
-      url.searchParams.set("specialty", draft.join(","));
-    } else {
-      url.searchParams.delete("specialty");
-    }
+    if (draft.length > 0) url.searchParams.set("specialty", draft.join(","));
+    else url.searchParams.delete("specialty");
     if (regionDraft) url.searchParams.set("region", regionDraft);
     else url.searchParams.delete("region");
     if (cityDraft) url.searchParams.set("city", cityDraft);
@@ -236,98 +189,67 @@
       <button class="close" onclick={onClose} aria-label="Close">✕</button>
     </header>
 
-    <div class="section">
-      <div class="label">Region</div>
-      <select class="search" value={regionDraft} onchange={(e) => onRegionChange(e.currentTarget.value)}>
-        <option value="">All regions</option>
-        {#each liveRegions as r (r.slug)}
-          <option value={r.slug}>{r.nameEn} ({r.doctorCount})</option>
-        {/each}
-      </select>
+    <div class="body">
+      <MultiSelect
+        label="Specialty"
+        placeholder="Select specialty"
+        searchPlaceholder="Search specialties..."
+        options={specialtyOptions}
+        selected={draft}
+        onChange={(next) => (draft = next)}
+      />
 
-      {#if cityOptions.length > 0}
-        <div class="label" style="margin-top:0.75rem;">City</div>
-        <select class="search" bind:value={cityDraft}>
-          <option value="">All cities</option>
-          {#each cityOptions as c (c.slug)}
-            <option value={c.slug}>{c.nameEn} ({c.doctorCount})</option>
-          {/each}
-        </select>
+      <MultiSelect
+        label="Region"
+        placeholder="All regions"
+        multiple={false}
+        options={regionOptions}
+        selected={regionDraft ? [regionDraft] : []}
+        onChange={(next) => onRegionChange(next[0] ?? "")}
+      />
+
+      {#if cityList.length > 0}
+        <MultiSelect
+          label="City"
+          placeholder="All cities"
+          multiple={false}
+          searchable={false}
+          options={cityOptions}
+          selected={cityDraft ? [cityDraft] : []}
+          onChange={(next) => (cityDraft = next[0] ?? "")}
+        />
       {/if}
-    </div>
 
-    <div class="section">
-      <div class="label">Specialty</div>
-      <input
-        class="search"
-        type="text"
-        placeholder="Search specialties..."
-        bind:value={search}
+      <MultiSelect
+        label="Clinic"
+        placeholder="Select clinic"
+        searchPlaceholder="Search clinics..."
+        options={clinicOptions}
+        selected={clinicDraft}
+        onChange={(next) => (clinicDraft = next)}
       />
-      <ul class="checklist">
-        {#each filtered as s (s.slug)}
-          <li>
-            <label>
-              <input
-                type="checkbox"
-                checked={draft.includes(s.slug)}
-                onchange={() => toggle(s.slug)}
-              />
-              <span class="name">{s.nameEn}</span>
-              <span class="count">({s.doctorCount})</span>
-            </label>
-          </li>
-        {/each}
-      </ul>
-    </div>
-
-    <div class="section">
-      <div class="label">Clinic</div>
-      <input
-        class="search"
-        type="text"
-        placeholder="Search clinics..."
-        bind:value={clinicSearch}
-      />
-      <ul class="checklist">
-        {#each filteredClinics as c (c.slug)}
-          <li>
-            <label>
-              <input
-                type="checkbox"
-                checked={clinicDraft.includes(c.slug)}
-                onchange={() => toggleClinic(c.slug)}
-              />
-              <span class="name">{c.nameEn}</span>
-              <span class="count">({c.doctorCount})</span>
-            </label>
-          </li>
-        {/each}
-      </ul>
     </div>
 
     <footer>
-      <button class="apply" onclick={apply}>Apply</button>
       <button class="clear" onclick={clearDraft}>Clear</button>
+      <button class="apply" onclick={apply}>Apply</button>
     </footer>
   </aside>
 {/if}
 
 <style>
-  .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 40; }
-  .drawer { position: fixed; top: 0; left: 0; bottom: 0; width: 360px; background: white; z-index: 50; display: flex; flex-direction: column; box-shadow: 2px 0 16px rgba(0,0,0,0.1); }
+  .backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.35); z-index: 40; }
+  .drawer {
+    position: fixed; top: 0; left: 0; bottom: 0; width: min(360px, 90vw); background: white; z-index: 50;
+    display: flex; flex-direction: column; box-shadow: 2px 0 16px rgba(0, 0, 0, 0.1);
+  }
   header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--line); }
   header h2 { font-family: var(--display); font-size: 1.25rem; margin: 0; }
   .close { background: none; border: 0; font-size: 1.25rem; cursor: pointer; color: var(--ink-muted); }
-  .section { flex: 1; overflow-y: auto; padding: 1.25rem 1.5rem; }
-  .label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); margin-bottom: 0.75rem; }
-  .search { width: 100%; padding: 0.55rem 0.75rem; border: 1px solid var(--line); border-radius: 6px; margin-bottom: 0.75rem; font: inherit; }
-  .checklist { list-style: none; margin: 0; padding: 0; }
-  .checklist li { margin-bottom: 0.4rem; }
-  .checklist label { display: flex; gap: 0.6rem; align-items: center; cursor: pointer; font-size: 0.9rem; }
-  .checklist .name { flex: 1; }
-  .checklist .count { color: var(--ink-faint); font-size: 0.8rem; }
+  .body { flex: 1 1 auto; overflow: visible; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
   footer { display: flex; gap: 0.75rem; padding: 1.25rem 1.5rem; border-top: 1px solid var(--line); }
-  .apply { flex: 1; background: var(--accent); color: white; border: 0; padding: 0.7rem; border-radius: 6px; font: inherit; font-weight: 600; cursor: pointer; }
-  .clear { background: none; border: 1px solid var(--line); padding: 0.7rem 1rem; border-radius: 6px; font: inherit; cursor: pointer; color: var(--ink); }
+  .apply { flex: 1; background: var(--accent); color: white; border: 0; padding: 0.7rem; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; }
+  .apply:hover { background: var(--accent-deep); }
+  .clear { background: none; border: 1px solid var(--line); padding: 0.7rem 1rem; border-radius: 8px; font: inherit; cursor: pointer; color: var(--ink); }
+  .clear:hover { border-color: var(--line-strong); }
 </style>
