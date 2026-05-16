@@ -84,3 +84,20 @@ def test_discover_stops_on_empty_page():
     urls = list(scraper.discover())
     assert len(urls) >= 1
     assert all(u.startswith("https://cmchospital.ge/ge/doctors/") for u in urls)
+
+
+class _EnFetcher:
+    def __init__(self, pages: dict) -> None:
+        self._pages = pages
+
+    def get(self, url: str) -> str:
+        return self._pages[url]
+
+
+def test_extract_sets_english_name_and_clinic():
+    ka_url = "https://cmchospital.ge/ge/doctors/284-levani-makhaldiani"
+    en_url = ka_url.replace("/ge/", "/en/", 1)
+    scraper = CmcScraper(fetcher=_EnFetcher({en_url: _read("profile_1_en.html")}))
+    record = scraper.extract(_read("profile_1.html"), ka_url)
+    assert record.full_name_en == "Levan Makhaldiani"
+    assert record.clinics[0].name_en == "Caucasus Medical Centre"

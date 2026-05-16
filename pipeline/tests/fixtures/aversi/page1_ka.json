@@ -1,0 +1,62 @@
+{
+  "page_number": 1,
+  "max_pages": 30,
+  "per_page": 16,
+  "data": [
+    {
+      "id": 18,
+      "name": "მაია აბესაძე",
+      "photo": "doctors/7ulpUX2Tm4MYgQHRjfzHpB5pyhJiy3SsmYgBcdrR.webp",
+      "gender": "female",
+      "specialties": [
+        {
+          "id": 74,
+          "title": "რენტგენოლოგი (სტომატოლოგი)"
+        }
+      ],
+      "branches": [
+        {
+          "id": 17,
+          "title": "ცენტრალური ფილიალი",
+          "address": "ვაჟა-ფშაველას გამზირი №27 ბ"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "ნაილი აბესაძე",
+      "photo": "doctors/iECPsw0oTISowqkcZxpWSWiAzJQKsgirKUb86HRp.webp",
+      "gender": "female",
+      "specialties": [
+        {
+          "id": 74,
+          "title": "რენტგენოლოგი (სტომატოლოგი)"
+        }
+      ],
+      "branches": [
+        {
+          "id": 17,
+          "title": "ცენტრალური ფილიალი",
+          "address": "ვაჟა-ფშაველას გამზირი №27 ბ"
+        }
+      ]
+    },
+    {
+      "id": 99001,
+      "name": "ტესტ უბრანჩო",
+      "photo": null,
+      "gender": "male",
+      "specialties": [
+        {
+          "id": 1,
+          "title": "თერაპევტი"
+        }
+      ],
+      "branches": []
+    }
+  ],
+  "meta": {
+    "title": "doctors",
+    "canonicalUrl": "https://aversiclinic.ge/doctors"
+  }
+}

@@ -45,7 +45,6 @@
   <div class="info">
     <a class="name-link" href="/doctors/{doctor.slug}">
       <h3 class="name">{doctor.fullNameEn}</h3>
-      <p class="name-ka">{doctor.fullNameKa}</p>
     </a>
     {#if doctor.primarySpecialty}
       <a class="specialty-pill" href={`/specialties/${doctor.primarySpecialty.slug}`}>
@@ -173,13 +172,6 @@
     color: var(--ink);
     margin: 0 0 0.25rem;
     letter-spacing: -0.015em;
-  }
-  .name-ka {
-    font-family: var(--sans-ge);
-    font-weight: 500;
-    color: var(--ink-muted);
-    font-size: 0.92rem;
-    margin: 0;
   }
   .specialty-pill {
     display: inline-block;

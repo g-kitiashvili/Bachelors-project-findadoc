@@ -8,9 +8,11 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
+from pipeline.core.fetcher import FetchError
 from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
 from pipeline.core.static_scraper import StaticHtmlScraper
+from pipeline.core.translit import english_or_none
 
 _BG_URL_RE = re.compile(r"url\(['\"]?(//[^'\")\s]+)['\"]?\)")
 _CLINIC_RE = re.compile(r"clinic=(\d+)")
@@ -28,11 +30,14 @@ class VivomedicalScraper(StaticHtmlScraper):
         super().__init__(fetcher, rate_per_sec=2.0)
 
     _CLINIC_LINK_SELECTOR = "a[href*='/ge/16/']"
+    _CLINIC_LINK_EN_SELECTOR = "a[href*='/en/16/']"
     _CLINIC_NAME_SELECTOR = "h4.title"
     _CLINIC_ADDRESS_SELECTOR = "p.texticon.address span"
     _CLINIC_PHONE_SELECTOR = "p.texticon.phone span"
 
-    def _clinics(self, soup: BeautifulSoup, url: str) -> list[ClinicRef]:
+    def _clinics(
+        self, soup: BeautifulSoup, url: str, en_soup: BeautifulSoup | None = None
+    ) -> list[ClinicRef]:
         link = soup.select_one(self._CLINIC_LINK_SELECTOR)
         if link is None:
             return []
@@ -46,7 +51,14 @@ class VivomedicalScraper(StaticHtmlScraper):
         address = addr_el.get_text(" ", strip=True) if addr_el else None
         phone_el = link.select_one(self._CLINIC_PHONE_SELECTOR)
         phone = phone_el.get_text(" ", strip=True) if phone_el else None
-        return [ClinicRef(source_url=clinic_url, name_ka=name, address=address or None, phone=phone or None)]
+        name_en: str | None = None
+        if en_soup is not None:
+            en_link = en_soup.select_one(self._CLINIC_LINK_EN_SELECTOR)
+            if en_link is not None:
+                en_name_el = en_link.select_one(self._CLINIC_NAME_SELECTOR)
+                en_text = en_name_el.get_text(" ", strip=True) if en_name_el else None
+                name_en = english_or_none(en_text)
+        return [ClinicRef(source_url=clinic_url, name_ka=name, name_en=name_en, address=address or None, phone=phone or None)]
 
     def index_urls(self) -> Iterator[str]:
         soup = BeautifulSoup(self.fetcher.get(self._INDEX_URL), "lxml")
@@ -73,13 +85,27 @@ class VivomedicalScraper(StaticHtmlScraper):
             m = _BG_URL_RE.search(style)
             if m:
                 photo_url = f"https:{m.group(1)}"
+        en_soup: BeautifulSoup | None = None
+        full_name_en: str | None = None
+        if "/ge/" in url:
+            en_url = url.replace("/ge/", "/en/", 1)
+            try:
+                en_html = self.fetcher.get(en_url)
+                en_soup = BeautifulSoup(en_html, "lxml")
+                en_name_el = en_soup.select_one(self._NAME_SELECTOR)
+                full_name_en = english_or_none(
+                    en_name_el.get_text(strip=True) if en_name_el else None
+                )
+            except (FetchError, KeyError):
+                pass
         return DoctorRecord(
             source=self.name,
             source_url=url,
             full_name_ka=name_el.get_text(strip=True),
+            full_name_en=full_name_en,
             specialty_ka=specialty_el.get_text(strip=True) if specialty_el else None,
             photo_url=photo_url or None,
-            clinics=self._clinics(soup, url),
+            clinics=self._clinics(soup, url, en_soup),
         )
 
 

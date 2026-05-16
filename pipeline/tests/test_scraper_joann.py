@@ -69,3 +69,30 @@ def test_discover_stops_on_empty_page():
         fetcher=_FakeFetcher("<html><body>no doctors here</body></html>")
     )
     assert list(scraper.discover()) == []
+
+
+class _EnFetcher:
+    def __init__(self, pages: dict) -> None:
+        self._pages = pages
+
+    def get(self, url: str) -> str:
+        return self._pages[url]
+
+
+def test_extract_sets_english_name():
+    ka_url = "https://joann.ge/eqimebi/nino-janashia"
+    en_url = "https://joann.ge/en/doctors/nino-janashia/"
+    scraper = JoannScraper(fetcher=_EnFetcher({en_url: _read("profile_2_en.html")}))
+    record = scraper.extract(_read("profile_2.html"), ka_url)
+    assert record is not None
+    assert record.full_name_en == "Nino Janashia"
+    assert record.clinics[0].name_en == "Jo Ann University Hospital"
+
+
+def test_extract_georgian_en_falls_back():
+    ka_url = "https://joann.ge/eqimebi/aleqsandre-jeiranashvili"
+    en_url = "https://joann.ge/en/doctors/aleqsandre-jeiranashvili/"
+    scraper = JoannScraper(fetcher=_EnFetcher({en_url: _read("profile_1_en.html")}))
+    record = scraper.extract(_read("profile_1.html"), ka_url)
+    assert record is not None
+    assert record.full_name_en is None

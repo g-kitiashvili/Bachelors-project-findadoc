@@ -14,11 +14,17 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
+from pipeline.core.fetcher import FetchError
 from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
 from pipeline.core.static_scraper import StaticHtmlScraper
+from pipeline.core.translit import english_or_none
 
-_HOSPITAL_CLINIC = ClinicRef(source_url="https://carapsmedline.ge", name_ka="კარაპს მედლაინი")
+_HOSPITAL_CLINIC = ClinicRef(
+    source_url="https://carapsmedline.ge",
+    name_ka="კარაპს მედლაინი",
+    name_en="Caraps Medline",
+)
 
 _BASE = "https://carapsmedline.ge"
 _FILTER_URL = f"{_BASE}/doctors/filter"
@@ -83,10 +89,26 @@ class CarapsScraper(StaticHtmlScraper):
             src = img.get("src")
             if src:
                 photo_url = urljoin(url, src)
+        full_name_en = None
+        en_url = url.replace(
+            "https://carapsmedline.ge/doctors/",
+            "https://carapsmedline.ge/en/doctors/",
+            1,
+        )
+        if en_url != url:
+            try:
+                en_html = self.fetcher.get(en_url)
+                en_soup = BeautifulSoup(en_html, "lxml")
+                en_el = en_soup.select_one("div.info-col h1.title")
+                if en_el is not None:
+                    full_name_en = english_or_none(en_el.get_text(strip=True))
+            except FetchError:
+                pass
         return DoctorRecord(
             source=self.name,
             source_url=url,
             full_name_ka=name_el.get_text(strip=True),
+            full_name_en=full_name_en,
             specialty_ka=specialty_ka,
             photo_url=photo_url,
             clinics=[_HOSPITAL_CLINIC],

@@ -1,0 +1,62 @@
+{
+  "page_number": 1,
+  "max_pages": 30,
+  "per_page": 16,
+  "data": [
+    {
+      "id": 18,
+      "name": "Maia Abesadze",
+      "photo": "doctors/7ulpUX2Tm4MYgQHRjfzHpB5pyhJiy3SsmYgBcdrR.webp",
+      "gender": "female",
+      "specialties": [
+        {
+          "id": 74,
+          "title": "Radiodentist"
+        }
+      ],
+      "branches": [
+        {
+          "id": 17,
+          "title": "Central Branch",
+          "address": "Vazha-Pshavela Avenue №27 b"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Naili Abesadze",
+      "photo": "doctors/iECPsw0oTISowqkcZxpWSWiAzJQKsgirKUb86HRp.webp",
+      "gender": "female",
+      "specialties": [
+        {
+          "id": 74,
+          "title": "Radiodentist"
+        }
+      ],
+      "branches": [
+        {
+          "id": 17,
+          "title": "Central Branch",
+          "address": "Vazha-Pshavela Avenue №27 b"
+        }
+      ]
+    },
+    {
+      "id": 99001,
+      "name": "Test Nobranch",
+      "photo": null,
+      "gender": "male",
+      "specialties": [
+        {
+          "id": 1,
+          "title": "Therapist"
+        }
+      ],
+      "branches": []
+    }
+  ],
+  "meta": {
+    "title": "doctors",
+    "canonicalUrl": "https://aversiclinic.ge/doctors"
+  }
+}

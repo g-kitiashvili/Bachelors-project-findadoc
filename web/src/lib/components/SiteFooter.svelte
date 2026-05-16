@@ -25,13 +25,6 @@
         <li><a href="/thesis">Thesis</a></li>
       </ul>
     </div>
-    <div class="footer-col">
-      <h4>Language</h4>
-      <ul>
-        <li><a href="/en">English</a></li>
-        <li><a href="/ka">ქართული</a></li>
-      </ul>
-    </div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 findadoc · Free University of Tbilisi</span>
@@ -51,7 +44,7 @@
     margin: 0 auto;
     padding: 0 2rem;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr 1fr;
     gap: 3rem;
   }
   .footer-brand {

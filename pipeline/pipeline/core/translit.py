@@ -82,10 +82,23 @@ _CLINIC_WORD_OVERRIDES: dict[str, str] = {
 }
 
 _KARTULI_WORD = re.compile(r"[ა-ჰ]+")
+_GEORGIAN_CHAR = re.compile(r"[ა-ჰ]")
 _NON_SLUG = re.compile(r"[^a-z0-9-]+")
 _DASH_RUN = re.compile(r"-+")
 # Hyphen included so "ციტო-ს" splits and the prefix can match _BRAND_OVERRIDES.
 _TOKEN_SPLIT = re.compile(r"(\s+|[.,!?;:()\[\]\-])")
+
+
+def english_or_none(text: str | None) -> str | None:
+    """Return the trimmed text, or None if it's empty or still contains Georgian
+    script. Scrapers use this for source 'English' fields that are sometimes still
+    Georgian — a Georgian value routes to the romanization fallback."""
+    if not text:
+        return None
+    trimmed = text.strip()
+    if not trimmed or _GEORGIAN_CHAR.search(trimmed):
+        return None
+    return trimmed
 
 
 def _token_to_latin(token: str) -> str:
@@ -133,9 +146,37 @@ def _title_word(word: str) -> str:
     return word
 
 
+_GENITIVE_RULES = (("ძის", "ძე"), ("ის", "ი"), ("ას", "ა"))
+
+
+def _strip_genitive(token: str) -> str:
+    for suffix, repl in _GENITIVE_RULES:
+        if token.endswith(suffix) and len(token) > len(suffix) + 1:
+            return token[: -len(suffix)] + repl
+    return token
+
+
+def _clinic_token_to_en(token: str) -> str:
+    if token in _CLINIC_WORD_OVERRIDES:
+        return _CLINIC_WORD_OVERRIDES[token]
+    if token in _BRAND_OVERRIDES:
+        return _BRAND_OVERRIDES[token]
+    stripped = _strip_genitive(token)
+    if stripped in _CLINIC_WORD_OVERRIDES:
+        return _CLINIC_WORD_OVERRIDES[stripped]
+    return kartuli_to_latin(stripped)
+
+
 def clinic_name_to_en(name_ka: str) -> str:
-    translated = _KARTULI_WORD.sub(lambda m: _CLINIC_WORD_OVERRIDES.get(m.group(0), m.group(0)), name_ka)
-    latin = kartuli_to_latin(translated).strip()
+    out: list[str] = []
+    for part in _TOKEN_SPLIT.split(name_ka):
+        if not part:
+            continue
+        if _TOKEN_SPLIT.fullmatch(part):
+            out.append(part)
+        else:
+            out.append(_clinic_token_to_en(part))
+    latin = "".join(out).strip()
     return " ".join(_title_word(w) for w in latin.split()) or name_ka
 
 

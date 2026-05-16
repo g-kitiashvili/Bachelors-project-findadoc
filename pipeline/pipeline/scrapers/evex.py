@@ -8,6 +8,7 @@ from collections.abc import Iterator
 from pipeline.core.fetcher import HttpxFetcher
 from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
+from pipeline.core.translit import english_or_none
 
 
 _API = "https://admin.evex.ge/api"
@@ -36,7 +37,8 @@ def _clinics(doctor: dict) -> tuple[ClinicRef, ...]:
         seen.add(source_url)
         address = ((c.get("address") or {}).get("ka") or "").strip() or None
         phone = (c.get("phone") or "").strip() or None
-        clinics.append(ClinicRef(source_url=source_url, name_ka=name, address=address, phone=phone))
+        name_en = english_or_none((c.get("title") or {}).get("en"))
+        clinics.append(ClinicRef(source_url=source_url, name_ka=name, name_en=name_en, address=address, phone=phone))
     return tuple(clinics)
 
 
@@ -49,7 +51,9 @@ def _to_record(doctor: dict) -> DoctorRecord | None:
         source="evex",
         source_url=f"{_PROFILE_BASE}/{slug}",
         full_name_ka=name_ka,
+        full_name_en=english_or_none((doctor.get("name") or {}).get("en")),
         specialty_ka=((doctor.get("title") or {}).get("ka") or "").strip() or None,
+        specialty_en=english_or_none((doctor.get("title") or {}).get("en")),
         photo_url=doctor.get("image") or None,
         city=((doctor.get("city") or {}).get("name") or {}).get("ka") or None,
         clinics=_clinics(doctor),

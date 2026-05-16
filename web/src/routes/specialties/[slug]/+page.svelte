@@ -15,7 +15,6 @@
 
 <section class="hero">
   <h1>{data.detail.nameEn}</h1>
-  <div class="ka">{data.detail.nameKa}</div>
   {#if data.detail.descriptionEn}
     <p>{data.detail.descriptionEn}</p>
   {/if}
@@ -57,8 +56,7 @@
   @media (min-width: 1320px) {
     .hero { margin: 0 auto 2.5rem; }
   }
-  .hero h1 { font-family: var(--display); font-size: 2.5rem; letter-spacing: -0.02em; margin: 0 0 0.4rem; }
-  .hero .ka { color: rgba(255,255,255,0.8); font-style: italic; margin-bottom: 1.25rem; }
+  .hero h1 { font-family: var(--display); font-size: 2.5rem; letter-spacing: -0.02em; margin: 0 0 1.25rem; }
   .hero p { line-height: 1.55; max-width: 70ch; margin: 0 0 1.5rem; color: rgba(255,255,255,0.95); }
   .stats { display: flex; gap: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.2); flex-wrap: wrap; }
   .stat b { display: block; font-size: 1.5rem; font-weight: 600; }

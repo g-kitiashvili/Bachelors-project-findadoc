@@ -8,12 +8,16 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
+from pipeline.core.fetcher import FetchError
 from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
 from pipeline.core.static_scraper import StaticHtmlScraper
+from pipeline.core.translit import english_or_none
 
 _HOSPITAL_CLINIC = ClinicRef(
-    source_url="https://joann.ge", name_ka="ჯო ენის საუნივერსიტეტო ჰოსპიტალი"
+    source_url="https://joann.ge",
+    name_ka="ჯო ენის საუნივერსიტეტო ჰოსპიტალი",
+    name_en="Jo Ann University Hospital",
 )
 
 _PROFILE_HREF = re.compile(r"^https://joann\.ge/eqimebi/[^/]+/?$")
@@ -53,6 +57,25 @@ class JoannScraper(StaticHtmlScraper):
             if new_on_page == 0:
                 break
 
+    def _fetch_english_name(self, soup: BeautifulSoup) -> str | None:
+        link = soup.select_one('a[href*="/en/eqimebi/"]')
+        if link is None:
+            return None
+        href = link.get("href", "")
+        slug = href.rstrip("/").rsplit("/", 1)[-1]
+        if not slug:
+            return None
+        en_url = f"https://joann.ge/en/doctors/{slug}/"
+        try:
+            html = self.fetcher.get(en_url)
+        except FetchError:
+            return None
+        en_soup = BeautifulSoup(html, "lxml")
+        h1 = en_soup.select_one("h1")
+        if h1 is None:
+            return None
+        return english_or_none(h1.get_text(strip=True))
+
     def parse(self, soup: BeautifulSoup, url: str) -> DoctorRecord | None:
         heading = soup.select_one("div.elementor-widget-heading h1")
         if heading is None or not heading.get_text(strip=True):
@@ -70,6 +93,7 @@ class JoannScraper(StaticHtmlScraper):
             source=self.name,
             source_url=url,
             full_name_ka=heading.get_text(strip=True),
+            full_name_en=self._fetch_english_name(soup),
             specialty_ka=specialty_ka,
             photo_url=photo_url,
             clinics=[_HOSPITAL_CLINIC],

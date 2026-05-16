@@ -8,11 +8,17 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
+from pipeline.core.fetcher import FetchError
 from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
 from pipeline.core.static_scraper import StaticHtmlScraper
+from pipeline.core.translit import english_or_none
 
-_HOSPITAL_CLINIC = ClinicRef(source_url="https://cmchospital.ge", name_ka="კავკასიის მედიცინის ცენტრი")
+_HOSPITAL_CLINIC = ClinicRef(
+    source_url="https://cmchospital.ge",
+    name_ka="კავკასიის მედიცინის ცენტრი",
+    name_en="Caucasus Medical Centre",
+)
 
 _PROFILE_HREF = re.compile(r"^/ge/doctors/\d+-")
 
@@ -50,6 +56,25 @@ class CmcScraper(StaticHtmlScraper):
             if new_on_page == 0:
                 break
 
+    def _en_url(self, ka_url: str) -> str | None:
+        if "/ge/" not in ka_url:
+            return None
+        return ka_url.replace("/ge/", "/en/", 1)
+
+    def _fetch_english_name(self, ka_url: str) -> str | None:
+        en_url = self._en_url(ka_url)
+        if en_url is None:
+            return None
+        try:
+            html = self.fetcher.get(en_url)
+        except FetchError:
+            return None
+        soup = BeautifulSoup(html, "lxml")
+        el = soup.select_one(self._NAME_SELECTOR)
+        if el is None:
+            return None
+        return english_or_none(el.get_text(strip=True))
+
     def parse(self, soup: BeautifulSoup, url: str) -> DoctorRecord | None:
         name_el = soup.select_one(self._NAME_SELECTOR)
         if name_el is None or not name_el.get_text(strip=True):
@@ -70,6 +95,7 @@ class CmcScraper(StaticHtmlScraper):
             source=self.name,
             source_url=url,
             full_name_ka=name_el.get_text(strip=True),
+            full_name_en=self._fetch_english_name(url),
             specialty_ka=specialty_ka,
             photo_url=photo_url,
             clinics=[_HOSPITAL_CLINIC],

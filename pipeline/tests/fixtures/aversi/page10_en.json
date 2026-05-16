@@ -1,0 +1,64 @@
+{
+  "page_number": 10,
+  "max_pages": 30,
+  "per_page": 16,
+  "data": [
+    {
+      "id": 1077,
+      "name": "მაკა ალავიძე",
+      "photo": "doctors/1kdAplNcAJMwYFhYZvXX5S9hAwdh5RNAQOSnJRzu.webp",
+      "gender": "female",
+      "specialties": [
+        {
+          "id": 8,
+          "title": "Cardiologist"
+        }
+      ],
+      "branches": [
+        {
+          "id": 17,
+          "title": "Central Branch",
+          "address": "Vazha-Pshavela Avenue №27 b"
+        },
+        {
+          "id": 18,
+          "title": "Isani Branch",
+          "address": "Navtlughi Street 11/13"
+        }
+      ]
+    },
+    {
+      "id": 1081,
+      "name": "Marika Bakradze",
+      "photo": "doctors/AeXYMhQOF3ptzJITxvJWG3eNiSS4luPPUhLTBUcV.webp",
+      "gender": "female",
+      "specialties": [
+        {
+          "id": 15,
+          "title": "Rheumatologist"
+        }
+      ],
+      "branches": [
+        {
+          "id": 17,
+          "title": "Central Branch",
+          "address": "Vazha-Pshavela Avenue №27 b"
+        },
+        {
+          "id": 18,
+          "title": "Isani Branch",
+          "address": "Navtlughi Street 11/13"
+        },
+        {
+          "id": 20,
+          "title": "Gori №1 Branch",
+          "address": "Tskhinvali Highway №12"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "title": "doctors",
+    "canonicalUrl": "https://aversiclinic.ge/doctors"
+  }
+}

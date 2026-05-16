@@ -77,6 +77,18 @@ def test_discover_yields_profile_urls_from_index():
     assert all(u.startswith("https://newhospitals.ge") for u in urls)
 
 
+def test_extract_sets_english_name_and_clinic():
+    ka_url = "https://newhospitals.ge/ka/doctor/aleko-turiashvili_ka"
+    en_url = ka_url.replace("/ka/", "/en/", 1)
+    scraper = NewhospitalsScraper(
+        fetcher=_FakeFetcher({en_url: _read("profile_1_en.html")})
+    )
+    record = scraper.extract(_read("profile_1.html"), ka_url)
+    assert record is not None
+    assert record.full_name_en == "Aleko Turiashvili"
+    assert record.clinics[0].name_en == "New Hospitals"
+
+
 def test_extract_populates_specialty_ka(scraper):
     # At least one profile fixture must have a non-empty specialty_ka.
     specialties = []

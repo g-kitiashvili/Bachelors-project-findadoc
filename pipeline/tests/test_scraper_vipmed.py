@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from pipeline.core.fetcher import FetchError
 from pipeline.scrapers.vipmed import VipmedScraper, _strip_md
 
 
@@ -13,9 +14,17 @@ def _read(name: str) -> str:
     return (FIXTURE_DIR / name).read_text(encoding="utf-8")
 
 
+class _FakeFetcher:
+    def __init__(self, pages: dict[str, str]) -> None:
+        self._pages = pages
+
+    def get(self, url: str) -> str:
+        return self._pages.get(url, _read("list_empty.html"))
+
+
 @pytest.fixture(scope="module")
 def scraper():
-    return VipmedScraper()
+    return VipmedScraper(fetcher=_FakeFetcher({}))
 
 
 def test_extract_returns_doctor_with_clinics(scraper):
@@ -49,17 +58,29 @@ def test_strip_md():
     assert _strip_md("MDoe Surname") == "MDoe Surname"
 
 
-class _FakeFetcher:
-    def __init__(self, pages: dict[str, str]) -> None:
-        self._pages = pages
-
-    def get(self, url: str) -> str:
-        return self._pages.get(url, _read("list_empty.html"))
-
-
 def test_discover_yields_and_terminates():
     scraper = VipmedScraper(fetcher=_FakeFetcher({"https://vipmed.ge/doctors/": _read("list.html")}))
     urls = list(scraper.discover())
     assert len(urls) >= 1
     assert "https://vipmed.ge/maia-mchedlidze/" in urls
     assert all(u.startswith("https://vipmed.ge/") for u in urls)
+
+
+class _EnFetcher:
+    def __init__(self, pages):
+        self._pages = pages
+
+    def get(self, url):
+        if url not in self._pages:
+            raise FetchError(f"not found: {url}", status_code=404)
+        return self._pages[url]
+
+
+def test_extract_sets_english_name_and_clinics():
+    ka_url = "https://vipmed.ge/maia-mchedlidze/"
+    en_url = "https://vipmed.ge/maia-mchedlidze-en/"
+    scraper = VipmedScraper(fetcher=_EnFetcher({en_url: _read("profile_1_en.html")}))
+    record = scraper.extract(_read("profile_1.html"), ka_url)
+    assert record.full_name_en and not any("ა" <= c <= "ჿ" for c in record.full_name_en)
+    assert any(c.name_en for c in record.clinics)
+    assert all((c.name_en is None) or not any("ა" <= ch <= "ჿ" for ch in c.name_en) for c in record.clinics)

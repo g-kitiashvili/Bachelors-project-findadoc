@@ -57,3 +57,11 @@ def test_discover_yields_detail_urls():
     assert len(urls) == 12
     assert all(u.startswith("https://admin.evex.ge/api/doctors/") for u in urls)
     assert "https://admin.evex.ge/api/doctors/avtandil-dgebuadze" in urls
+
+
+def test_extract_populates_english(scraper):
+    record = scraper.extract(_read("profile_en.json"), "https://evex.ge/ka/archive/chveni-ekimebi/x")
+    assert record is not None
+    assert record.full_name_en and not any("ა" <= c <= "ჿ" for c in record.full_name_en)
+    assert record.specialty_en
+    assert record.clinics and record.clinics[0].name_en

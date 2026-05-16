@@ -38,9 +38,9 @@
       <div class="chips">
         <span class="chips-label">Try</span>
         <a class="chip" href="/doctors?q=Cardiologist">Cardiologist</a>
-        <a class="chip chip-ge" href="/doctors?q=გასტროენტეროლოგი">გასტროენტეროლოგი</a>
+        <a class="chip" href="/doctors?q=Gastroenterologist">Gastroenterologist</a>
         <a class="chip" href="/doctors?q=Pediatrician">Pediatrician</a>
-        <a class="chip chip-ge" href="/doctors?q=ნეიროლოგი">ნეიროლოგი</a>
+        <a class="chip" href="/doctors?q=Neurologist">Neurologist</a>
       </div>
     </div>
 
@@ -161,10 +161,6 @@
     color: var(--accent);
     background: var(--accent-soft);
   }
-  .chip-ge {
-    font-family: var(--sans-ge);
-  }
-
   /* hero collage on the right */
   .hero-collage {
     position: relative;

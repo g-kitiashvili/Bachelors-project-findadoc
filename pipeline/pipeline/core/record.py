@@ -12,6 +12,7 @@ class ClinicRef(BaseModel):
 
     source_url: HttpUrl
     name_ka: str = Field(..., min_length=1)
+    name_en: str | None = None
     address: str | None = None
     phone: str | None = None
     website: HttpUrl | None = None

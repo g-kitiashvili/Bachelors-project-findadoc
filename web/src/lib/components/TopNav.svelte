@@ -13,7 +13,6 @@
       <a href="/about" class:disabled={true}>About</a>
     </div>
     <div class="nav-right">
-      <span class="nav-lang"><strong>EN</strong> / ქართული</span>
       <button class="nav-cta" type="button" disabled aria-disabled="true">Request callback</button>
     </div>
   </div>
@@ -83,16 +82,6 @@
     display: flex;
     gap: 1rem;
     align-items: center;
-  }
-  .nav-lang {
-    font-size: 0.82rem;
-    color: var(--ink-faint);
-    font-weight: 500;
-    padding-right: 1rem;
-    border-right: 1px solid var(--line);
-  }
-  .nav-lang strong {
-    color: var(--ink);
   }
   .nav-cta {
     background: var(--ink);

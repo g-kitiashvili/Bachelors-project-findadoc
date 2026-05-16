@@ -79,3 +79,22 @@ def test_index_urls_enumerates_clinics():
     urls = list(scraper.index_urls())
     assert urls[0] == VivomedicalScraper._INDEX_URL
     assert any("clinic=" in u for u in urls[1:])
+
+
+class _EnFetcher:
+    def __init__(self, pages: dict[str, str]) -> None:
+        self._pages = pages
+
+    def get(self, url: str) -> str:
+        return self._pages[url]
+
+
+def test_extract_sets_english_name_and_clinic():
+    ka_url = "https://vivomedical.ge/ge/19/61/konstantine-kipiani"
+    en_url = ka_url.replace("/ge/", "/en/", 1)
+    scraper = VivomedicalScraper(fetcher=_EnFetcher({en_url: _read("profile_1_en.html")}))
+    record = scraper.extract(_read("profile_1.html"), ka_url)
+    assert record is not None
+    assert record.full_name_en == "Konstantine Kipiani"
+    assert record.clinics[0].name_en == "Bokhua Memorial Cardiovascular Center"
+    assert not any("ა" <= c <= "ჿ" for c in record.clinics[0].name_en)

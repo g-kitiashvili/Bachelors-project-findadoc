@@ -24,10 +24,8 @@
   }
 
   let { doctor }: { doctor: Doctor } = $props();
-  let activeTab = $state<"en" | "ka">("en");
 
   const initial = doctor.fullNameEn.trim().charAt(0).toUpperCase() || "·";
-  const activeBio = $derived(activeTab === "en" ? doctor.bioEn : doctor.bioKa);
 
   // Deterministic photo gradient based on slug (matches DoctorCard logic)
   const bgClass = (() => {
@@ -79,7 +77,6 @@
   <div class="body">
     <div class="eyebrow">Doctor profile</div>
     <h1 class="name">{doctor.fullNameEn}</h1>
-    <p class="name-ka">{doctor.fullNameKa}</p>
 
     {#if doctor.specialties && doctor.specialties.length > 0}
       <div class="specialty-row">
@@ -119,32 +116,12 @@
       </div>
     </div>
 
-    <div class="tabs" role="tablist">
-      <button
-        role="tab"
-        type="button"
-        aria-selected={activeTab === "en"}
-        class="tab"
-        class:active={activeTab === "en"}
-        onclick={() => (activeTab = "en")}>
-        English
-      </button>
-      <button
-        role="tab"
-        type="button"
-        aria-selected={activeTab === "ka"}
-        class="tab"
-        class:active={activeTab === "ka"}
-        onclick={() => (activeTab = "ka")}>
-        ქართული
-      </button>
-    </div>
-
-    <div class="bio" role="tabpanel">
-      {#if activeBio}
-        <p>{activeBio}</p>
+    <h2 class="bio-head">Biography</h2>
+    <div class="bio">
+      {#if doctor.bioEn}
+        <p>{doctor.bioEn}</p>
       {:else}
-        <p class="empty">No biography available in this language yet.</p>
+        <p class="empty">No biography available.</p>
       {/if}
     </div>
   </div>
@@ -259,12 +236,6 @@
     margin: 0 0 0.6rem;
     color: var(--ink);
   }
-  .name-ka {
-    font-family: var(--sans-ge);
-    font-size: 1.4rem;
-    color: var(--ink-muted);
-    margin: 0 0 1.8rem;
-  }
   .specialty-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 1.6rem; }
   .profile-specialty-pill {
     display: inline-flex; align-items: center; gap: 0.4rem;
@@ -320,34 +291,12 @@
   .quick-val.accent { color: var(--accent); }
   .quick-val.success { color: var(--success); }
 
-  .tabs {
-    display: flex;
-    gap: 0;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 2rem;
-  }
-  .tab {
-    background: transparent;
-    border: none;
-    padding: 0.9rem 0;
-    margin-right: 2.4rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--ink-faint);
-    position: relative;
-    cursor: pointer;
-    transition: color 0.15s;
-  }
-  .tab:hover { color: var(--ink-muted); }
-  .tab.active { color: var(--ink); font-weight: 600; }
-  .tab.active::after {
-    content: "";
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--accent);
+  .bio-head {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin: 0 0 1rem;
   }
 
   .bio {

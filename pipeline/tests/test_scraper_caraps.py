@@ -70,3 +70,20 @@ def test_discover_stops_on_empty_page():
 def test_index_urls_not_used(scraper):
     with pytest.raises(NotImplementedError):
         scraper.index_urls()
+
+
+class _EnFetcher:
+    def __init__(self, pages: dict[str, str]) -> None:
+        self._pages = pages
+
+    def get(self, url: str) -> str:
+        return self._pages[url]
+
+
+def test_extract_sets_english_name_and_clinic():
+    ka_url = "https://carapsmedline.ge/doctors/giorgi-modebadze"
+    en_url = "https://carapsmedline.ge/en/doctors/giorgi-modebadze"
+    scraper = CarapsScraper(fetcher=_EnFetcher({en_url: _read("profile_1_en.html")}))
+    record = scraper.extract(_read("profile_1.html"), ka_url)
+    assert record.full_name_en == "Giorgi Modebadze"
+    assert record.clinics[0].name_en == "Caraps Medline"

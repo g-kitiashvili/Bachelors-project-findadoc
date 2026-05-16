@@ -148,7 +148,6 @@
               onmouseenter={() => (highlighted = results.doctors.length + j)}
               onclick={() => select(`/doctors?specialty=${s.slug}`)}>
               <span class="label">{s.nameEn}</span>
-              <span class="sub">{s.nameKa}</span>
             </button>
           {/each}
         {/if}

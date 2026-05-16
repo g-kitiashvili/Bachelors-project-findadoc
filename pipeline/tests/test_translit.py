@@ -1,19 +1,61 @@
 import pytest
 from pipeline.core.translit import kartuli_to_latin, slugify, next_slug_candidate, normalize, clinic_name_to_en
 from pipeline.core.record import DoctorRecord
+from pipeline.core.translit import english_or_none
+
+
+def test_english_or_none_passes_latin():
+    assert english_or_none("Levan Makhaldiani") == "Levan Makhaldiani"
+
+
+def test_english_or_none_strips_whitespace():
+    assert english_or_none("  Aversi Clinic  ") == "Aversi Clinic"
+
+
+def test_english_or_none_rejects_georgian():
+    assert english_or_none("ანა ჯანაშვილი") is None
+
+
+def test_english_or_none_rejects_mixed():
+    assert english_or_none("Aversi ავერსი") is None
+
+
+def test_english_or_none_handles_empty():
+    assert english_or_none(None) is None
+    assert english_or_none("   ") is None
 
 
 @pytest.mark.parametrize("input_,expected", [
-    ("ჟორდანიას სამედიცინო ცენტრი", "Zhordanias Medical Center"),
-    ("თბილისის ცენტრალური საავადმყოფო", "Tbilisis Central Hospital"),
-    ("ბოხუას სახელობის კარდიოვასკულარული ცენტრი", "Bokhuas Cardiovascular Center"),
-    ("გაგუას კლინიკა", "Gaguas Clinic"),
+    ("ჟორდანიას სამედიცინო ცენტრი", "Zhordania Medical Center"),
+    ("თბილისის ცენტრალური საავადმყოფო", "Tbilisi Central Hospital"),
+    ("ბოხუას სახელობის კარდიოვასკულარული ცენტრი", "Bokhua Cardiovascular Center"),
+    ("გაგუას კლინიკა", "Gagua Clinic"),
     ("ნიუ ჰოსპიტალსი", "New Hospitals"),
     ("ევექსის კლინიკა ვარკეთილში", "Evex Clinic Varketilshi"),
     ("ავერსის კლინიკა", "Aversi Clinic"),
 ])
 def test_clinic_name_translates_common_words_and_transliterates_proper_nouns(input_, expected):
     assert clinic_name_to_en(input_) == expected
+
+
+def test_clinic_genitive_named_after():
+    assert clinic_name_to_en("ჟორდანიას სამედიცინო ცენტრი") == "Zhordania Medical Center"
+
+
+def test_clinic_genitive_dze_surname():
+    assert clinic_name_to_en("აბულაძის კლინიკა") == "Abuladze Clinic"
+
+
+def test_clinic_genitive_place():
+    assert clinic_name_to_en("თბილისის ცენტრალური საავადმყოფო") == "Tbilisi Central Hospital"
+
+
+def test_clinic_brand_preserved():
+    assert clinic_name_to_en("ავერსის კლინიკა") == "Aversi Clinic"
+
+
+def test_clinic_plain_word():
+    assert clinic_name_to_en("გაგუას კლინიკა") == "Gagua Clinic"
 
 
 @pytest.mark.parametrize(

@@ -163,7 +163,7 @@ class Persister:
         return location_id
 
     def _upsert_clinic(self, cur: psycopg.Cursor, clinic: ClinicRef) -> int:
-        name_en = clinic_name_to_en(clinic.name_ka)
+        name_en = clinic.name_en or clinic_name_to_en(clinic.name_ka)
         slug_base = slugify(name_en) or slugify(clinic.name_ka)
         for attempt in range(1, 100):
             params = {

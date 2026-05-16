@@ -1,0 +1,64 @@
+{
+  "page_number": 10,
+  "max_pages": 30,
+  "per_page": 16,
+  "data": [
+    {
+      "id": 1077,
+      "name": "მაკა ალავიძე",
+      "photo": "doctors/1kdAplNcAJMwYFhYZvXX5S9hAwdh5RNAQOSnJRzu.webp",
+      "gender": "female",
+      "specialties": [
+        {
+          "id": 8,
+          "title": "კარდიოლოგი"
+        }
+      ],
+      "branches": [
+        {
+          "id": 17,
+          "title": "ცენტრალური ფილიალი",
+          "address": "ვაჟა-ფშაველას გამზირი №27 ბ"
+        },
+        {
+          "id": 18,
+          "title": "ისნის ფილიალი",
+          "address": "ნავთლუღის ქუჩა №11/13"
+        }
+      ]
+    },
+    {
+      "id": 1081,
+      "name": "მარიკა ბაქრაძე",
+      "photo": "doctors/AeXYMhQOF3ptzJITxvJWG3eNiSS4luPPUhLTBUcV.webp",
+      "gender": "female",
+      "specialties": [
+        {
+          "id": 15,
+          "title": "რევმატოლოგი"
+        }
+      ],
+      "branches": [
+        {
+          "id": 17,
+          "title": "ცენტრალური ფილიალი",
+          "address": "ვაჟა-ფშაველას გამზირი №27 ბ"
+        },
+        {
+          "id": 18,
+          "title": "ისნის ფილიალი",
+          "address": "ნავთლუღის ქუჩა №11/13"
+        },
+        {
+          "id": 20,
+          "title": "გორის №1 ფილიალი",
+          "address": "ცხინვალის გზატკეცილი №12"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "title": "doctors",
+    "canonicalUrl": "https://aversiclinic.ge/doctors"
+  }
+}
