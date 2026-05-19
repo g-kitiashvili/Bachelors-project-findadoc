@@ -8,7 +8,7 @@
     <div class="nav-links">
       <a href="/doctors" class:active={active === "doctors"}>Find a Doctor</a>
       <a href="/specialties" class:active={active === "specialties"}>Specialties</a>
-      <a href="/conditions" class:disabled={true}>Conditions</a>
+      <a href="/conditions" class:active={active === "conditions"}>Conditions</a>
       <a href="/clinics" class:disabled={true}>Clinics</a>
       <a href="/about" class:disabled={true}>About</a>
     </div>

@@ -14,7 +14,7 @@ pytestmark = pytest.mark.slow
 @pytest.fixture()
 def clean_specialty_table(postgres_container):
     with psycopg.connect(postgres_container, autocommit=True) as conn:
-        conn.execute("TRUNCATE doctor_specialty, specialty RESTART IDENTITY")
+        conn.execute("TRUNCATE condition_specialty, doctor_specialty, specialty RESTART IDENTITY CASCADE")
     yield postgres_container
 
 

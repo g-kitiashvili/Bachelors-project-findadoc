@@ -254,6 +254,27 @@ class DoctorListTest @Autowired constructor(
     }
 
     @Test
+    @Sql("/sql/conditions-test-fixture.sql")
+    fun `getAll condition filter returns doctors in the mapped specialty only`() {
+        mockMvc.get("/api/v1/doctors") { param("condition", "hypertension") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(2) }
+                jsonPath("$.items[?(@.slug=='davit-gelashvili')]") { isEmpty() }
+            }
+    }
+
+    @Test
+    @Sql("/sql/conditions-test-fixture.sql")
+    fun `getAll with unknown condition slug returns no doctors`() {
+        mockMvc.get("/api/v1/doctors") { param("condition", "does-not-exist") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(0) }
+            }
+    }
+
+    @Test
     @Sql("/sql/locations-test-fixture.sql")
     fun `getAll region filter returns only doctors in that region`() {
         mockMvc.get("/api/v1/doctors?region=imereti")

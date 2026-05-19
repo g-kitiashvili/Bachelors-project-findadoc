@@ -5,10 +5,11 @@
     total,
     q = "",
     specialty = "",
+    condition = "",
     region = "",
     city = "",
     sort = "",
-  }: { page: number; pageSize: number; total: number; q?: string; specialty?: string; region?: string; city?: string; sort?: string } = $props();
+  }: { page: number; pageSize: number; total: number; q?: string; specialty?: string; condition?: string; region?: string; city?: string; sort?: string } = $props();
 
   const totalPages = $derived(Math.max(1, Math.ceil(total / pageSize)));
   const prevDisabled = $derived(page <= 1);
@@ -19,6 +20,7 @@
     params.set("page", String(p));
     if (q) params.set("q", q);
     if (specialty) params.set("specialty", specialty);
+    if (condition) params.set("condition", condition);
     if (region) params.set("region", region);
     if (city) params.set("city", city);
     if (sort) params.set("sort", sort);

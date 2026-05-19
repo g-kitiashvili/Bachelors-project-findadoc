@@ -26,6 +26,13 @@ def load_specialties(yaml_path: Path | str) -> list[dict]:
     return rows
 
 
+def load_conditions(yaml_path: Path | str) -> list[dict]:
+    rows = yaml.safe_load(Path(yaml_path).read_text(encoding="utf-8")) or []
+    if not isinstance(rows, list):
+        raise ValueError(f"{yaml_path} must contain a YAML list at the top level")
+    return rows
+
+
 def build_alias_index(rows: list[dict]) -> dict[str, str]:
     """Normalized alias/name -> slug. A key claimed by two different slugs is a
     curation error and raises, so mistakes surface loudly rather than silently

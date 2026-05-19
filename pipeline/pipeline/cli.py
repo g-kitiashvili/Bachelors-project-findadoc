@@ -6,6 +6,7 @@ Subcommands:
   scheduler           → long-running APScheduler loop
   seed-specialties    → upsert the specialty taxonomy from YAML and exit
   seed-locations      → upsert the region/city taxonomy from YAML and exit
+  seed-conditions     → upsert medical conditions from YAML (run after seed-specialties) and exit
   remap-specialties   → re-map every doctor's specialties from stored data and exit
 """
 
@@ -27,6 +28,7 @@ from pipeline.core.remapper import RemapRegression, Remapper
 from pipeline.core.runner import Runner
 from pipeline.core.scheduler import run_blocking_scheduler
 from pipeline.core.specialty_matcher import SpecialtyMatcher
+from pipeline.core.medical_condition_seeder import MedicalConditionSeeder
 from pipeline.core.specialty_seeder import SpecialtySeeder
 from pipeline.core.taxonomy import build_alias_index, load_specialties
 
@@ -34,6 +36,7 @@ log = structlog.get_logger("pipeline.cli")
 
 _SPECIALTY_YAML_PATH = Path(__file__).parent / "data" / "specialties.yaml"
 _LOCATION_YAML_PATH = Path(__file__).parent / "data" / "locations.yaml"
+_CONDITIONS_YAML_PATH = Path(__file__).parent / "data" / "conditions.yaml"
 _NON_PROVIDERS_YAML_PATH = Path(__file__).parent / "data" / "non_providers.yaml"
 
 
@@ -54,6 +57,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("scheduler", help="Long-running scheduler loop.")
     sub.add_parser("seed-specialties", help="Upsert the specialty taxonomy from YAML.")
     sub.add_parser("seed-locations", help="Upsert the region/city taxonomy from YAML.")
+    sub.add_parser("seed-conditions", help="Upsert medical conditions from YAML (run after seed-specialties).")
     sub.add_parser("remap-specialties", help="Re-map all doctors' specialties from stored data.")
     return parser
 
@@ -101,6 +105,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "seed-locations":
         LocationSeeder(dsn=settings.database_url, yaml_path=_LOCATION_YAML_PATH).seed()
+        return 0
+
+    if args.cmd == "seed-conditions":
+        MedicalConditionSeeder(dsn=settings.database_url, yaml_path=_CONDITIONS_YAML_PATH).seed()
         return 0
 
     if args.cmd == "remap-specialties":

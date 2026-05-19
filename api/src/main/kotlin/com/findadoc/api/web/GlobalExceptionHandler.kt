@@ -2,6 +2,7 @@ package com.findadoc.api.web
 
 import com.findadoc.api.service.ClinicNotFoundException
 import com.findadoc.api.service.DoctorNotFoundException
+import com.findadoc.api.service.MedicalConditionNotFoundException
 import com.findadoc.api.service.SpecialtyNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
@@ -42,6 +43,17 @@ class GlobalExceptionHandler {
         ).apply {
             type = URI.create("https://findadoc.example.com/problems/specialty-not-found")
             title = "Specialty not found"
+            setProperty("slug", ex.slug)
+        }
+
+    @ExceptionHandler(MedicalConditionNotFoundException::class)
+    fun handleMedicalConditionNotFound(ex: MedicalConditionNotFoundException): ProblemDetail =
+        ProblemDetail.forStatusAndDetail(
+            HttpStatus.NOT_FOUND,
+            "Medical condition with slug '${ex.slug}' not found",
+        ).apply {
+            type = URI.create("https://findadoc.example.com/problems/medical-condition-not-found")
+            title = "Medical condition not found"
             setProperty("slug", ex.slug)
         }
 }

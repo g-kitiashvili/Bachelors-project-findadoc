@@ -11,6 +11,7 @@ data class DoctorFilter(
     val region: String? = null,
     val city: String? = null,
     val clinicSlugs: List<String> = emptyList(),
+    val conditionSlugs: List<String> = emptyList(),
 )
 
 const val FUZZY_THRESHOLD = 0.30
@@ -48,6 +49,17 @@ fun doctorConditions(
                 DSL.selectOne().from("doctor_clinic dc").join("clinic c").on("c.id = dc.clinic_id")
                     .where(DSL.field("dc.doctor_id").eq(DSL.field("d.id")))
                     .and(DSL.field("c.slug").`in`(f.clinicSlugs)),
+            ),
+        )
+    }
+    if (f.conditionSlugs.isNotEmpty()) {
+        add(
+            DSL.exists(
+                DSL.selectOne().from("doctor_specialty ds")
+                    .join("condition_specialty cs").on("cs.specialty_id = ds.specialty_id")
+                    .join("medical_condition mc").on("mc.id = cs.condition_id")
+                    .where(DSL.field("ds.doctor_id").eq(DSL.field("d.id")))
+                    .and(DSL.field("mc.slug").`in`(f.conditionSlugs)),
             ),
         )
     }

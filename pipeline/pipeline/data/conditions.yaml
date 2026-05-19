@@ -1,0 +1,2221 @@
+# Medical conditions for Find-a-Doc. Seeded into `medical_condition` + `condition_specialty`
+# by MedicalConditionSeeder (run after seed-specialties). NYU-Langone-style "Conditions"
+# coverage, adapted for the Georgian market.
+#
+# Every `specialties` slug must exist in specialties.yaml. The ~30 most common conditions
+# carry curated KA + EN descriptions; the long tail is name + specialties + synonyms only.
+# `sort_order` roughly groups conditions by specialty area (long tail defaults to 1000).
+
+# --- Cardiology & vascular ---------------------------------------------------
+- slug: hypertension
+  name_ka: არტერიული ჰიპერტენზია
+  name_en: Hypertension
+  sort_order: 100
+  specialties: [cardiology, internal-medicine, family-medicine]
+  synonyms_en: [high blood pressure, blood pressure, htn]
+  synonyms_ka: [მაღალი წნევა, არტერიული წნევა, წნევა, მომატებული წნევა]
+  description_ka: |
+    არტერიული ჰიპერტენზია არის მდგომარეობა, რომლის დროსაც სისხლის წნევა
+    არტერიების კედლებზე მუდმივად მომატებულია. ხშირად მიმდინარეობს უსიმპტომოდ,
+    მაგრამ მკურნალობის გარეშე ზრდის ინფარქტის, ინსულტისა და თირკმლის
+    დაავადების რისკს. მკურნალობა მოიცავს ცხოვრების წესის შეცვლასა და მედიკამენტებს.
+  description_en: |
+    Hypertension is a condition in which the force of blood against the artery
+    walls is persistently too high. It is often symptomless but, if untreated,
+    raises the risk of heart attack, stroke, and kidney disease. Treatment
+    combines lifestyle changes with medication.
+
+- slug: coronary-artery-disease
+  name_ka: კორონარული არტერიების დაავადება
+  name_en: Coronary Artery Disease
+  sort_order: 101
+  specialties: [cardiology, cardiac-surgery]
+  synonyms_en: [cad, ischemic heart disease, blocked arteries, heart disease]
+  synonyms_ka: [გულის იშემიური დაავადება, იშემია, გულის დაავადება]
+  description_ka: |
+    კორონარული არტერიების დაავადება ვითარდება, როდესაც გულის კვებაზე
+    პასუხისმგებელი არტერიები ვიწროვდება ქოლესტერინის ნადებების გამო. ეს იწვევს
+    გულმკერდის ტკივილს (სტენოკარდიას) და შეიძლება გამოიწვიოს მიოკარდიუმის
+    ინფარქტი. მკურნალობა მოიცავს მედიკამენტებს, სტენტირებას ან შუნტირებას.
+  description_en: |
+    Coronary artery disease develops when the arteries supplying the heart
+    narrow due to cholesterol plaque buildup. It causes chest pain (angina) and
+    can lead to a heart attack. Treatment ranges from medication to stenting or
+    bypass surgery.
+
+- slug: heart-failure
+  name_ka: გულის უკმარისობა
+  name_en: Heart Failure
+  sort_order: 102
+  specialties: [cardiology, internal-medicine]
+  synonyms_en: [congestive heart failure, chf, weak heart]
+  synonyms_ka: [გულის შეგუბებითი უკმარისობა, სუსტი გული]
+  description_ka: |
+    გულის უკმარისობა ნიშნავს, რომ გული ვეღარ ამოტუმბავს სისხლს ორგანიზმის
+    მოთხოვნის დასაკმაყოფილებლად. სიმპტომებია ქოშინი, დაღლილობა და ფეხების
+    შეშუპება. მკურნალობა მიმართულია სიმპტომების კონტროლსა და დაავადების
+    პროგრესირების შენელებაზე მედიკამენტებითა და ცხოვრების წესის ცვლილებით.
+  description_en: |
+    Heart failure means the heart cannot pump enough blood to meet the body's
+    needs. Symptoms include shortness of breath, fatigue, and swelling in the
+    legs. Treatment focuses on controlling symptoms and slowing progression with
+    medication and lifestyle changes.
+
+- slug: arrhythmia
+  name_ka: არითმია
+  name_en: Arrhythmia
+  sort_order: 103
+  specialties: [cardiology]
+  synonyms_en: [irregular heartbeat, heart rhythm disorder, palpitations]
+  synonyms_ka: [არარეგულარული გულისცემა, რიტმის დარღვევა, გულის ფრიალი]
+  description_ka: |
+    არითმია არის გულისცემის რიტმის დარღვევა — გული შეიძლება ცემდეს ძალიან
+    სწრაფად, ნელა ან არარეგულარულად. ზოგი არითმია უსაფრთხოა, ზოგი კი
+    საშიში. დიაგნოსტიკა ხდება ეკგ-ით და მკურნალობა მოიცავს მედიკამენტებს,
+    კარდიოვერსიას ან გულის რიტმის მართველის ჩანერგვას.
+  description_en: |
+    An arrhythmia is an irregular heart rhythm — the heart may beat too fast,
+    too slow, or erratically. Some arrhythmias are harmless while others are
+    dangerous. Diagnosis is by ECG, and treatment may include medication,
+    cardioversion, or an implanted device such as a pacemaker.
+
+- slug: atrial-fibrillation
+  name_ka: წინაგულების ფიბრილაცია
+  name_en: Atrial Fibrillation
+  sort_order: 104
+  specialties: [cardiology]
+  synonyms_en: [afib, irregular heartbeat]
+  synonyms_ka: [წინაგულების მოციმციმე არითმია, არითმია]
+
+- slug: high-cholesterol
+  name_ka: ჰიპერქოლესტერინემია
+  name_en: High Cholesterol
+  sort_order: 105
+  specialties: [cardiology, internal-medicine, endocrinology]
+  synonyms_en: [hypercholesterolemia, dyslipidemia, high lipids]
+  synonyms_ka: [მაღალი ქოლესტერინი, დისლიპიდემია, ქოლესტერინი]
+  description_ka: |
+    მაღალი ქოლესტერინი ნიშნავს სისხლში ცხიმოვანი ნივთიერებების მომატებულ
+    დონეს, რაც ზრდის არტერიების დახშობისა და გულის დაავადების რისკს.
+    მდგომარეობა უსიმპტომოა და ვლინდება სისხლის ანალიზით. მკურნალობა მოიცავს
+    დიეტას, ფიზიკურ აქტივობას და საჭიროების შემთხვევაში სტატინებს.
+  description_en: |
+    High cholesterol means elevated levels of fatty substances in the blood,
+    which increase the risk of clogged arteries and heart disease. It causes no
+    symptoms and is found through a blood test. Treatment includes diet,
+    exercise, and statin medication when needed.
+
+- slug: varicose-veins
+  name_ka: ვარიკოზული ვენები
+  name_en: Varicose Veins
+  sort_order: 106
+  specialties: [vascular-surgery, angiology]
+  synonyms_en: [spider veins, swollen veins, leg veins]
+  synonyms_ka: [ვენების გაფართოება, ფეხის ვენები]
+
+- slug: deep-vein-thrombosis
+  name_ka: ღრმა ვენების თრომბოზი
+  name_en: Deep Vein Thrombosis
+  sort_order: 107
+  specialties: [vascular-surgery, angiology, hematology]
+  synonyms_en: [dvt, blood clot, leg clot]
+  synonyms_ka: [თრომბოზი, სისხლის შედედება, ვენის თრომბი]
+
+- slug: peripheral-artery-disease
+  name_ka: პერიფერიული არტერიების დაავადება
+  name_en: Peripheral Artery Disease
+  sort_order: 108
+  specialties: [vascular-surgery, angiology, cardiology]
+  synonyms_en: [pad, poor circulation, leg pain walking]
+  synonyms_ka: [სისხლის ცუდი მიმოქცევა, ფეხების არტერიების დაავადება]
+
+- slug: aortic-aneurysm
+  name_ka: აორტის ანევრიზმა
+  name_en: Aortic Aneurysm
+  sort_order: 109
+  specialties: [vascular-surgery, cardiac-surgery, cardiology]
+  synonyms_en: [aneurysm, aortic bulge]
+  synonyms_ka: [ანევრიზმა, აორტის გაფართოება]
+
+- slug: heart-valve-disease
+  name_ka: გულის სარქვლის დაავადება
+  name_en: Heart Valve Disease
+  sort_order: 110
+  specialties: [cardiology, cardiac-surgery]
+  synonyms_en: [valve disease, heart murmur, valve stenosis]
+  synonyms_ka: [სარქვლოვანი მანკი, გულის შუილი]
+
+- slug: stroke
+  name_ka: ინსულტი
+  name_en: Stroke
+  sort_order: 111
+  specialties: [neurology, neurosurgery, emergency-medicine]
+  synonyms_en: [cerebrovascular accident, cva, brain attack]
+  synonyms_ka: [თავის ტვინის ინსულტი, ცერებრალური ინსულტი, თავის ტვინის ინფარქტი]
+  description_ka: |
+    ინსულტი ვითარდება, როდესაც თავის ტვინის მკვებავი სისხლის ნაკადი წყდება
+    ან არტერია სკდება. ეს იწვევს ტვინის უჯრედების სწრაფ დაზიანებას და
+    მოითხოვს გადაუდებელ დახმარებას. სიმპტომებია სახის ასიმეტრია, ხელის
+    სისუსტე და მეტყველების დარღვევა — ნებისმიერი მათგანის შემთხვევაში
+    დაუყოვნებლივ უნდა გამოიძახოთ სასწრაფო.
+  description_en: |
+    A stroke occurs when blood flow to part of the brain is blocked or a vessel
+    bursts, rapidly damaging brain cells and requiring emergency care. Warning
+    signs include facial drooping, arm weakness, and slurred speech — call
+    emergency services immediately if any appear.
+
+# --- Endocrinology & metabolic ----------------------------------------------
+
+- slug: type-2-diabetes
+  name_ka: ტიპი 2 შაქრიანი დიაბეტი
+  name_en: Type 2 Diabetes
+  sort_order: 120
+  specialties: [endocrinology, internal-medicine, family-medicine]
+  synonyms_en: [diabetes, high blood sugar, t2dm, adult onset diabetes]
+  synonyms_ka: [შაქრიანი დიაბეტი, დიაბეტი, შაქარი, მაღალი შაქარი]
+  description_ka: |
+    ტიპი 2 შაქრიანი დიაბეტი არის ქრონიკული მდგომარეობა, რომლის დროსაც
+    ორგანიზმი ვეღარ იყენებს ინსულინს ეფექტურად და სისხლში შაქრის დონე
+    იმატებს. დროთა განმავლობაში ის აზიანებს გულს, თირკმელებს, თვალებსა და
+    ნერვებს. მკურნალობა ეფუძნება ჯანსაღ კვებას, ფიზიკურ აქტივობასა და
+    მედიკამენტებს.
+  description_en: |
+    Type 2 diabetes is a chronic condition in which the body no longer uses
+    insulin effectively, causing blood sugar to rise. Over time it damages the
+    heart, kidneys, eyes, and nerves. Management is based on healthy eating,
+    physical activity, and medication.
+
+- slug: type-1-diabetes
+  name_ka: ტიპი 1 შაქრიანი დიაბეტი
+  name_en: Type 1 Diabetes
+  sort_order: 121
+  specialties: [endocrinology, pediatrics, internal-medicine]
+  synonyms_en: [diabetes, insulin dependent diabetes, t1dm, juvenile diabetes]
+  synonyms_ka: [შაქრიანი დიაბეტი, დიაბეტი, ინსულინდამოკიდებული დიაბეტი]
+  description_ka: |
+    ტიპი 1 შაქრიანი დიაბეტი არის აუტოიმუნური დაავადება, რომლის დროსაც
+    ორგანიზმი აღარ გამოიმუშავებს ინსულინს. ის ჩვეულებრივ ვლინდება ბავშვობასა
+    და ახალგაზრდა ასაკში. პაციენტებს მთელი ცხოვრების მანძილზე ესაჭიროებათ
+    ინსულინის ინექციები და სისხლში შაქრის რეგულარული კონტროლი.
+  description_en: |
+    Type 1 diabetes is an autoimmune disease in which the body stops producing
+    insulin, usually appearing in childhood or young adulthood. Patients require
+    lifelong insulin injections and regular blood-sugar monitoring to stay
+    healthy.
+
+- slug: hypothyroidism
+  name_ka: ჰიპოთირეოზი
+  name_en: Hypothyroidism
+  sort_order: 122
+  specialties: [endocrinology, internal-medicine]
+  synonyms_en: [underactive thyroid, low thyroid, thyroid problem]
+  synonyms_ka: [ფარისებრი ჯირკვლის ფუნქციის დაქვეითება, ფარისებრი ჯირკვალი]
+  description_ka: |
+    ჰიპოთირეოზი ვითარდება, როდესაც ფარისებრი ჯირკვალი საკმარის ჰორმონს ვერ
+    გამოიმუშავებს. ეს ანელებს ორგანიზმის მეტაბოლიზმს და იწვევს დაღლილობას,
+    წონის მატებას, სიცივის შეგრძნებასა და დეპრესიას. მკურნალობა მარტივია —
+    ჰორმონის ყოველდღიური ჩანაცვლება ტაბლეტის სახით.
+  description_en: |
+    Hypothyroidism occurs when the thyroid gland does not produce enough
+    hormone, slowing the body's metabolism. It causes fatigue, weight gain,
+    sensitivity to cold, and depression. Treatment is simple — a daily hormone
+    replacement tablet.
+
+- slug: hyperthyroidism
+  name_ka: ჰიპერთირეოზი
+  name_en: Hyperthyroidism
+  sort_order: 123
+  specialties: [endocrinology, internal-medicine]
+  synonyms_en: [overactive thyroid, graves disease, thyroid problem]
+  synonyms_ka: [ფარისებრი ჯირკვლის ფუნქციის მომატება, ფარისებრი ჯირკვალი]
+
+- slug: thyroid-nodules
+  name_ka: ფარისებრი ჯირკვლის კვანძები
+  name_en: Thyroid Nodules
+  sort_order: 124
+  specialties: [endocrinology, surgery]
+  synonyms_en: [thyroid lumps, goiter]
+  synonyms_ka: [ფარისებრი ჯირკვლის კვანძი, ჩიჩახვი]
+
+- slug: obesity
+  name_ka: სიმსუქნე
+  name_en: Obesity
+  sort_order: 125
+  specialties: [endocrinology, nutrition, internal-medicine]
+  synonyms_en: [overweight, weight problem, excess weight]
+  synonyms_ka: [ჭარბი წონა, წონის ჭარბი მატება, სიმსუქნის პრობლემა]
+  description_ka: |
+    სიმსუქნე არის ჭარბი ცხიმის დაგროვება ორგანიზმში, რაც ზრდის დიაბეტის,
+    გულის დაავადებისა და სახსრების პრობლემების რისკს. ის ვითარდება
+    კალორიების ჭარბი მიღების, ფიზიკური უმოქმედობისა და გენეტიკური
+    ფაქტორების ერთობლიობით. მკურნალობა მოიცავს კვების კორექციას, ფიზიკურ
+    აქტივობას და ზოგ შემთხვევაში მედიკამენტებს ან ქირურგიას.
+  description_en: |
+    Obesity is the accumulation of excess body fat, which raises the risk of
+    diabetes, heart disease, and joint problems. It develops from a combination
+    of excess calorie intake, inactivity, and genetic factors. Treatment
+    includes dietary change, physical activity, and sometimes medication or
+    surgery.
+
+- slug: metabolic-syndrome
+  name_ka: მეტაბოლური სინდრომი
+  name_en: Metabolic Syndrome
+  sort_order: 126
+  specialties: [endocrinology, internal-medicine, cardiology]
+  synonyms_en: [insulin resistance syndrome]
+  synonyms_ka: [მეტაბოლური დარღვევა, ინსულინრეზისტენტობა]
+
+- slug: osteoporosis
+  name_ka: ოსტეოპოროზი
+  name_en: Osteoporosis
+  sort_order: 127
+  specialties: [endocrinology, rheumatology, orthopedics]
+  synonyms_en: [brittle bones, bone loss, low bone density]
+  synonyms_ka: [ძვლის სიმკვრივის დაქვეითება, ძვლების გათხელება, მტვრევადი ძვლები]
+  description_ka: |
+    ოსტეოპოროზი არის მდგომარეობა, რომლის დროსაც ძვლები კარგავს სიმკვრივეს
+    და ხდება მტვრევადი. ხშირად უსიმპტომოა მანამ, სანამ მოულოდნელი მოტეხილობა
+    არ მოხდება, განსაკუთრებით მენოპაუზის შემდგომ ქალებში. პრევენცია და
+    მკურნალობა მოიცავს კალციუმს, D ვიტამინს, ფიზიკურ აქტივობასა და მედიკამენტებს.
+  description_en: |
+    Osteoporosis is a condition in which bones lose density and become fragile.
+    It is often silent until a sudden fracture occurs, especially in
+    postmenopausal women. Prevention and treatment include calcium, vitamin D,
+    weight-bearing exercise, and medication.
+
+- slug: gout
+  name_ka: პოდაგრა
+  name_en: Gout
+  sort_order: 128
+  specialties: [rheumatology, internal-medicine]
+  synonyms_en: [uric acid, joint inflammation, big toe pain]
+  synonyms_ka: [შარდმჟავა, სახსრის ტკივილი, პოდაგრის შეტევა]
+
+- slug: vitamin-d-deficiency
+  name_ka: D ვიტამინის დეფიციტი
+  name_en: Vitamin D Deficiency
+  sort_order: 129
+  specialties: [endocrinology, internal-medicine, family-medicine]
+  synonyms_en: [low vitamin d]
+  synonyms_ka: [ვიტამინ D-ს ნაკლებობა, D ვიტამინის ნაკლებობა]
+
+- slug: pcos
+  name_ka: პოლიკისტოზური საკვერცხის სინდრომი
+  name_en: Polycystic Ovary Syndrome
+  sort_order: 130
+  specialties: [gynecology, endocrinology, reproductology]
+  synonyms_en: [pcos, ovarian cysts, hormonal imbalance]
+  synonyms_ka: [საკვერცხეების კისტები, ჰორმონული დისბალანსი]
+
+# --- Pulmonology & respiratory ----------------------------------------------
+
+- slug: asthma
+  name_ka: ბრონქული ასთმა
+  name_en: Asthma
+  sort_order: 140
+  specialties: [pulmonology, allergology, pediatrics]
+  synonyms_en: [wheezing, breathing problem, bronchial asthma]
+  synonyms_ka: [ასთმა, ხიხინი, სუნთქვის გაძნელება]
+  description_ka: |
+    ბრონქული ასთმა არის სასუნთქი გზების ქრონიკული ანთებითი დაავადება,
+    რომელიც იწვევს ბრონქების შევიწროებას, ხიხინს, ხველასა და ქოშინს.
+    შეტევები შეიძლება გამოიწვიოს ალერგენებმა, ინფექციამ ან ფიზიკურმა
+    დატვირთვამ. მკურნალობა ხდება საინჰალაციო პრეპარატებით, რომლებიც
+    აკონტროლებენ ანთებას და ხსნიან ბრონქოსპაზმს.
+  description_en: |
+    Asthma is a chronic inflammatory airway disease that causes the bronchial
+    tubes to narrow, producing wheezing, coughing, and shortness of breath.
+    Attacks can be triggered by allergens, infection, or exercise. Treatment
+    uses inhalers that control inflammation and relieve bronchospasm.
+
+- slug: copd
+  name_ka: ფილტვების ქრონიკული ობსტრუქციული დაავადება
+  name_en: COPD
+  sort_order: 141
+  specialties: [pulmonology, internal-medicine]
+  synonyms_en: [chronic obstructive pulmonary disease, emphysema, smokers lung]
+  synonyms_ka: [ფქოდ, ემფიზემა, მწეველის ფილტვი]
+  description_ka: |
+    ფილტვების ქრონიკული ობსტრუქციული დაავადება (ფქოდ) არის სასუნთქი გზების
+    პროგრესირებადი დაავადება, რომელიც ართულებს სუნთქვას. მისი მთავარი მიზეზი
+    თამბაქოს მოწევაა. სიმპტომებია ქრონიკული ხველა, ნახველი და ქოშინი.
+    მკურნალობა ანელებს დაავადების პროგრესირებას, მაგრამ მოწევის შეწყვეტა
+    ყველაზე მნიშვნელოვანია.
+  description_en: |
+    Chronic obstructive pulmonary disease (COPD) is a progressive airway
+    disease that makes breathing difficult, most often caused by smoking.
+    Symptoms include a chronic cough, phlegm, and breathlessness. Treatment
+    slows progression, but quitting smoking matters most.
+
+- slug: pneumonia
+  name_ka: პნევმონია
+  name_en: Pneumonia
+  sort_order: 142
+  specialties: [pulmonology, infectious-diseases, internal-medicine]
+  synonyms_en: [lung infection, chest infection]
+  synonyms_ka: [ფილტვების ანთება, ფილტვის ინფექცია]
+  description_ka: |
+    პნევმონია არის ფილტვების ინფექცია, რომელიც იწვევს ჰაერის პატარა
+    პარკების ანთებას და სითხით ავსებას. სიმპტომებია სიცხე, ხველა ნახველით,
+    გულმკერდის ტკივილი და ქოშინი. გამომწვევი მიზეზის მიხედვით მკურნალობა
+    ხდება ანტიბიოტიკებით ან ანტივირუსული პრეპარატებით.
+  description_en: |
+    Pneumonia is an infection of the lungs that inflames the air sacs and fills
+    them with fluid. Symptoms include fever, a cough with phlegm, chest pain,
+    and shortness of breath. Depending on the cause, it is treated with
+    antibiotics or antiviral medication.
+
+- slug: bronchitis
+  name_ka: ბრონქიტი
+  name_en: Bronchitis
+  sort_order: 143
+  specialties: [pulmonology, internal-medicine, family-medicine]
+  synonyms_en: [chest cold, airway inflammation]
+  synonyms_ka: [ბრონქების ანთება, გულმკერდის გაცივება]
+
+- slug: sleep-apnea
+  name_ka: ძილის აპნოე
+  name_en: Sleep Apnea
+  sort_order: 144
+  specialties: [pulmonology, ent, neurology]
+  synonyms_en: [snoring, breathing stops in sleep, osa]
+  synonyms_ka: [ხვრინვა, ძილში სუნთქვის შეჩერება, აპნოე]
+
+- slug: tuberculosis
+  name_ka: ტუბერკულოზი
+  name_en: Tuberculosis
+  sort_order: 145
+  specialties: [phthisiology, pulmonology, infectious-diseases]
+  synonyms_en: [tb, consumption]
+  synonyms_ka: [ტუბი, ჭლექი, ფილტვის ტუბერკულოზი]
+
+- slug: pulmonary-embolism
+  name_ka: ფილტვის არტერიის თრომბოემბოლია
+  name_en: Pulmonary Embolism
+  sort_order: 146
+  specialties: [pulmonology, vascular-surgery, emergency-medicine]
+  synonyms_en: [pe, lung clot, blood clot lung]
+  synonyms_ka: [ფილტვის თრომბი, ფილტვის არტერიის ემბოლია]
+
+- slug: chronic-cough
+  name_ka: ქრონიკული ხველა
+  name_en: Chronic Cough
+  sort_order: 147
+  specialties: [pulmonology, ent, allergology]
+  synonyms_en: [persistent cough, long lasting cough]
+  synonyms_ka: [ხანგრძლივი ხველა, გაუვალი ხველა]
+
+# --- Gastroenterology -------------------------------------------------------
+
+- slug: gerd
+  name_ka: გასტროეზოფაგური რეფლუქსური დაავადება
+  name_en: GERD
+  sort_order: 160
+  specialties: [gastroenterology, internal-medicine]
+  synonyms_en: [acid reflux, heartburn, reflux, gastroesophageal reflux]
+  synonyms_ka: [მჟავას რეფლუქსი, გულძმარვა, რეფლუქსი, მჟავას უკუგდება]
+  description_ka: |
+    გასტროეზოფაგური რეფლუქსური დაავადება (GERD) ვითარდება, როდესაც კუჭის
+    მჟავა რეგულარულად ბრუნდება საყლაპავ მილში და იწვევს გულძმარვას. ხშირი
+    სიმპტომებია წვის შეგრძნება გულმკერდის არეში და მჟავას გემო პირში.
+    მკურნალობა მოიცავს კვების ჩვევების შეცვლასა და მჟავას შემამცირებელ
+    მედიკამენტებს.
+  description_en: |
+    Gastroesophageal reflux disease (GERD) occurs when stomach acid repeatedly
+    flows back into the esophagus, causing heartburn. Common symptoms are a
+    burning sensation in the chest and a sour taste in the mouth. Treatment
+    involves changing eating habits and taking acid-reducing medication.
+
+- slug: peptic-ulcer
+  name_ka: კუჭ-ნაწლავის წყლული
+  name_en: Peptic Ulcer
+  sort_order: 161
+  specialties: [gastroenterology, internal-medicine]
+  synonyms_en: [stomach ulcer, gastric ulcer, ulcer]
+  synonyms_ka: [კუჭის წყლული, წყლული, თორმეტგოჯა ნაწლავის წყლული]
+  description_ka: |
+    კუჭ-ნაწლავის წყლული არის ღია ჭრილობა კუჭის ან თორმეტგოჯა ნაწლავის
+    შიდა ზედაპირზე, რომელსაც ხშირად H. pylori ბაქტერია ან ტკივილგამაყუჩებელი
+    წამლები იწვევს. სიმპტომებია მუცლის წვა და ტკივილი. მკურნალობა მოიცავს
+    ანტიბიოტიკებსა და მჟავას შემამცირებელ პრეპარატებს.
+  description_en: |
+    A peptic ulcer is an open sore on the inner lining of the stomach or
+    duodenum, often caused by H. pylori bacteria or pain-relief drugs. Symptoms
+    include a burning stomach ache and pain. Treatment combines antibiotics with
+    acid-reducing medication.
+
+- slug: irritable-bowel-syndrome
+  name_ka: გაღიზიანებული ნაწლავის სინდრომი
+  name_en: Irritable Bowel Syndrome
+  sort_order: 162
+  specialties: [gastroenterology]
+  synonyms_en: [ibs, spastic colon, nervous stomach]
+  synonyms_ka: [ნაწლავის გაღიზიანების სინდრომი, სპასტიკური კოლიტი]
+  description_ka: |
+    გაღიზიანებული ნაწლავის სინდრომი (IBS) არის ნაწლავის ფუნქციური დარღვევა,
+    რომელიც იწვევს მუცლის ტკივილს, შებერილობას, ფაღარათსა და ყაბზობას.
+    სიმპტომები ხშირად უკავშირდება სტრესსა და კვებას. მკურნალობა ფოკუსირებულია
+    დიეტის კორექციასა და სიმპტომების მართვაზე.
+  description_en: |
+    Irritable bowel syndrome (IBS) is a functional bowel disorder that causes
+    abdominal pain, bloating, diarrhea, and constipation. Symptoms are often
+    linked to stress and diet. Management focuses on dietary adjustment and
+    symptom control.
+
+- slug: gallstones
+  name_ka: ნაღვლის კენჭები
+  name_en: Gallstones
+  sort_order: 163
+  specialties: [gastroenterology, surgery]
+  synonyms_en: [gallbladder stones, biliary stones]
+  synonyms_ka: [ნაღვლის ბუშტის კენჭები, ქოლელითიაზი]
+
+- slug: hepatitis-b
+  name_ka: B ჰეპატიტი
+  name_en: Hepatitis B
+  sort_order: 164
+  specialties: [gastroenterology, infectious-diseases]
+  synonyms_en: [hep b, liver infection]
+  synonyms_ka: [B ჰეპატიტი, ღვიძლის ანთება]
+
+- slug: hepatitis-c
+  name_ka: C ჰეპატიტი
+  name_en: Hepatitis C
+  sort_order: 165
+  specialties: [gastroenterology, infectious-diseases]
+  synonyms_en: [hep c, liver infection]
+  synonyms_ka: [C ჰეპატიტი, ღვიძლის ანთება]
+
+- slug: fatty-liver-disease
+  name_ka: ღვიძლის ცხიმოვანი ჰეპატოზი
+  name_en: Fatty Liver Disease
+  sort_order: 166
+  specialties: [gastroenterology, internal-medicine, endocrinology]
+  synonyms_en: [nafld, hepatic steatosis, fatty liver]
+  synonyms_ka: [ცხიმოვანი ღვიძლი, სტეატოზი, ღვიძლის გაცხიმოვნება]
+
+- slug: liver-cirrhosis
+  name_ka: ღვიძლის ციროზი
+  name_en: Liver Cirrhosis
+  sort_order: 167
+  specialties: [gastroenterology, internal-medicine]
+  synonyms_en: [cirrhosis, liver scarring, liver damage]
+  synonyms_ka: [ციროზი, ღვიძლის დაზიანება]
+
+- slug: crohns-disease
+  name_ka: კრონის დაავადება
+  name_en: Crohn's Disease
+  sort_order: 168
+  specialties: [gastroenterology]
+  synonyms_en: [ibd, inflammatory bowel disease]
+  synonyms_ka: [ანთებითი ნაწლავის დაავადება, ნაწლავის ანთება]
+
+- slug: ulcerative-colitis
+  name_ka: წყლულოვანი კოლიტი
+  name_en: Ulcerative Colitis
+  sort_order: 169
+  specialties: [gastroenterology]
+  synonyms_en: [ibd, inflammatory bowel disease, colitis]
+  synonyms_ka: [ანთებითი ნაწლავის დაავადება, კოლიტი]
+
+- slug: pancreatitis
+  name_ka: პანკრეატიტი
+  name_en: Pancreatitis
+  sort_order: 170
+  specialties: [gastroenterology, surgery, internal-medicine]
+  synonyms_en: [pancreas inflammation]
+  synonyms_ka: [კუჭქვეშა ჯირკვლის ანთება, პანკრეასის ანთება]
+
+- slug: hemorrhoids
+  name_ka: ბუასილი
+  name_en: Hemorrhoids
+  sort_order: 171
+  specialties: [proctology, surgery]
+  synonyms_en: [piles, swollen anal veins]
+  synonyms_ka: [ჰემოროი, ბუასილი]
+
+- slug: anal-fissure
+  name_ka: სწორი ნაწლავის ნაპრალი
+  name_en: Anal Fissure
+  sort_order: 172
+  specialties: [proctology, surgery]
+  synonyms_en: [anal tear]
+  synonyms_ka: [ანალური ნაპრალი, ბზარი]
+
+- slug: constipation
+  name_ka: ყაბზობა
+  name_en: Constipation
+  sort_order: 173
+  specialties: [gastroenterology, internal-medicine, family-medicine]
+  synonyms_en: [hard stool, infrequent bowel movements]
+  synonyms_ka: [ნაწლავის შეკრულობა, შეკრულობა]
+
+- slug: celiac-disease
+  name_ka: ცელიაკია
+  name_en: Celiac Disease
+  sort_order: 174
+  specialties: [gastroenterology, allergology]
+  synonyms_en: [gluten intolerance, gluten allergy]
+  synonyms_ka: [გლუტენის აუტანლობა]
+
+# --- Neurology --------------------------------------------------------------
+
+- slug: migraine
+  name_ka: მიგრენი
+  name_en: Migraine
+  sort_order: 190
+  specialties: [neurology]
+  synonyms_en: [severe headache, throbbing headache, headache]
+  synonyms_ka: [თავის ძლიერი ტკივილი, ნახევარი თავის ტკივილი, თავის ტკივილი]
+  description_ka: |
+    მიგრენი არის ძლიერი, ხშირად პულსირებადი თავის ტკივილი, რომელიც
+    ჩვეულებრივ თავის ერთ მხარეს ვითარდება და თან ახლავს გულისრევა,
+    სინათლისა და ხმის მიმართ მგრძნობელობა. შეტევები შეიძლება გაგრძელდეს
+    საათობით ან დღეობით. მკურნალობა მოიცავს შეტევის გამაყუჩებელ და
+    პროფილაქტიკურ მედიკამენტებს.
+  description_en: |
+    A migraine is an intense, often throbbing headache, usually on one side of
+    the head, accompanied by nausea and sensitivity to light and sound. Attacks
+    can last hours or days. Treatment includes both acute pain-relief and
+    preventive medication.
+
+- slug: epilepsy
+  name_ka: ეპილეფსია
+  name_en: Epilepsy
+  sort_order: 191
+  specialties: [neurology, neurosurgery, pediatrics]
+  synonyms_en: [seizures, seizure disorder, convulsions]
+  synonyms_ka: [გულყრა, კრუნჩხვები, ეპილეფსიური შეტევები]
+  description_ka: |
+    ეპილეფსია არის ნევროლოგიური დაავადება, რომელსაც ახასიათებს განმეორებადი
+    გულყრები — თავის ტვინში ელექტრული აქტივობის უეცარი აფეთქებები. შეტევები
+    შეიძლება გამოვლინდეს კრუნჩხვებით ან ცნობიერების ხანმოკლე დაკარგვით.
+    მკურნალობა უმეტეს შემთხვევაში ეფექტურად აკონტროლებს შეტევებს
+    მედიკამენტებით.
+  description_en: |
+    Epilepsy is a neurological disorder marked by recurrent seizures — sudden
+    bursts of electrical activity in the brain. Seizures may appear as
+    convulsions or brief lapses of awareness. In most cases, medication controls
+    the seizures effectively.
+
+- slug: parkinsons-disease
+  name_ka: პარკინსონის დაავადება
+  name_en: Parkinson's Disease
+  sort_order: 192
+  specialties: [neurology]
+  synonyms_en: [parkinsons, tremor, shaking]
+  synonyms_ka: [პარკინსონი, კანკალი, ცახცახი]
+  description_ka: |
+    პარკინსონის დაავადება არის თავის ტვინის პროგრესირებადი დაავადება,
+    რომელიც მოძრაობას აზიანებს. ძირითადი ნიშნებია კიდურების კანკალი,
+    კუნთების სიხისტე და მოძრაობის შენელება. მკურნალობა ვერ კურნავს დაავადებას,
+    მაგრამ მედიკამენტები მნიშვნელოვნად აუმჯობესებენ სიმპტომებსა და ცხოვრების
+    ხარისხს.
+  description_en: |
+    Parkinson's disease is a progressive brain disorder that affects movement.
+    Its hallmark signs are trembling limbs, muscle stiffness, and slowed
+    movement. There is no cure, but medication significantly improves symptoms
+    and quality of life.
+
+- slug: multiple-sclerosis
+  name_ka: გაფანტული სკლეროზი
+  name_en: Multiple Sclerosis
+  sort_order: 193
+  specialties: [neurology]
+  synonyms_en: [ms, demyelinating disease]
+  synonyms_ka: [გაფანტული სკლეროზი]
+
+- slug: alzheimers-disease
+  name_ka: ალცჰაიმერის დაავადება
+  name_en: Alzheimer's Disease
+  sort_order: 194
+  specialties: [neurology, psychiatry, geriatrics]
+  synonyms_en: [dementia, memory loss, alzheimers]
+  synonyms_ka: [დემენცია, ჭკუასუსტობა, მეხსიერების დაკარგვა]
+
+- slug: tension-headache
+  name_ka: დაჭიმვითი თავის ტკივილი
+  name_en: Tension Headache
+  sort_order: 195
+  specialties: [neurology, family-medicine]
+  synonyms_en: [headache, stress headache]
+  synonyms_ka: [თავის ტკივილი, დაძაბულობის თავის ტკივილი]
+
+- slug: peripheral-neuropathy
+  name_ka: პერიფერიული ნეიროპათია
+  name_en: Peripheral Neuropathy
+  sort_order: 196
+  specialties: [neurology, endocrinology]
+  synonyms_en: [nerve damage, numbness, tingling]
+  synonyms_ka: [ნერვების დაზიანება, დაბუჟება, ჭიანჭველების ცოცვა]
+
+- slug: sciatica
+  name_ka: იშიასი
+  name_en: Sciatica
+  sort_order: 197
+  specialties: [neurology, orthopedics, neurosurgery]
+  synonyms_en: [sciatic nerve pain, leg and back pain]
+  synonyms_ka: [ბარძაყის ნერვის ტკივილი, წელისა და ფეხის ტკივილი]
+
+- slug: vertigo
+  name_ka: ვერტიგო
+  name_en: Vertigo
+  sort_order: 198
+  specialties: [neurology, ent]
+  synonyms_en: [dizziness, spinning sensation, balance problem]
+  synonyms_ka: [თავბრუსხვევა, ბრუ, წონასწორობის დარღვევა]
+
+- slug: bells-palsy
+  name_ka: სახის ნერვის დამბლა
+  name_en: Bell's Palsy
+  sort_order: 199
+  specialties: [neurology]
+  synonyms_en: [facial paralysis, facial nerve palsy]
+  synonyms_ka: [ბელის დამბლა, სახის დამბლა]
+
+- slug: restless-legs-syndrome
+  name_ka: მოუსვენარი ფეხების სინდრომი
+  name_en: Restless Legs Syndrome
+  sort_order: 200
+  specialties: [neurology]
+  synonyms_en: [rls, leg discomfort at night]
+  synonyms_ka: [ფეხების მოუსვენრობა]
+
+- slug: trigeminal-neuralgia
+  name_ka: სამწვერა ნერვის ნევრალგია
+  name_en: Trigeminal Neuralgia
+  sort_order: 201
+  specialties: [neurology, neurosurgery]
+  synonyms_en: [face nerve pain]
+  synonyms_ka: [სახის ნერვის ტკივილი, ტრიგემინალური ნევრალგია]
+
+# --- Psychiatry & mental health ---------------------------------------------
+
+- slug: depression
+  name_ka: დეპრესია
+  name_en: Depression
+  sort_order: 220
+  specialties: [psychiatry, psychology]
+  synonyms_en: [major depressive disorder, low mood, sadness]
+  synonyms_ka: [დეპრესიული აშლილობა, დათრგუნულობა, ცუდი ხასიათი]
+  description_ka: |
+    დეპრესია არის ფსიქიკური ჯანმრთელობის აშლილობა, რომელსაც ახასიათებს
+    მუდმივი სევდა, ინტერესის დაკარგვა და ენერგიის დაქვეითება ორ კვირაზე
+    მეტი ხნის განმავლობაში. ის გავლენას ახდენს ძილზე, მადასა და
+    კონცენტრაციაზე. მკურნალობა ეფექტურია ფსიქოთერაპიითა და, საჭიროების
+    შემთხვევაში, ანტიდეპრესანტებით.
+  description_en: |
+    Depression is a mental health disorder marked by persistent sadness, loss
+    of interest, and low energy lasting more than two weeks. It affects sleep,
+    appetite, and concentration. Treatment is effective with psychotherapy and,
+    when needed, antidepressant medication.
+
+- slug: anxiety-disorder
+  name_ka: შფოთვითი აშლილობა
+  name_en: Anxiety Disorder
+  sort_order: 221
+  specialties: [psychiatry, psychology]
+  synonyms_en: [anxiety, panic, generalized anxiety, worry]
+  synonyms_ka: [შფოთვა, პანიკა, განგაში, მღელვარება]
+  description_ka: |
+    შფოთვითი აშლილობა არის მდგომარეობა, რომელსაც ახასიათებს ჭარბი და
+    მუდმივი შიში ან წუხილი, რომელიც ხელს უშლის ყოველდღიურ ცხოვრებას.
+    სიმპტომები მოიცავს გულის ფრიალს, დაძაბულობასა და ძილის დარღვევას.
+    მკურნალობა მოიცავს ფსიქოთერაპიასა და მედიკამენტებს.
+  description_en: |
+    An anxiety disorder is a condition marked by excessive and persistent fear
+    or worry that interferes with daily life. Symptoms include a racing heart,
+    tension, and disturbed sleep. Treatment combines psychotherapy with
+    medication.
+
+- slug: panic-disorder
+  name_ka: პანიკური აშლილობა
+  name_en: Panic Disorder
+  sort_order: 222
+  specialties: [psychiatry, psychology]
+  synonyms_en: [panic attacks]
+  synonyms_ka: [პანიკის შეტევები, პანიკური შეტევა]
+
+- slug: bipolar-disorder
+  name_ka: ბიპოლარული აშლილობა
+  name_en: Bipolar Disorder
+  sort_order: 223
+  specialties: [psychiatry]
+  synonyms_en: [manic depression, mood swings]
+  synonyms_ka: [მანიაკალურ-დეპრესიული აშლილობა, განწყობის რყევები]
+
+- slug: insomnia
+  name_ka: უძილობა
+  name_en: Insomnia
+  sort_order: 224
+  specialties: [psychiatry, neurology, psychology]
+  synonyms_en: [sleeplessness, trouble sleeping, sleep disorder]
+  synonyms_ka: [ძილის დარღვევა, ძილის უკმარისობა, დაძინების პრობლემა]
+
+- slug: ptsd
+  name_ka: პოსტტრავმული სტრესული აშლილობა
+  name_en: Post-Traumatic Stress Disorder
+  sort_order: 225
+  specialties: [psychiatry, psychology]
+  synonyms_en: [ptsd, trauma]
+  synonyms_ka: [პტსა, ფსიქოლოგიური ტრავმა]
+
+- slug: ocd
+  name_ka: ობსესიურ-კომპულსიური აშლილობა
+  name_en: Obsessive-Compulsive Disorder
+  sort_order: 226
+  specialties: [psychiatry, psychology]
+  synonyms_en: [ocd, compulsions, obsessions]
+  synonyms_ka: [აკვიატებული აზრები, ოკ აშლილობა]
+
+- slug: schizophrenia
+  name_ka: შიზოფრენია
+  name_en: Schizophrenia
+  sort_order: 227
+  specialties: [psychiatry]
+  synonyms_en: [psychosis]
+  synonyms_ka: [ფსიქოზი]
+
+- slug: adhd
+  name_ka: ყურადღების დეფიციტისა და ჰიპერაქტივობის სინდრომი
+  name_en: ADHD
+  sort_order: 228
+  specialties: [psychiatry, pediatrics, psychology]
+  synonyms_en: [attention deficit, hyperactivity]
+  synonyms_ka: [ყურადღების დეფიციტი, ჰიპერაქტივობა]
+
+- slug: eating-disorders
+  name_ka: კვებითი აშლილობები
+  name_en: Eating Disorders
+  sort_order: 229
+  specialties: [psychiatry, psychology, nutrition]
+  synonyms_en: [anorexia, bulimia]
+  synonyms_ka: [ანორექსია, ბულიმია]
+
+- slug: addiction
+  name_ka: დამოკიდებულება
+  name_en: Addiction
+  sort_order: 230
+  specialties: [narcology, psychiatry, psychology]
+  synonyms_en: [substance abuse, dependence, alcoholism]
+  synonyms_ka: [ნივთიერებებზე დამოკიდებულება, ალკოჰოლიზმი, ნარკომანია]
+
+# --- Dermatology ------------------------------------------------------------
+
+- slug: acne
+  name_ka: აკნე
+  name_en: Acne
+  sort_order: 250
+  specialties: [dermatology, cosmetology]
+  synonyms_en: [pimples, spots, breakouts]
+  synonyms_ka: [მუწუკები, ბუგრები, კანის გამონაყარი, აკნე]
+  description_ka: |
+    აკნე არის კანის გავრცელებული მდგომარეობა, რომელიც ვითარდება, როდესაც
+    ბეწვის ფოლიკულები იხშობა ცხიმითა და მკვდარი უჯრედებით. ის ვლინდება
+    ბუგრებით, შავი წერტილებითა და ანთებითი მუწუკებით, ხშირად სახეზე, ზურგსა
+    და მკერდზე. მკურნალობა მერყეობს ადგილობრივი საშუალებებიდან მედიკამენტებამდე.
+  description_en: |
+    Acne is a common skin condition that occurs when hair follicles become
+    clogged with oil and dead cells. It appears as pimples, blackheads, and
+    inflamed spots, often on the face, back, and chest. Treatment ranges from
+    topical creams to oral medication.
+
+- slug: eczema
+  name_ka: ეგზემა
+  name_en: Eczema
+  sort_order: 251
+  specialties: [dermatology, allergology]
+  synonyms_en: [atopic dermatitis, itchy skin, dry skin rash]
+  synonyms_ka: [ატოპიური დერმატიტი, კანის ქავილი, ეგზემა]
+  description_ka: |
+    ეგზემა (ატოპიური დერმატიტი) არის კანის ქრონიკული ანთებითი დაავადება,
+    რომელიც იწვევს ქავილს, სიწითლესა და კანის სიმშრალეს. ხშირად იწყება
+    ბავშვობაში და უკავშირდება ალერგიასა და ასთმას. მკურნალობა მოიცავს კანის
+    დატენიანებასა და ანთების საწინააღმდეგო კრემებს.
+  description_en: |
+    Eczema (atopic dermatitis) is a chronic inflammatory skin condition that
+    causes itching, redness, and dryness. It often begins in childhood and is
+    linked to allergies and asthma. Treatment includes moisturizing the skin and
+    anti-inflammatory creams.
+
+- slug: psoriasis
+  name_ka: ფსორიაზი
+  name_en: Psoriasis
+  sort_order: 252
+  specialties: [dermatology, rheumatology]
+  synonyms_en: [scaly skin, skin plaques]
+  synonyms_ka: [ქერცლოვანი კანი, ფსორიაზის ფოლაქები]
+
+- slug: rosacea
+  name_ka: როზაცეა
+  name_en: Rosacea
+  sort_order: 253
+  specialties: [dermatology]
+  synonyms_en: [facial redness, flushing]
+  synonyms_ka: [სახის სიწითლე, კანის სიწითლე]
+
+- slug: hives
+  name_ka: ჭინჭრის ციება
+  name_en: Hives
+  sort_order: 254
+  specialties: [dermatology, allergology]
+  synonyms_en: [urticaria, allergic rash, welts]
+  synonyms_ka: [ურტიკარია, ალერგიული გამონაყარი, ჭინჭარი]
+
+- slug: fungal-skin-infection
+  name_ka: კანის სოკოვანი ინფექცია
+  name_en: Fungal Skin Infection
+  sort_order: 255
+  specialties: [dermatology, infectious-diseases]
+  synonyms_en: [ringworm, athletes foot, tinea]
+  synonyms_ka: [მიკოზი, კანის სოკო, ფეხის სოკო]
+
+- slug: vitiligo
+  name_ka: ვიტილიგო
+  name_en: Vitiligo
+  sort_order: 256
+  specialties: [dermatology]
+  synonyms_en: [white skin patches, depigmentation]
+  synonyms_ka: [კანის თეთრი ლაქები, დეპიგმენტაცია]
+
+- slug: skin-cancer
+  name_ka: კანის კიბო
+  name_en: Skin Cancer
+  sort_order: 257
+  specialties: [dermatology, oncology]
+  synonyms_en: [melanoma, basal cell carcinoma, mole change]
+  synonyms_ka: [მელანომა, კანის სიმსივნე, ხალის ცვლილება]
+
+- slug: hair-loss
+  name_ka: თმის ცვენა
+  name_en: Hair Loss
+  sort_order: 258
+  specialties: [dermatology, cosmetology, endocrinology]
+  synonyms_en: [alopecia, baldness, thinning hair]
+  synonyms_ka: [ალოპეცია, სიმელოტე, თმის ცვენა]
+
+- slug: warts
+  name_ka: მეჭეჭები
+  name_en: Warts
+  sort_order: 259
+  specialties: [dermatology]
+  synonyms_en: [verruca, hpv skin]
+  synonyms_ka: [კონდილომა, კანის მეჭეჭი]
+
+- slug: contact-dermatitis
+  name_ka: კონტაქტური დერმატიტი
+  name_en: Contact Dermatitis
+  sort_order: 260
+  specialties: [dermatology, allergology]
+  synonyms_en: [skin allergy, irritant rash]
+  synonyms_ka: [კანის ალერგია, გამღიზიანებელი გამონაყარი]
+
+# --- Gynecology & women's health --------------------------------------------
+
+- slug: uterine-fibroids
+  name_ka: საშვილოსნოს მიომა
+  name_en: Uterine Fibroids
+  sort_order: 280
+  specialties: [gynecology, surgery]
+  synonyms_en: [fibroids, myoma, uterine tumors]
+  synonyms_ka: [მიომა, საშვილოსნოს კვანძი, ფიბრომიომა]
+
+- slug: endometriosis
+  name_ka: ენდომეტრიოზი
+  name_en: Endometriosis
+  sort_order: 281
+  specialties: [gynecology, reproductology]
+  synonyms_en: [pelvic pain, painful periods]
+  synonyms_ka: [მენჯის ტკივილი, მტკივნეული მენსტრუაცია]
+
+- slug: menstrual-disorders
+  name_ka: მენსტრუალური ციკლის დარღვევები
+  name_en: Menstrual Disorders
+  sort_order: 282
+  specialties: [gynecology, endocrinology]
+  synonyms_en: [irregular periods, heavy periods, painful periods]
+  synonyms_ka: [არარეგულარული მენსტრუაცია, უხვი მენსტრუაცია, ციკლის დარღვევა]
+
+- slug: menopause
+  name_ka: მენოპაუზა
+  name_en: Menopause
+  sort_order: 283
+  specialties: [gynecology, endocrinology]
+  synonyms_en: [climacteric, hot flashes, change of life]
+  synonyms_ka: [კლიმაქსი, მენოპაუზა, ცხელების მოვლენები]
+
+- slug: ovarian-cysts
+  name_ka: საკვერცხის კისტა
+  name_en: Ovarian Cysts
+  sort_order: 284
+  specialties: [gynecology]
+  synonyms_en: [cyst on ovary]
+  synonyms_ka: [საკვერცხის სიმსივნური წარმონაქმნი, კისტა]
+
+- slug: vaginal-infection
+  name_ka: ვაგინალური ინფექცია
+  name_en: Vaginal Infection
+  sort_order: 285
+  specialties: [gynecology, infectious-diseases]
+  synonyms_en: [yeast infection, thrush, vaginitis, bacterial vaginosis]
+  synonyms_ka: [საშოს ინფექცია, კანდიდოზი, ვაგინიტი]
+
+- slug: cervical-dysplasia
+  name_ka: საშვილოსნოს ყელის დისპლაზია
+  name_en: Cervical Dysplasia
+  sort_order: 286
+  specialties: [gynecology, oncology]
+  synonyms_en: [abnormal pap smear, precancerous cervix]
+  synonyms_ka: [საშვილოსნოს ყელის ცვლილება, დისპლაზია]
+
+- slug: infertility
+  name_ka: უნაყოფობა
+  name_en: Infertility
+  sort_order: 287
+  specialties: [reproductology, gynecology, andrology]
+  synonyms_en: [trouble conceiving, cannot get pregnant]
+  synonyms_ka: [უშვილობა, ჩასახვის პრობლემა, დაორსულების პრობლემა]
+
+- slug: pregnancy-care
+  name_ka: ორსულობის მართვა
+  name_en: Pregnancy Care
+  sort_order: 288
+  specialties: [obstetrics, gynecology]
+  synonyms_en: [prenatal care, antenatal care, pregnancy]
+  synonyms_ka: [ანტენატალური მეთვალყურეობა, ორსულობა, ორსულის მეთვალყურეობა]
+
+- slug: pelvic-inflammatory-disease
+  name_ka: მენჯის ანთებითი დაავადება
+  name_en: Pelvic Inflammatory Disease
+  sort_order: 289
+  specialties: [gynecology, infectious-diseases]
+  synonyms_en: [pid, pelvic infection]
+  synonyms_ka: [მენჯის ორგანოების ანთება]
+
+- slug: uterine-prolapse
+  name_ka: საშვილოსნოს ჩამოწევა
+  name_en: Uterine Prolapse
+  sort_order: 290
+  specialties: [gynecology, surgery]
+  synonyms_en: [pelvic organ prolapse]
+  synonyms_ka: [საშვილოსნოს პროლაფსი, ჩამოწევა]
+
+# --- Urology & men's health -------------------------------------------------
+
+- slug: urinary-tract-infection
+  name_ka: საშარდე გზების ინფექცია
+  name_en: Urinary Tract Infection
+  sort_order: 310
+  specialties: [urology, internal-medicine, family-medicine]
+  synonyms_en: [uti, bladder infection, cystitis]
+  synonyms_ka: [შარდის ბუშტის ანთება, ცისტიტი, შარდვის პრობლემა]
+  description_ka: |
+    საშარდე გზების ინფექცია არის ბაქტერიული ინფექცია, რომელიც ყველაზე
+    ხშირად შარდის ბუშტს აზიანებს. სიმპტომებია ხშირი და მტკივნეული შარდვა,
+    წვის შეგრძნება და მღვრიე შარდი. ინფექცია, როგორც წესი, ეფექტურად იკურნება
+    ანტიბიოტიკებით.
+  description_en: |
+    A urinary tract infection (UTI) is a bacterial infection that most commonly
+    affects the bladder. Symptoms include frequent, painful urination, a burning
+    sensation, and cloudy urine. UTIs are usually treated effectively with
+    antibiotics.
+
+- slug: kidney-stones
+  name_ka: თირკმლის კენჭები
+  name_en: Kidney Stones
+  sort_order: 311
+  specialties: [urology, nephrology]
+  synonyms_en: [renal calculi, stones, nephrolithiasis]
+  synonyms_ka: [თირკმლის კენჭოვანი დაავადება, ნეფროლითიაზი, კენჭები თირკმელში]
+  description_ka: |
+    თირკმლის კენჭები არის მაგარი წარმონაქმნები, რომლებიც წარმოიქმნება
+    შარდში მინერალების კონცენტრაციის გამო. პატარა კენჭები შეიძლება უსიმპტომოდ
+    გამოვიდეს, დიდები კი იწვევენ მძაფრ ტკივილს წელისა და გვერდის არეში.
+    მკურნალობა მერყეობს ტკივილის მართვიდან ქირურგიულ ჩარევამდე.
+  description_en: |
+    Kidney stones are hard deposits that form from concentrated minerals in the
+    urine. Small stones may pass unnoticed, while larger ones cause severe pain
+    in the back and side. Treatment ranges from pain management to surgical
+    removal.
+
+- slug: benign-prostatic-hyperplasia
+  name_ka: პროსტატის კეთილთვისებიანი ჰიპერპლაზია
+  name_en: Benign Prostatic Hyperplasia
+  sort_order: 312
+  specialties: [urology, andrology]
+  synonyms_en: [bph, enlarged prostate, prostate problem]
+  synonyms_ka: [პროსტატის ადენომა, წინამდებარე ჯირკვლის გადიდება, პროსტატა]
+  description_ka: |
+    პროსტატის კეთილთვისებიანი ჰიპერპლაზია არის წინამდებარე ჯირკვლის
+    არასიმსივნური გადიდება, რომელიც ასაკთან ერთად ვითარდება მამაკაცებში.
+    გადიდებული ჯირკვალი აჭერს შარდის ნაკადს და იწვევს ხშირ, გაძნელებულ
+    შარდვას. მკურნალობა მოიცავს მედიკამენტებსა და, საჭიროების შემთხვევაში,
+    ქირურგიას.
+  description_en: |
+    Benign prostatic hyperplasia is a non-cancerous enlargement of the prostate
+    gland that develops with age in men. The enlarged gland presses on the
+    urethra, causing frequent and difficult urination. Treatment includes
+    medication and, if needed, surgery.
+
+- slug: prostatitis
+  name_ka: პროსტატიტი
+  name_en: Prostatitis
+  sort_order: 313
+  specialties: [urology, andrology]
+  synonyms_en: [prostate inflammation, prostate infection]
+  synonyms_ka: [წინამდებარე ჯირკვლის ანთება, პროსტატის ანთება]
+
+- slug: erectile-dysfunction
+  name_ka: ერექციული დისფუნქცია
+  name_en: Erectile Dysfunction
+  sort_order: 314
+  specialties: [andrology, urology, sexology]
+  synonyms_en: [impotence, ed]
+  synonyms_ka: [იმპოტენცია, პოტენციის დარღვევა, ერექციის პრობლემა]
+
+- slug: urinary-incontinence
+  name_ka: შარდის შეუკავებლობა
+  name_en: Urinary Incontinence
+  sort_order: 315
+  specialties: [urology, gynecology]
+  synonyms_en: [bladder leakage, loss of bladder control]
+  synonyms_ka: [შარდის დაუკავებლობა, შარდის გაუვალობა]
+
+- slug: chronic-kidney-disease
+  name_ka: თირკმლის ქრონიკული დაავადება
+  name_en: Chronic Kidney Disease
+  sort_order: 316
+  specialties: [nephrology, internal-medicine]
+  synonyms_en: [ckd, kidney failure, renal failure]
+  synonyms_ka: [თირკმლის უკმარისობა, თირკმლის ქრონიკული უკმარისობა]
+  description_ka: |
+    თირკმლის ქრონიკული დაავადება არის თირკმლების ფუნქციის თანდათანობითი
+    და შეუქცევადი დაქვეითება. ადრეულ სტადიაზე ხშირად უსიმპტომოა და ვლინდება
+    სისხლისა და შარდის ანალიზებით. მთავარი მიზეზებია დიაბეტი და მაღალი წნევა.
+    მკურნალობა ანელებს პროგრესირებას და მძიმე შემთხვევაში საჭიროა დიალიზი.
+  description_en: |
+    Chronic kidney disease is a gradual, irreversible decline in kidney
+    function. It is often symptomless in early stages and detected through blood
+    and urine tests. The main causes are diabetes and high blood pressure.
+    Treatment slows progression, and advanced cases require dialysis.
+
+- slug: male-infertility
+  name_ka: მამაკაცის უნაყოფობა
+  name_en: Male Infertility
+  sort_order: 317
+  specialties: [andrology, urology, reproductology]
+  synonyms_en: [low sperm count]
+  synonyms_ka: [სპერმის ხარისხის დარღვევა, მამაკაცის უშვილობა]
+
+# --- Orthopedics & musculoskeletal ------------------------------------------
+
+- slug: osteoarthritis
+  name_ka: ოსტეოართრიტი
+  name_en: Osteoarthritis
+  sort_order: 340
+  specialties: [orthopedics, rheumatology]
+  synonyms_en: [arthritis, joint wear, degenerative joint disease]
+  synonyms_ka: [ართროზი, სახსრის ცვეთა, სახსრების ტკივილი, ართრიტი]
+  description_ka: |
+    ოსტეოართრიტი არის სახსრების ყველაზე გავრცელებული დაავადება, რომელიც
+    ვითარდება ხრტილის თანდათანობითი ცვეთის შედეგად. ის იწვევს სახსრის ტკივილს,
+    სიხისტესა და მოძრაობის შეზღუდვას, განსაკუთრებით მუხლებში, თეძოსა და
+    ხელებში. მკურნალობა მოიცავს ვარჯიშს, წონის კონტროლსა და ტკივილგამაყუჩებლებს.
+  description_en: |
+    Osteoarthritis is the most common joint disease, caused by the gradual
+    wearing away of cartilage. It produces joint pain, stiffness, and limited
+    movement, especially in the knees, hips, and hands. Treatment includes
+    exercise, weight control, and pain relief.
+
+- slug: rheumatoid-arthritis
+  name_ka: რევმატოიდული ართრიტი
+  name_en: Rheumatoid Arthritis
+  sort_order: 341
+  specialties: [rheumatology]
+  synonyms_en: [ra, autoimmune arthritis, joint inflammation]
+  synonyms_ka: [რევმატოიდული ართრიტი, აუტოიმუნური ართრიტი, სახსრების ანთება]
+  description_ka: |
+    რევმატოიდული ართრიტი არის აუტოიმუნური დაავადება, რომლის დროსაც იმუნური
+    სისტემა უტევს სახსრების გარსს და იწვევს ანთებას. ის იწვევს სიმეტრიულ
+    სახსრის ტკივილს, შეშუპებასა და დილის სიხისტეს. ადრეული მკურნალობა
+    მედიკამენტებით ანელებს სახსრების დაზიანებას.
+  description_en: |
+    Rheumatoid arthritis is an autoimmune disease in which the immune system
+    attacks the joint lining, causing inflammation. It produces symmetric joint
+    pain, swelling, and morning stiffness. Early treatment with medication slows
+    joint damage.
+
+- slug: low-back-pain
+  name_ka: წელის ტკივილი
+  name_en: Low Back Pain
+  sort_order: 342
+  specialties: [orthopedics, neurology, physical-medicine]
+  synonyms_en: [back pain, lumbago, lower back pain]
+  synonyms_ka: [ზურგის ტკივილი, წელის ტკივილი, ლუმბაგო]
+  description_ka: |
+    წელის ტკივილი ერთ-ერთი ყველაზე გავრცელებული საჩივარია, რომელიც
+    შეიძლება გამოწვეული იყოს კუნთების დაჭიმვით, მალთაშუა დისკის პრობლემით
+    ან არასწორი მდგომარეობით. უმეტეს შემთხვევაში ის თავისით ან ფიზიკური
+    თერაპიით უმჯობესდება. ხანგრძლივი ან ძლიერი ტკივილი ექიმის შემოწმებას
+    საჭიროებს.
+  description_en: |
+    Low back pain is one of the most common complaints and can be caused by
+    muscle strain, disc problems, or poor posture. In most cases it improves on
+    its own or with physical therapy. Persistent or severe pain warrants a
+    medical evaluation.
+
+- slug: herniated-disc
+  name_ka: მალთაშუა დისკის თიაქარი
+  name_en: Herniated Disc
+  sort_order: 343
+  specialties: [orthopedics, neurosurgery, neurology]
+  synonyms_en: [slipped disc, disc herniation, bulging disc]
+  synonyms_ka: [დისკის თიაქარი, დისკის გრიჟა, ხერხემლის თიაქარი]
+
+- slug: scoliosis
+  name_ka: სკოლიოზი
+  name_en: Scoliosis
+  sort_order: 344
+  specialties: [orthopedics, traumatology]
+  synonyms_en: [curved spine, spinal curvature]
+  synonyms_ka: [ხერხემლის გამრუდება, ზურგის გამრუდება]
+
+- slug: bone-fracture
+  name_ka: ძვლის მოტეხილობა
+  name_en: Bone Fracture
+  sort_order: 345
+  specialties: [traumatology, orthopedics, emergency-medicine]
+  synonyms_en: [broken bone, fracture]
+  synonyms_ka: [მოტეხილობა, ძვლის გადატეხა, კიდურის მოტეხვა]
+
+- slug: carpal-tunnel-syndrome
+  name_ka: მაჯის არხის სინდრომი
+  name_en: Carpal Tunnel Syndrome
+  sort_order: 346
+  specialties: [orthopedics, neurology, neurosurgery]
+  synonyms_en: [wrist nerve pain, hand numbness]
+  synonyms_ka: [მაჯის ტკივილი, ხელის დაბუჟება]
+
+- slug: tendinitis
+  name_ka: ტენდინიტი
+  name_en: Tendinitis
+  sort_order: 347
+  specialties: [orthopedics, sports-medicine, rheumatology]
+  synonyms_en: [tendon inflammation, tennis elbow]
+  synonyms_ka: [მყესის ანთება, იდაყვის ტკივილი]
+
+- slug: rotator-cuff-injury
+  name_ka: მხრის მბრუნავი მანჟეტის დაზიანება
+  name_en: Rotator Cuff Injury
+  sort_order: 348
+  specialties: [orthopedics, sports-medicine, traumatology]
+  synonyms_en: [shoulder injury, shoulder pain]
+  synonyms_ka: [მხრის დაზიანება, მხრის ტკივილი]
+
+- slug: knee-ligament-injury
+  name_ka: მუხლის იოგების დაზიანება
+  name_en: Knee Ligament Injury
+  sort_order: 349
+  specialties: [orthopedics, sports-medicine, traumatology]
+  synonyms_en: [acl tear, meniscus tear, knee injury]
+  synonyms_ka: [მუხლის ტრავმა, მენისკის დაზიანება, იოგის გაწყვეტა]
+
+- slug: flat-feet
+  name_ka: ბრტყელტერფიანობა
+  name_en: Flat Feet
+  sort_order: 350
+  specialties: [orthopedics, podiatry, traumatology]
+  synonyms_en: [fallen arches, pes planus]
+  synonyms_ka: [ტერფის გაბრტყელება, ბრტყელი ტერფი]
+
+- slug: ankylosing-spondylitis
+  name_ka: ანკილოზური სპონდილიტი
+  name_en: Ankylosing Spondylitis
+  sort_order: 351
+  specialties: [rheumatology, orthopedics]
+  synonyms_en: [spinal arthritis]
+  synonyms_ka: [ხერხემლის ანთება, ბეხტერევის დაავადება]
+
+# --- ENT --------------------------------------------------------------------
+
+- slug: sinusitis
+  name_ka: სინუსიტი
+  name_en: Sinusitis
+  sort_order: 380
+  specialties: [ent, allergology]
+  synonyms_en: [sinus infection, blocked sinuses, sinus inflammation]
+  synonyms_ka: [პარანაზალური სინუსების ანთება, ჰაიმორიტი, ცხვირის ღრუების ანთება]
+  description_ka: |
+    სინუსიტი არის ცხვირის გვერდითი ღრუების ანთება, რომელიც ხშირად
+    გაცივების ან ალერგიის შემდეგ ვითარდება. სიმპტომებია ცხვირის გაჭედვა,
+    სახის ტკივილი და სქელი გამონადენი. მსუბუქი შემთხვევა თავისით გადის,
+    ბაქტერიული ინფექცია კი ანტიბიოტიკებს საჭიროებს.
+  description_en: |
+    Sinusitis is inflammation of the sinuses, often developing after a cold or
+    due to allergies. Symptoms include a blocked nose, facial pain, and thick
+    discharge. Mild cases clear on their own, while bacterial infections need
+    antibiotics.
+
+- slug: tonsillitis
+  name_ka: ტონზილიტი
+  name_en: Tonsillitis
+  sort_order: 381
+  specialties: [ent, pediatrics, infectious-diseases]
+  synonyms_en: [sore throat, inflamed tonsils]
+  synonyms_ka: [ნუშისებრი ჯირკვლების ანთება, ყელის ტკივილი, ანგინა]
+
+- slug: otitis-media
+  name_ka: შუა ყურის ანთება
+  name_en: Otitis Media
+  sort_order: 382
+  specialties: [ent, pediatrics]
+  synonyms_en: [middle ear infection, ear infection, earache]
+  synonyms_ka: [ყურის ანთება, ყურის ტკივილი, შუა ოტიტი]
+
+- slug: hearing-loss
+  name_ka: სმენის დაქვეითება
+  name_en: Hearing Loss
+  sort_order: 383
+  specialties: [ent]
+  synonyms_en: [deafness, hard of hearing]
+  synonyms_ka: [სმენის დაკარგვა, სიყრუე, სმენის გაუარესება]
+
+- slug: tinnitus
+  name_ka: ყურში ხმაური
+  name_en: Tinnitus
+  sort_order: 384
+  specialties: [ent, neurology]
+  synonyms_en: [ringing in ears, ear noise]
+  synonyms_ka: [ყურში წივილი, ყურში გუგუნი]
+
+- slug: allergic-rhinitis
+  name_ka: ალერგიული რინიტი
+  name_en: Allergic Rhinitis
+  sort_order: 385
+  specialties: [allergology, ent]
+  synonyms_en: [hay fever, nasal allergy, runny nose]
+  synonyms_ka: [თივის ცხელება, ცხვირის ალერგია, ალერგიული სურდო]
+  description_ka: |
+    ალერგიული რინიტი არის ცხვირის ლორწოვანის ალერგიული ანთება,
+    რომელსაც იწვევს მტვერი, ყვავილის მტვერი ან ცხოველის ბეწვი. სიმპტომებია
+    ცემინება, ცხვირიდან გამონადენი და ცხვირის გაჭედვა. მკურნალობა მოიცავს
+    ანტიჰისტამინებსა და ალერგენის თავიდან აცილებას.
+  description_en: |
+    Allergic rhinitis is an allergic inflammation of the nasal lining triggered
+    by dust, pollen, or animal dander. Symptoms include sneezing, a runny nose,
+    and nasal congestion. Treatment includes antihistamines and avoiding the
+    allergen.
+
+- slug: deviated-septum
+  name_ka: ცხვირის ძგიდის გამრუდება
+  name_en: Deviated Septum
+  sort_order: 386
+  specialties: [ent]
+  synonyms_en: [crooked nose, blocked nasal passage]
+  synonyms_ka: [ცხვირის ძგიდის გამრუდება, ცხვირის ტიხრის გამრუდება]
+
+- slug: laryngitis
+  name_ka: ლარინგიტი
+  name_en: Laryngitis
+  sort_order: 387
+  specialties: [ent]
+  synonyms_en: [hoarse voice, voice loss]
+  synonyms_ka: [ხმის ჩახლეჩა, ხორხის ანთება]
+
+- slug: nasal-polyps
+  name_ka: ცხვირის პოლიპები
+  name_en: Nasal Polyps
+  sort_order: 388
+  specialties: [ent, allergology]
+  synonyms_en: [polyps in nose]
+  synonyms_ka: [ცხვირის პოლიპი]
+
+# --- Ophthalmology ----------------------------------------------------------
+
+- slug: cataracts
+  name_ka: კატარაქტა
+  name_en: Cataracts
+  sort_order: 410
+  specialties: [ophthalmology]
+  synonyms_en: [cloudy lens, blurry vision]
+  synonyms_ka: [თვალის ბურუსი, თვალის დაბინდვა, ბროლის დანისლვა]
+  description_ka: |
+    კატარაქტა არის თვალის ბუნებრივი ბროლის დამღვრევა, რომელიც ასაკთან
+    ერთად ვითარდება და მხედველობას აბუნდოვანებს. სიმპტომებია ბუნდოვანი
+    ხედვა, ფერების გახუნება და სინათლის მიმართ მგრძნობელობა. მკურნალობა
+    ქირურგიულია — დამღვრეული ბროლი იცვლება ხელოვნურით.
+  description_en: |
+    A cataract is a clouding of the eye's natural lens that develops with age
+    and blurs vision. Symptoms include hazy sight, fading colors, and
+    sensitivity to light. Treatment is surgical — the clouded lens is replaced
+    with an artificial one.
+
+- slug: glaucoma
+  name_ka: გლაუკომა
+  name_en: Glaucoma
+  sort_order: 411
+  specialties: [ophthalmology]
+  synonyms_en: [eye pressure, optic nerve damage]
+  synonyms_ka: [გლაუკომა]
+  description_ka: |
+    გლაუკომა არის თვალის დაავადება, რომელიც აზიანებს მხედველობის ნერვს,
+    ხშირად თვალის შიდა წნევის მომატების გამო. ის ნელ-ნელა იღებს გვერდით
+    მხედველობას და მკურნალობის გარეშე შეიძლება გამოიწვიოს სიბრმავე. ადრეული
+    მკურნალობა წვეთებით ან ქირურგიით იცავს მხედველობას.
+  description_en: |
+    Glaucoma is an eye disease that damages the optic nerve, often due to raised
+    pressure inside the eye. It slowly erodes peripheral vision and can cause
+    blindness if untreated. Early treatment with drops or surgery preserves
+    sight.
+
+- slug: myopia
+  name_ka: მიოპია
+  name_en: Myopia
+  sort_order: 412
+  specialties: [ophthalmology]
+  synonyms_en: [nearsightedness, short sight]
+  synonyms_ka: [ახლომხედველობა, მიოპია]
+
+- slug: conjunctivitis
+  name_ka: კონიუნქტივიტი
+  name_en: Conjunctivitis
+  sort_order: 413
+  specialties: [ophthalmology, infectious-diseases]
+  synonyms_en: [pink eye, eye infection, red eye]
+  synonyms_ka: [თვალის ლორწოვანის ანთება, წითელი თვალი]
+
+- slug: dry-eye-syndrome
+  name_ka: მშრალი თვალის სინდრომი
+  name_en: Dry Eye Syndrome
+  sort_order: 414
+  specialties: [ophthalmology]
+  synonyms_en: [dry eyes, eye irritation]
+  synonyms_ka: [თვალის სიმშრალე, თვალის გაღიზიანება]
+
+- slug: diabetic-retinopathy
+  name_ka: დიაბეტური რეტინოპათია
+  name_en: Diabetic Retinopathy
+  sort_order: 415
+  specialties: [ophthalmology, endocrinology]
+  synonyms_en: [diabetic eye disease]
+  synonyms_ka: [დიაბეტური თვალის დაავადება]
+
+- slug: macular-degeneration
+  name_ka: ყვითელი ლაქის დეგენერაცია
+  name_en: Macular Degeneration
+  sort_order: 416
+  specialties: [ophthalmology]
+  synonyms_en: [amd, age related vision loss]
+  synonyms_ka: [ასაკთან დაკავშირებული მხედველობის დაკარგვა]
+
+- slug: strabismus
+  name_ka: სიელმე
+  name_en: Strabismus
+  sort_order: 417
+  specialties: [ophthalmology, pediatrics]
+  synonyms_en: [crossed eyes, squint, lazy eye]
+  synonyms_ka: [ელმა, თვალის ელმა]
+
+# --- Allergy & immunology ---------------------------------------------------
+
+- slug: food-allergy
+  name_ka: საკვების ალერგია
+  name_en: Food Allergy
+  sort_order: 440
+  specialties: [allergology, immunology]
+  synonyms_en: [allergic reaction, food intolerance]
+  synonyms_ka: [საკვებზე ალერგია, კვებითი ალერგია]
+
+- slug: drug-allergy
+  name_ka: მედიკამენტური ალერგია
+  name_en: Drug Allergy
+  sort_order: 441
+  specialties: [allergology, immunology]
+  synonyms_en: [medication allergy]
+  synonyms_ka: [წამალზე ალერგია, მედიკამენტზე ალერგია]
+
+- slug: anaphylaxis
+  name_ka: ანაფილაქსია
+  name_en: Anaphylaxis
+  sort_order: 442
+  specialties: [allergology, immunology, emergency-medicine]
+  synonyms_en: [severe allergic reaction, allergic shock]
+  synonyms_ka: [ანაფილაქსიური შოკი, ძლიერი ალერგია]
+
+- slug: immunodeficiency
+  name_ka: იმუნოდეფიციტი
+  name_en: Immunodeficiency
+  sort_order: 443
+  specialties: [immunology, infectious-diseases]
+  synonyms_en: [weak immune system, low immunity]
+  synonyms_ka: [იმუნიტეტის დაქვეითება, სუსტი იმუნიტეტი]
+
+# --- Infectious diseases ----------------------------------------------------
+
+- slug: influenza
+  name_ka: გრიპი
+  name_en: Influenza
+  sort_order: 470
+  specialties: [infectious-diseases, internal-medicine, family-medicine]
+  synonyms_en: [flu, seasonal flu]
+  synonyms_ka: [გრიპი, სეზონური გრიპი]
+  description_ka: |
+    გრიპი არის სასუნთქი გზების ვირუსული ინფექცია, რომელიც სწრაფად
+    ვრცელდება და სეზონურ ეპიდემიებს იწვევს. სიმპტომებია მაღალი სიცხე,
+    კუნთების ტკივილი, ხველა და ძლიერი დაღლილობა. უმეტესად თავისით
+    გაივლის; ვაქცინაცია საუკეთესო პრევენციაა.
+  description_en: |
+    Influenza is a viral respiratory infection that spreads rapidly and causes
+    seasonal epidemics. Symptoms include high fever, muscle aches, cough, and
+    severe fatigue. It usually resolves on its own; vaccination is the best
+    prevention.
+
+- slug: covid-19
+  name_ka: კოვიდ-19
+  name_en: COVID-19
+  sort_order: 471
+  specialties: [infectious-diseases, pulmonology, internal-medicine]
+  synonyms_en: [coronavirus, sars-cov-2]
+  synonyms_ka: [კორონავირუსი, ახალი კორონავირუსი]
+
+- slug: hiv
+  name_ka: აივ ინფექცია
+  name_en: HIV
+  sort_order: 472
+  specialties: [infectious-diseases, immunology]
+  synonyms_en: [aids, human immunodeficiency virus]
+  synonyms_ka: [შიდსი, აივ, აივ-ინფექცია]
+
+- slug: lyme-disease
+  name_ka: ლაიმის დაავადება
+  name_en: Lyme Disease
+  sort_order: 473
+  specialties: [infectious-diseases]
+  synonyms_en: [tick bite disease, borreliosis]
+  synonyms_ka: [ბორელიოზი, ტკიპის დაკბენა]
+
+- slug: mononucleosis
+  name_ka: მონონუკლეოზი
+  name_en: Mononucleosis
+  sort_order: 474
+  specialties: [infectious-diseases, pediatrics]
+  synonyms_en: [mono, glandular fever, epstein barr]
+  synonyms_ka: [ინფექციური მონონუკლეოზი]
+
+- slug: sexually-transmitted-infections
+  name_ka: სქესობრივი გზით გადამდები ინფექციები
+  name_en: Sexually Transmitted Infections
+  sort_order: 475
+  specialties: [infectious-diseases, urology, gynecology]
+  synonyms_en: [sti, std, chlamydia, gonorrhea, syphilis]
+  synonyms_ka: [ვენერიული დაავადებები, ქლამიდია, გონორეა, სიფილისი]
+
+# --- Hematology -------------------------------------------------------------
+
+- slug: anemia
+  name_ka: ანემია
+  name_en: Anemia
+  sort_order: 500
+  specialties: [hematology, internal-medicine]
+  synonyms_en: [low iron, low blood count, low hemoglobin]
+  synonyms_ka: [სისხლნაკლებობა, რკინადეფიციტური ანემია, ჰემოგლობინის დაქვეითება]
+  description_ka: |
+    ანემია არის მდგომარეობა, რომლის დროსაც სისხლში წითელი უჯრედების ან
+    ჰემოგლობინის რაოდენობა შემცირებულია. ეს იწვევს დაღლილობას,
+    სიფერმკრთალესა და ქოშინს. ყველაზე ხშირი მიზეზი რკინის დეფიციტია,
+    რომელიც დანამატებით იკურნება.
+  description_en: |
+    Anemia is a condition in which the number of red blood cells or the level of
+    hemoglobin in the blood is reduced. It causes fatigue, pale skin, and
+    shortness of breath. The most common cause is iron deficiency, which is
+    treated with supplements.
+
+- slug: thrombocytopenia
+  name_ka: თრომბოციტოპენია
+  name_en: Thrombocytopenia
+  sort_order: 501
+  specialties: [hematology]
+  synonyms_en: [low platelets]
+  synonyms_ka: [თრომბოციტების დაქვეითება]
+
+- slug: hemophilia
+  name_ka: ჰემოფილია
+  name_en: Hemophilia
+  sort_order: 502
+  specialties: [hematology, genetics]
+  synonyms_en: [bleeding disorder]
+  synonyms_ka: [სისხლდენის დარღვევა]
+
+- slug: leukemia
+  name_ka: ლეიკემია
+  name_en: Leukemia
+  sort_order: 503
+  specialties: [hematology, oncology]
+  synonyms_en: [blood cancer]
+  synonyms_ka: [სისხლის კიბო, სისხლის სიმსივნე]
+
+- slug: lymphoma
+  name_ka: ლიმფომა
+  name_en: Lymphoma
+  sort_order: 504
+  specialties: [hematology, oncology]
+  synonyms_en: [lymph node cancer, hodgkin]
+  synonyms_ka: [ლიმფური კვანძების კიბო]
+
+# --- Oncology (common cancers) ----------------------------------------------
+
+- slug: breast-cancer
+  name_ka: ძუძუს კიბო
+  name_en: Breast Cancer
+  sort_order: 530
+  specialties: [oncology, mammology, surgery]
+  synonyms_en: [breast tumor, breast lump]
+  synonyms_ka: [ძუძუს სიმსივნე, სარძევე ჯირკვლის კიბო]
+  description_ka: |
+    ძუძუს კიბო ქალებში ყველაზე გავრცელებული ონკოლოგიური დაავადებაა.
+    ადრეულ სტადიაზე ხშირად ვლინდება ძუძუში კვანძის სახით ან სკრინინგით.
+    ადრეული გამოვლენა მნიშვნელოვნად აუმჯობესებს განკურნების შანსს.
+    მკურნალობა შეიძლება აერთიანებდეს ქირურგიას, სხივურ თერაპიასა და მედიკამენტებს.
+  description_en: |
+    Breast cancer is the most common cancer among women. In early stages it
+    often appears as a lump in the breast or is detected through screening. Early
+    detection significantly improves the chance of a cure. Treatment may combine
+    surgery, radiation, and medication.
+
+- slug: lung-cancer
+  name_ka: ფილტვის კიბო
+  name_en: Lung Cancer
+  sort_order: 531
+  specialties: [oncology, pulmonology]
+  synonyms_en: [lung tumor]
+  synonyms_ka: [ფილტვის სიმსივნე]
+
+- slug: colorectal-cancer
+  name_ka: მსხვილი ნაწლავის კიბო
+  name_en: Colorectal Cancer
+  sort_order: 532
+  specialties: [oncology, gastroenterology, proctology]
+  synonyms_en: [colon cancer, bowel cancer, rectal cancer]
+  synonyms_ka: [ნაწლავის კიბო, მსხვილი ნაწლავის სიმსივნე]
+
+- slug: prostate-cancer
+  name_ka: პროსტატის კიბო
+  name_en: Prostate Cancer
+  sort_order: 533
+  specialties: [oncology, urology]
+  synonyms_en: [prostate tumor]
+  synonyms_ka: [წინამდებარე ჯირკვლის კიბო, პროსტატის სიმსივნე]
+
+- slug: cervical-cancer
+  name_ka: საშვილოსნოს ყელის კიბო
+  name_en: Cervical Cancer
+  sort_order: 534
+  specialties: [oncology, gynecology]
+  synonyms_en: [cervix cancer]
+  synonyms_ka: [საშვილოსნოს ყელის სიმსივნე]
+
+- slug: stomach-cancer
+  name_ka: კუჭის კიბო
+  name_en: Stomach Cancer
+  sort_order: 535
+  specialties: [oncology, gastroenterology, surgery]
+  synonyms_en: [gastric cancer]
+  synonyms_ka: [კუჭის სიმსივნე, გასტრული კიბო]
+
+- slug: thyroid-cancer
+  name_ka: ფარისებრი ჯირკვლის კიბო
+  name_en: Thyroid Cancer
+  sort_order: 536
+  specialties: [oncology, endocrinology, surgery]
+  synonyms_en: [thyroid tumor]
+  synonyms_ka: [ფარისებრი ჯირკვლის სიმსივნე]
+
+# --- Pediatrics (childhood-specific) ----------------------------------------
+
+- slug: childhood-asthma
+  name_ka: ბავშვთა ასთმა
+  name_en: Childhood Asthma
+  sort_order: 560
+  specialties: [pediatrics, pulmonology, allergology]
+  synonyms_en: [pediatric asthma, child wheezing]
+  synonyms_ka: [ბავშვის ასთმა, ბავშვის ხიხინი]
+
+- slug: chickenpox
+  name_ka: ჩუტყვავილა
+  name_en: Chickenpox
+  sort_order: 561
+  specialties: [pediatrics, infectious-diseases]
+  synonyms_en: [varicella]
+  synonyms_ka: [ჩუტყვავილა, ვარიცელა]
+
+- slug: ear-infection-children
+  name_ka: ბავშვთა ყურის ანთება
+  name_en: Ear Infection in Children
+  sort_order: 562
+  specialties: [pediatrics, ent]
+  synonyms_en: [child ear infection, earache]
+  synonyms_ka: [ბავშვის ყურის ტკივილი]
+
+- slug: developmental-delay
+  name_ka: განვითარების შეფერხება
+  name_en: Developmental Delay
+  sort_order: 563
+  specialties: [pediatrics, neurology, psychology]
+  synonyms_en: [delayed development, growth delay]
+  synonyms_ka: [ბავშვის განვითარების ჩამორჩენა]
+
+- slug: autism-spectrum-disorder
+  name_ka: აუტიზმის სპექტრის აშლილობა
+  name_en: Autism Spectrum Disorder
+  sort_order: 564
+  specialties: [psychiatry, pediatrics, psychology]
+  synonyms_en: [autism, asd]
+  synonyms_ka: [აუტიზმი]
+
+- slug: speech-delay
+  name_ka: მეტყველების შეფერხება
+  name_en: Speech Delay
+  sort_order: 565
+  specialties: [speech-therapy, pediatrics]
+  synonyms_en: [language delay, late talking]
+  synonyms_ka: [მეტყველების ჩამორჩენა, ბავშვი არ ლაპარაკობს]
+
+- slug: bronchiolitis
+  name_ka: ბრონქიოლიტი
+  name_en: Bronchiolitis
+  sort_order: 566
+  specialties: [pediatrics, pulmonology]
+  synonyms_en: [rsv, infant wheezing]
+  synonyms_ka: [ბავშვთა ბრონქიოლიტი]
+
+# --- Dental & oral ----------------------------------------------------------
+
+- slug: dental-caries
+  name_ka: კბილის კარიესი
+  name_en: Dental Caries
+  sort_order: 590
+  specialties: [dentistry]
+  synonyms_en: [cavities, tooth decay]
+  synonyms_ka: [კარიესი, კბილის ნახვრეტი, კბილის გაფუჭება]
+
+- slug: gingivitis
+  name_ka: გინგივიტი
+  name_en: Gingivitis
+  sort_order: 591
+  specialties: [periodontology, dentistry]
+  synonyms_en: [gum inflammation, bleeding gums]
+  synonyms_ka: [ღრძილების ანთება, ღრძილების სისხლდენა]
+
+- slug: periodontitis
+  name_ka: პერიოდონტიტი
+  name_en: Periodontitis
+  sort_order: 592
+  specialties: [periodontology, dentistry]
+  synonyms_en: [gum disease, loose teeth]
+  synonyms_ka: [ღრძილების დაავადება, კბილების გაცვენა]
+
+- slug: malocclusion
+  name_ka: კბილების არასწორი მდებარეობა
+  name_en: Malocclusion
+  sort_order: 593
+  specialties: [orthodontics, dentistry]
+  synonyms_en: [crooked teeth, bad bite, misaligned teeth]
+  synonyms_ka: [მრუდი კბილები, არასწორი ნაკბენი]
+
+- slug: tooth-loss
+  name_ka: კბილის დაკარგვა
+  name_en: Tooth Loss
+  sort_order: 594
+  specialties: [prosthodontics, dentistry, oral-surgery]
+  synonyms_en: [missing teeth, edentulism]
+  synonyms_ka: [კბილების ნაკლებობა, კბილის ამოღება]
+
+- slug: impacted-wisdom-tooth
+  name_ka: რეტინირებული სიბრძნის კბილი
+  name_en: Impacted Wisdom Tooth
+  sort_order: 595
+  specialties: [oral-surgery, dentistry]
+  synonyms_en: [wisdom teeth, third molar]
+  synonyms_ka: [სიბრძნის კბილი, რვიანი]
+
+# --- Other common conditions ------------------------------------------------
+
+- slug: chronic-fatigue
+  name_ka: ქრონიკული დაღლილობა
+  name_en: Chronic Fatigue
+  sort_order: 620
+  specialties: [internal-medicine, neurology, psychiatry]
+  synonyms_en: [tiredness, exhaustion, cfs]
+  synonyms_ka: [მუდმივი დაღლილობა, ქანცის გაწყვეტა]
+
+- slug: fibromyalgia
+  name_ka: ფიბრომიალგია
+  name_en: Fibromyalgia
+  sort_order: 621
+  specialties: [rheumatology, neurology]
+  synonyms_en: [widespread pain, muscle pain]
+  synonyms_ka: [გავრცელებული კუნთოვანი ტკივილი]
+
+- slug: lupus
+  name_ka: წითელი მგლურა
+  name_en: Lupus
+  sort_order: 622
+  specialties: [rheumatology, immunology]
+  synonyms_en: [sle, systemic lupus]
+  synonyms_ka: [სისტემური წითელი მგლურა, ლუპუსი]
+
+- slug: chronic-pain
+  name_ka: ქრონიკული ტკივილი
+  name_en: Chronic Pain
+  sort_order: 623
+  specialties: [physical-medicine, neurology, palliative-care]
+  synonyms_en: [persistent pain, long term pain]
+  synonyms_ka: [ხანგრძლივი ტკივილი, მუდმივი ტკივილი]
+
+- slug: thyroiditis
+  name_ka: თირეოიდიტი
+  name_en: Thyroiditis
+  sort_order: 624
+  specialties: [endocrinology]
+  synonyms_en: [hashimoto, thyroid inflammation]
+  synonyms_ka: [ფარისებრი ჯირკვლის ანთება, ჰაშიმოტო]
+
+- slug: adrenal-insufficiency
+  name_ka: თირკმელზედა ჯირკვლის უკმარისობა
+  name_en: Adrenal Insufficiency
+  sort_order: 625
+  specialties: [endocrinology]
+  synonyms_en: [addisons disease]
+  synonyms_ka: [ადისონის დაავადება]
+
+- slug: cushings-syndrome
+  name_ka: კუშინგის სინდრომი
+  name_en: Cushing's Syndrome
+  sort_order: 626
+  specialties: [endocrinology]
+  synonyms_en: [high cortisol]
+  synonyms_ka: [კორტიზოლის მომატება]
+
+- slug: prediabetes
+  name_ka: წინადიაბეტური მდგომარეობა
+  name_en: Prediabetes
+  sort_order: 627
+  specialties: [endocrinology, internal-medicine, nutrition]
+  synonyms_en: [borderline diabetes, impaired glucose]
+  synonyms_ka: [წინადიაბეტი, შაქრის აუტანლობა]
+
+- slug: malnutrition
+  name_ka: არასრულფასოვანი კვება
+  name_en: Malnutrition
+  sort_order: 628
+  specialties: [nutrition, internal-medicine, pediatrics]
+  synonyms_en: [undernutrition, nutrient deficiency]
+  synonyms_ka: [კვებითი დეფიციტი, არასაკმარისი კვება]
+
+- slug: dysphagia
+  name_ka: ყლაპვის გაძნელება
+  name_en: Dysphagia
+  sort_order: 629
+  specialties: [gastroenterology, ent, neurology]
+  synonyms_en: [difficulty swallowing, swallowing problem]
+  synonyms_ka: [დისფაგია, ყლაპვის პრობლემა]
+
+- slug: snoring
+  name_ka: ხვრინვა
+  name_en: Snoring
+  sort_order: 630
+  specialties: [ent, pulmonology]
+  synonyms_en: [loud breathing in sleep]
+  synonyms_ka: [ღრუტუნი, ხვრინვა ძილში]
+
+- slug: nosebleed
+  name_ka: ცხვირიდან სისხლდენა
+  name_en: Nosebleed
+  sort_order: 631
+  specialties: [ent]
+  synonyms_en: [epistaxis, bleeding nose]
+  synonyms_ka: [ცხვირიდან სისხლი, ეპისტაქსისი]
+
+- slug: thyroid-eye-disease
+  name_ka: თირეოიდული ოფთალმოპათია
+  name_en: Thyroid Eye Disease
+  sort_order: 632
+  specialties: [ophthalmology, endocrinology]
+  synonyms_en: [graves eye disease, bulging eyes]
+  synonyms_ka: [თვალების გამობერვა]
+
+- slug: melasma
+  name_ka: მელაზმა
+  name_en: Melasma
+  sort_order: 633
+  specialties: [dermatology, cosmetology]
+  synonyms_en: [skin pigmentation, dark patches]
+  synonyms_ka: [კანის პიგმენტური ლაქები, კანის პიგმენტაცია]
+
+- slug: ingrown-toenail
+  name_ka: ჩაზრდილი ფრჩხილი
+  name_en: Ingrown Toenail
+  sort_order: 634
+  specialties: [podiatry, surgery, dermatology]
+  synonyms_en: [nail problem]
+  synonyms_ka: [ფრჩხილის ჩაზრდა]
+
+- slug: diabetic-foot
+  name_ka: დიაბეტური ტერფი
+  name_en: Diabetic Foot
+  sort_order: 635
+  specialties: [podiatry, endocrinology, vascular-surgery]
+  synonyms_en: [diabetic foot ulcer]
+  synonyms_ka: [დიაბეტური ფეხი, დიაბეტური წყლული]
+
+- slug: hernia
+  name_ka: თიაქარი
+  name_en: Hernia
+  sort_order: 636
+  specialties: [surgery]
+  synonyms_en: [inguinal hernia, abdominal hernia, groin lump]
+  synonyms_ka: [მუცლის თიაქარი, საზარდულის თიაქარი]
+
+- slug: appendicitis
+  name_ka: აპენდიციტი
+  name_en: Appendicitis
+  sort_order: 637
+  specialties: [surgery, emergency-medicine]
+  synonyms_en: [appendix inflammation]
+  synonyms_ka: [აპენდიქსის ანთება, ჭიანაწლავის ანთება]
+
+- slug: goiter
+  name_ka: ჩიჩახვი
+  name_en: Goiter
+  sort_order: 638
+  specialties: [endocrinology, surgery]
+  synonyms_en: [enlarged thyroid, neck swelling]
+  synonyms_ka: [ფარისებრი ჯირკვლის გადიდება, ჩიჩახვი]
+
+- slug: cleft-lip-palate
+  name_ka: ტუჩისა და სასის ნაპრალი
+  name_en: Cleft Lip and Palate
+  sort_order: 639
+  specialties: [plastic-surgery, oral-surgery, pediatrics]
+  synonyms_en: [cleft lip, cleft palate]
+  synonyms_ka: [მგლისპირა, კურდღლისტუჩა]
+
+- slug: burn-injury
+  name_ka: დამწვრობა
+  name_en: Burn Injury
+  sort_order: 640
+  specialties: [plastic-surgery, surgery, traumatology]
+  synonyms_en: [burns, scald]
+  synonyms_ka: [დამწვარი, ნადაგი]
+
+- slug: brain-tumor
+  name_ka: თავის ტვინის სიმსივნე
+  name_en: Brain Tumor
+  sort_order: 641
+  specialties: [neurosurgery, oncology, neurology]
+  synonyms_en: [brain mass]
+  synonyms_ka: [თავის ტვინის კიბო, ტვინის სიმსივნე]
+
+- slug: spinal-stenosis
+  name_ka: ხერხემლის არხის სტენოზი
+  name_en: Spinal Stenosis
+  sort_order: 642
+  specialties: [neurosurgery, orthopedics, neurology]
+  synonyms_en: [narrowing of spine]
+  synonyms_ka: [ხერხემლის არხის შევიწროება]
+
+- slug: concussion
+  name_ka: თავის ტვინის შერყევა
+  name_en: Concussion
+  sort_order: 643
+  specialties: [neurology, traumatology, emergency-medicine]
+  synonyms_en: [head injury, mild traumatic brain injury]
+  synonyms_ka: [თავის ტვინის კონტუზია, თავის ტრავმა]
+
+- slug: cerebral-palsy
+  name_ka: ცერებრალური დამბლა
+  name_en: Cerebral Palsy
+  sort_order: 644
+  specialties: [neurology, pediatrics, physical-medicine]
+  synonyms_en: [cp]
+  synonyms_ka: [ბავშვთა ცერებრალური დამბლა]
+
+- slug: sports-injury
+  name_ka: სპორტული ტრავმა
+  name_en: Sports Injury
+  sort_order: 645
+  specialties: [sports-medicine, orthopedics, traumatology]
+  synonyms_en: [athletic injury, sprain, strain]
+  synonyms_ka: [სპორტული დაზიანება, შეღრძობა]
+
+- slug: dislocation
+  name_ka: ამოვარდნა
+  name_en: Joint Dislocation
+  sort_order: 646
+  specialties: [traumatology, orthopedics, emergency-medicine]
+  synonyms_en: [dislocated joint]
+  synonyms_ka: [სახსრის ამოვარდნა, ამოვარდნილი სახსარი]
+
+- slug: premenstrual-syndrome
+  name_ka: წინამენსტრუალური სინდრომი
+  name_en: Premenstrual Syndrome
+  sort_order: 647
+  specialties: [gynecology]
+  synonyms_en: [pms]
+  synonyms_ka: [პმს, წინამენსტრუალური დაძაბულობა]
+
+- slug: low-libido
+  name_ka: ლიბიდოს დაქვეითება
+  name_en: Low Libido
+  sort_order: 648
+  specialties: [sexology, andrology, gynecology]
+  synonyms_en: [low sex drive]
+  synonyms_ka: [სექსუალური ლტოლვის დაქვეითება]
+
+- slug: testicular-pain
+  name_ka: სათესლე ჯირკვლის ტკივილი
+  name_en: Testicular Pain
+  sort_order: 649
+  specialties: [urology, andrology]
+  synonyms_en: [scrotal pain]
+  synonyms_ka: [სათესლეების ტკივილი]
+
+- slug: bladder-cancer
+  name_ka: შარდის ბუშტის კიბო
+  name_en: Bladder Cancer
+  sort_order: 650
+  specialties: [oncology, urology]
+  synonyms_en: [blood in urine, bladder tumor]
+  synonyms_ka: [შარდის ბუშტის სიმსივნე]
+
+- slug: kidney-cancer
+  name_ka: თირკმლის კიბო
+  name_en: Kidney Cancer
+  sort_order: 651
+  specialties: [oncology, urology, nephrology]
+  synonyms_en: [renal cancer, kidney tumor]
+  synonyms_ka: [თირკმლის სიმსივნე]
+
+- slug: ovarian-cancer
+  name_ka: საკვერცხის კიბო
+  name_en: Ovarian Cancer
+  sort_order: 652
+  specialties: [oncology, gynecology]
+  synonyms_en: [ovary cancer, ovarian tumor]
+  synonyms_ka: [საკვერცხის სიმსივნე]
+
+- slug: pancreatic-cancer
+  name_ka: კუჭქვეშა ჯირკვლის კიბო
+  name_en: Pancreatic Cancer
+  sort_order: 653
+  specialties: [oncology, gastroenterology, surgery]
+  synonyms_en: [pancreas cancer]
+  synonyms_ka: [პანკრეასის კიბო, კუჭქვეშა ჯირკვლის სიმსივნე]
+
+- slug: liver-cancer
+  name_ka: ღვიძლის კიბო
+  name_en: Liver Cancer
+  sort_order: 654
+  specialties: [oncology, gastroenterology, surgery]
+  synonyms_en: [hepatocellular carcinoma, liver tumor]
+  synonyms_ka: [ღვიძლის სიმსივნე]
+
+- slug: melanoma
+  name_ka: მელანომა
+  name_en: Melanoma
+  sort_order: 655
+  specialties: [oncology, dermatology, surgery]
+  synonyms_en: [malignant mole, skin cancer]
+  synonyms_ka: [ავთვისებიანი ხალი, კანის მელანომა]
+
+- slug: bedwetting
+  name_ka: ღამის შარდვა
+  name_en: Bedwetting
+  sort_order: 656
+  specialties: [pediatrics, urology]
+  synonyms_en: [enuresis, nocturnal enuresis]
+  synonyms_ka: [ენურეზი, ბავშვის ღამის შარდვა]
+
+- slug: jaundice
+  name_ka: სიყვითლე
+  name_en: Jaundice
+  sort_order: 657
+  specialties: [gastroenterology, neonatology, internal-medicine]
+  synonyms_en: [yellow skin, yellow eyes]
+  synonyms_ka: [სიყვითლე, კანის გაყვითლება]
+
+- slug: gestational-diabetes
+  name_ka: გესტაციური დიაბეტი
+  name_en: Gestational Diabetes
+  sort_order: 658
+  specialties: [obstetrics, endocrinology]
+  synonyms_en: [pregnancy diabetes]
+  synonyms_ka: [ორსულობის დიაბეტი]
+
+- slug: preeclampsia
+  name_ka: პრეეკლამფსია
+  name_en: Preeclampsia
+  sort_order: 659
+  specialties: [obstetrics, gynecology]
+  synonyms_en: [pregnancy high blood pressure]
+  synonyms_ka: [ორსულთა ტოქსიკოზი, ორსულობის მაღალი წნევა]
+
+- slug: dementia
+  name_ka: დემენცია
+  name_en: Dementia
+  sort_order: 660
+  specialties: [neurology, psychiatry, geriatrics]
+  synonyms_en: [memory loss, cognitive decline]
+  synonyms_ka: [ჭკუასუსტობა, მეხსიერების დაკარგვა]
+
+- slug: chronic-nasal-congestion
+  name_ka: ცხვირის ქრონიკული გაჭედვა
+  name_en: Chronic Nasal Congestion
+  sort_order: 661
+  specialties: [ent, allergology]
+  synonyms_en: [stuffy nose, blocked nose]
+  synonyms_ka: [ცხვირის გაჭედვა, ცხვირის დახშობა]
+
+- slug: dizziness
+  name_ka: თავბრუსხვევა
+  name_en: Dizziness
+  sort_order: 662
+  specialties: [neurology, ent, internal-medicine]
+  synonyms_en: [lightheadedness, balance problems]
+  synonyms_ka: [თავბრუ, ბრუ, წონასწორობის დარღვევა]
+
+- slug: thyroid-disorders
+  name_ka: ფარისებრი ჯირკვლის დაავადებები
+  name_en: Thyroid Disorders
+  sort_order: 663
+  specialties: [endocrinology]
+  synonyms_en: [thyroid problems]
+  synonyms_ka: [ფარისებრი ჯირკვლის პრობლემები]
+
+- slug: chronic-diarrhea
+  name_ka: ქრონიკული ფაღარათი
+  name_en: Chronic Diarrhea
+  sort_order: 664
+  specialties: [gastroenterology, infectious-diseases]
+  synonyms_en: [persistent diarrhea, loose stools]
+  synonyms_ka: [ხანგრძლივი ფაღარათი, გათხელებული განავალი]
+
+- slug: food-poisoning
+  name_ka: კვებითი მოწამვლა
+  name_en: Food Poisoning
+  sort_order: 665
+  specialties: [infectious-diseases, gastroenterology, toxicology]
+  synonyms_en: [foodborne illness, stomach bug]
+  synonyms_ka: [საკვებით მოწამვლა, კუჭ-ნაწლავის ინფექცია]
+
+- slug: juvenile-arthritis
+  name_ka: იუვენილური ართრიტი
+  name_en: Juvenile Arthritis
+  sort_order: 666
+  specialties: [rheumatology, pediatrics]
+  synonyms_en: [childhood arthritis]
+  synonyms_ka: [ბავშვთა ართრიტი]
+
+- slug: psoriatic-arthritis
+  name_ka: ფსორიაზული ართრიტი
+  name_en: Psoriatic Arthritis
+  sort_order: 667
+  specialties: [rheumatology, dermatology]
+  synonyms_en: [joint pain with psoriasis]
+  synonyms_ka: [ფსორიაზის ფონზე ართრიტი]
+
+- slug: vasculitis
+  name_ka: ვასკულიტი
+  name_en: Vasculitis
+  sort_order: 668
+  specialties: [rheumatology, immunology, angiology]
+  synonyms_en: [blood vessel inflammation]
+  synonyms_ka: [სისხლძარღვების ანთება]
+
+- slug: epicondylitis
+  name_ka: ეპიკონდილიტი
+  name_en: Epicondylitis
+  sort_order: 669
+  specialties: [orthopedics, sports-medicine]
+  synonyms_en: [tennis elbow, golfers elbow]
+  synonyms_ka: [იდაყვის ტკივილი, ჩოგბურთელის იდაყვი]
+
+- slug: plantar-fasciitis
+  name_ka: ფეხის ფასციის ანთება
+  name_en: Plantar Fasciitis
+  sort_order: 670
+  specialties: [podiatry, orthopedics, sports-medicine]
+  synonyms_en: [heel pain]
+  synonyms_ka: [ქუსლის ტკივილი, ფეხის ტერფის ტკივილი]
+
+- slug: hyperhidrosis
+  name_ka: ჭარბი ოფლიანობა
+  name_en: Hyperhidrosis
+  sort_order: 671
+  specialties: [dermatology, neurology]
+  synonyms_en: [excessive sweating]
+  synonyms_ka: [ჭარბი ოფლიანობა, ოფლიანობა]
+
+- slug: keloid-scar
+  name_ka: კელოიდური ნაწიბური
+  name_en: Keloid Scar
+  sort_order: 672
+  specialties: [dermatology, plastic-surgery, cosmetology]
+  synonyms_en: [raised scar, scar]
+  synonyms_ka: [ნაწიბური, კელოიდი]
+
+- slug: alcohol-use-disorder
+  name_ka: ალკოჰოლზე დამოკიდებულება
+  name_en: Alcohol Use Disorder
+  sort_order: 673
+  specialties: [narcology, psychiatry]
+  synonyms_en: [alcoholism, drinking problem]
+  synonyms_ka: [ალკოჰოლიზმი, ლოთობა]
+
+- slug: nicotine-dependence
+  name_ka: ნიკოტინზე დამოკიდებულება
+  name_en: Nicotine Dependence
+  sort_order: 674
+  specialties: [narcology, pulmonology]
+  synonyms_en: [smoking addiction, tobacco dependence]
+  synonyms_ka: [მოწევა, თამბაქოზე დამოკიდებულება]
+
+- slug: genetic-disorders
+  name_ka: გენეტიკური დაავადებები
+  name_en: Genetic Disorders
+  sort_order: 675
+  specialties: [genetics, pediatrics]
+  synonyms_en: [inherited disease, hereditary disorder]
+  synonyms_ka: [მემკვიდრეობითი დაავადებები]
+
+- slug: down-syndrome
+  name_ka: დაუნის სინდრომი
+  name_en: Down Syndrome
+  sort_order: 676
+  specialties: [genetics, pediatrics, neurology]
+  synonyms_en: [trisomy 21]
+  synonyms_ka: [დაუნის დაავადება]
+
+- slug: pressure-ulcer
+  name_ka: წოლითი წყლული
+  name_en: Pressure Ulcer
+  sort_order: 677
+  specialties: [palliative-care, dermatology, surgery]
+  synonyms_en: [bedsore, decubitus ulcer]
+  synonyms_ka: [ნაწოლები, დეკუბიტუსი]
+
+- slug: hyperprolactinemia
+  name_ka: ჰიპერპროლაქტინემია
+  name_en: Hyperprolactinemia
+  sort_order: 678
+  specialties: [endocrinology, gynecology, reproductology]
+  synonyms_en: [high prolactin]
+  synonyms_ka: [პროლაქტინის მომატება]
+
+- slug: night-sweats
+  name_ka: ღამის ოფლიანობა
+  name_en: Night Sweats
+  sort_order: 679
+  specialties: [internal-medicine, endocrinology, infectious-diseases]
+  synonyms_en: [sweating at night]
+  synonyms_ka: [ღამით ოფლიანობა]

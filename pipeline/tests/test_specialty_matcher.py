@@ -10,7 +10,7 @@ from pipeline.core.taxonomy import normalize_alias
 @pytest.fixture()
 def matcher_db(postgres_container):
     with psycopg.connect(postgres_container, autocommit=True) as conn, conn.cursor() as cur:
-        cur.execute("TRUNCATE doctor_specialty, specialty RESTART IDENTITY")
+        cur.execute("TRUNCATE condition_specialty, doctor_specialty, specialty RESTART IDENTITY CASCADE")
         cur.execute(
             "INSERT INTO specialty (slug, name_ka, name_en, sort_order) VALUES "
             "('cardiology', 'კარდიოლოგია', 'Cardiology', 10), "
