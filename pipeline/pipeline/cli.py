@@ -38,6 +38,7 @@ _SPECIALTY_YAML_PATH = Path(__file__).parent / "data" / "specialties.yaml"
 _LOCATION_YAML_PATH = Path(__file__).parent / "data" / "locations.yaml"
 _CONDITIONS_YAML_PATH = Path(__file__).parent / "data" / "conditions.yaml"
 _NON_PROVIDERS_YAML_PATH = Path(__file__).parent / "data" / "non_providers.yaml"
+_SEARCH_KEYWORDS_YAML_PATH = Path(__file__).parent / "data" / "search_keywords.yaml"
 
 
 def _build_matcher(database_url: str) -> SpecialtyMatcher:
@@ -82,7 +83,7 @@ def _make_runner(settings: Settings) -> Runner:
         location_matcher=location_matcher,
         non_providers=NonProviderList.load(_NON_PROVIDERS_YAML_PATH),
     )
-    specialty_seeder = SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH)
+    specialty_seeder = SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH, keywords_path=_SEARCH_KEYWORDS_YAML_PATH)
     location_seeder = LocationSeeder(dsn=settings.database_url, yaml_path=_LOCATION_YAML_PATH)
     return Runner(
         persister=persister,
@@ -100,7 +101,7 @@ def main(argv: list[str] | None = None) -> int:
     import pipeline.scrapers  # noqa: F401
 
     if args.cmd == "seed-specialties":
-        SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH).seed()
+        SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH, keywords_path=_SEARCH_KEYWORDS_YAML_PATH).seed()
         return 0
 
     if args.cmd == "seed-locations":
@@ -112,7 +113,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.cmd == "remap-specialties":
-        SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH).seed()
+        SpecialtySeeder(dsn=settings.database_url, yaml_path=_SPECIALTY_YAML_PATH, keywords_path=_SEARCH_KEYWORDS_YAML_PATH).seed()
         matcher = _build_matcher(settings.database_url)
         non_providers = NonProviderList.load(_NON_PROVIDERS_YAML_PATH)
         try:

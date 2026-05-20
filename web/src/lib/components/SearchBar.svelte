@@ -8,10 +8,12 @@
   }: { initialValue?: string; placeholder?: string; autofocus?: boolean } = $props();
 
   interface DoctorSuggestion { slug: string; fullNameEn: string; fullNameKa: string; primarySpecialtyEn: string | null }
-  interface SpecialtySuggestion { slug: string; nameEn: string; nameKa: string }
+  interface EntitySuggestion { slug: string; nameEn: string; nameKa: string; doctorCount: number }
 
   let value = $state(initialValue);
-  let results = $state<{ doctors: DoctorSuggestion[]; specialties: SpecialtySuggestion[] }>({ doctors: [], specialties: [] });
+  let results = $state<{ doctors: DoctorSuggestion[]; specialties: EntitySuggestion[]; conditions: EntitySuggestion[] }>(
+    { doctors: [], specialties: [], conditions: [] },
+  );
   let open = $state(false);
   let highlighted = $state(-1);
   let wrapper: HTMLElement;
@@ -22,16 +24,23 @@
   const flat = $derived([
     ...results.doctors.map((d) => `/doctors/${d.slug}`),
     ...results.specialties.map((s) => `/doctors?specialty=${s.slug}`),
+    ...results.conditions.map((c) => `/conditions/${c.slug}`),
   ]);
 
-  const hasResults = $derived(results.doctors.length > 0 || results.specialties.length > 0);
+  const hasResults = $derived(
+    results.doctors.length > 0 || results.specialties.length > 0 || results.conditions.length > 0,
+  );
+
+  function countLabel(n: number) {
+    return `${n} ${n === 1 ? "doctor" : "doctors"}`;
+  }
 
   function onInput() {
     if (debounceTimer) clearTimeout(debounceTimer);
     const term = value.trim();
     if (term.length < 2) {
       open = false;
-      results = { doctors: [], specialties: [] };
+      results = { doctors: [], specialties: [], conditions: [] };
       return;
     }
     debounceTimer = setTimeout(() => fetchSuggestions(term), 250);
@@ -43,7 +52,12 @@
     try {
       const res = await fetch(`/api/autocomplete?q=${encodeURIComponent(term)}`, { signal: controller.signal });
       if (!res.ok) { open = false; return; }
-      results = await res.json();
+      const data = await res.json();
+      results = {
+        doctors: data.doctors ?? [],
+        specialties: data.specialties ?? [],
+        conditions: data.conditions ?? [],
+      };
       highlighted = -1;
       open = true;
     } catch (e) {
@@ -56,7 +70,7 @@
     goto(href);
   }
 
-  function submit(event: Event) {
+  async function submit(event: Event) {
     event.preventDefault();
     if (open && highlighted >= 0 && highlighted < flat.length) {
       select(flat[highlighted]);
@@ -64,7 +78,16 @@
     }
     const q = value.trim();
     open = false;
-    goto(q ? `/doctors?q=${encodeURIComponent(q)}` : "/doctors");
+    if (!q) { goto("/doctors"); return; }
+    try {
+      const res = await fetch(`/api/search/resolve?q=${encodeURIComponent(q)}`);
+      const r = res.ok ? await res.json() : { type: "query", slug: null, label: q };
+      if (r.type === "specialty") goto(`/doctors?specialty=${r.slug}`);
+      else if (r.type === "condition") goto(`/conditions/${r.slug}`);
+      else goto(`/doctors?q=${encodeURIComponent(q)}`);
+    } catch {
+      goto(`/doctors?q=${encodeURIComponent(q)}`);
+    }
   }
 
   function onKeydown(event: KeyboardEvent) {
@@ -148,6 +171,23 @@
               onmouseenter={() => (highlighted = results.doctors.length + j)}
               onclick={() => select(`/doctors?specialty=${s.slug}`)}>
               <span class="label">{s.nameEn}</span>
+              <span class="sub">{countLabel(s.doctorCount)}</span>
+            </button>
+          {/each}
+        {/if}
+        {#if results.conditions.length > 0}
+          <div class="group-header">Conditions</div>
+          {#each results.conditions as c, k (c.slug)}
+            <button
+              type="button"
+              class="suggestion"
+              class:highlighted={highlighted === results.doctors.length + results.specialties.length + k}
+              role="option"
+              aria-selected={highlighted === results.doctors.length + results.specialties.length + k}
+              onmouseenter={() => (highlighted = results.doctors.length + results.specialties.length + k)}
+              onclick={() => select(`/conditions/${c.slug}`)}>
+              <span class="label">{c.nameEn}</span>
+              <span class="sub">{countLabel(c.doctorCount)}</span>
             </button>
           {/each}
         {/if}
@@ -239,6 +279,6 @@
   }
   .suggestion.highlighted { background: var(--accent-soft); }
   .suggestion .label { font-weight: 500; }
-  .suggestion .sub { color: var(--ink-muted); font-size: 0.85rem; }
+  .suggestion .sub { color: var(--ink-muted); font-size: 0.85rem; margin-left: auto; }
   .no-matches { padding: 0.8rem 1rem; color: var(--ink-muted); font-size: 0.9rem; }
 </style>

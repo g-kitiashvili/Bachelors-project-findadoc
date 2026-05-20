@@ -33,6 +33,23 @@ def load_conditions(yaml_path: Path | str) -> list[dict]:
     return rows
 
 
+def detect_lang(text: str) -> str:
+    """'ka' if the term contains any Georgian letter, else 'en'."""
+    return "ka" if any("ა" <= ch <= "ჰ" for ch in text) else "en"
+
+
+def load_search_keywords(yaml_path: Path | str) -> list[dict]:
+    """Lay/body-part keyword rows ({term_en, term_ka, specialty}). Missing file
+    is allowed and yields an empty list, so the seeder works without it."""
+    path = Path(yaml_path)
+    if not path.exists():
+        return []
+    rows = yaml.safe_load(path.read_text(encoding="utf-8")) or []
+    if not isinstance(rows, list):
+        raise ValueError(f"{yaml_path} must contain a YAML list at the top level")
+    return rows
+
+
 def build_alias_index(rows: list[dict]) -> dict[str, str]:
     """Normalized alias/name -> slug. A key claimed by two different slugs is a
     curation error and raises, so mistakes surface loudly rather than silently

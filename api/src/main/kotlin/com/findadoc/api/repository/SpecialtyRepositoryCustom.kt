@@ -1,12 +1,12 @@
 package com.findadoc.api.repository
 
+import com.findadoc.api.search.RankedTarget
 import com.findadoc.api.web.dto.SpecialtyListItemDto
-import com.findadoc.api.web.dto.SpecialtySuggestionDto
 
 interface SpecialtyRepositoryCustom {
     fun findAllWithDoctorCount(region: String?, city: String?, clinicSlugs: List<String>): List<SpecialtyListItemDto>
     fun countDoctorsBySlug(slug: String): Long
     fun countAcceptingBySlug(slug: String): Long
     fun countTreatsChildrenBySlug(slug: String): Long
-    fun autocomplete(q: String, threshold: Double, limit: Int): List<SpecialtySuggestionDto>
+    fun searchRank(q: String, threshold: Double, limit: Int): List<RankedTarget>
 }

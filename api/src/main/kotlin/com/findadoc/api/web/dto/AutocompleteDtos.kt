@@ -3,6 +3,7 @@ package com.findadoc.api.web.dto
 data class AutocompleteResponseDto(
     val doctors: List<DoctorSuggestionDto>,
     val specialties: List<SpecialtySuggestionDto>,
+    val conditions: List<ConditionSuggestionDto>,
     val clinics: List<ClinicSuggestionDto>,
 )
 
@@ -17,6 +18,14 @@ data class SpecialtySuggestionDto(
     val slug: String,
     val nameEn: String,
     val nameKa: String,
+    val doctorCount: Long,
+)
+
+data class ConditionSuggestionDto(
+    val slug: String,
+    val nameEn: String,
+    val nameKa: String,
+    val doctorCount: Long,
 )
 
 data class ClinicSuggestionDto(

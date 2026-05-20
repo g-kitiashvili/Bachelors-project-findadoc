@@ -141,4 +141,26 @@ class AutocompleteControllerTest @Autowired constructor(
                 jsonPath("$.doctors[0].fullNameEn") { exists() }
             }
     }
+
+    @Test
+    @Sql("/sql/search-test-fixture.sql")
+    fun `getSuggestions surfaces a specialty via a lay alias with a doctor count`() {
+        mockMvc.get("/api/v1/autocomplete") { param("q", "heart") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.specialties[?(@.slug=='cardiology')].nameEn") { value("Cardiology") }
+                jsonPath("$.specialties[?(@.slug=='cardiology')].doctorCount") { value(2) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/search-test-fixture.sql")
+    fun `getSuggestions surfaces a condition via a synonym in its own group`() {
+        mockMvc.get("/api/v1/autocomplete") { param("q", "high blood pressure") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.conditions[?(@.slug=='hypertension')].nameEn") { value("Hypertension") }
+                jsonPath("$.conditions[?(@.slug=='hypertension')].doctorCount") { value(2) }
+            }
+    }
 }

@@ -55,6 +55,19 @@ class MedicalConditionSeeder:
                         "ON CONFLICT DO NOTHING",
                         (cond_id, sid),
                     )
+                cur.execute("DELETE FROM condition_synonym WHERE condition_id = %s", (cond_id,))
+                seen: set[tuple[str, str]] = set()
+                for lang, key in (("en", "synonyms_en"), ("ka", "synonyms_ka")):
+                    for raw in row.get(key, []) or []:
+                        term = (raw or "").strip()
+                        dedup_key = (lang, term.lower())
+                        if not term or dedup_key in seen:
+                            continue
+                        seen.add(dedup_key)
+                        cur.execute(
+                            "INSERT INTO condition_synonym (condition_id, term, lang) VALUES (%s, %s, %s)",
+                            (cond_id, term, lang),
+                        )
             conn.commit()
         log.info("condition_seed_complete", count=len(rows))
         return len(rows)
