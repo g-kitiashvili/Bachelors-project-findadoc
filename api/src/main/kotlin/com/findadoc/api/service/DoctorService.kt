@@ -47,4 +47,8 @@ class DoctorService(
             ?: throw DoctorNotFoundException(slug)
         return doctor.toProfileDto()
     }
+
+    fun findEntityBySlug(slug: String): com.findadoc.api.domain.Doctor? = doctorRepository.findBySlug(slug)
+
+    fun canonicalSlugForMerged(slug: String): String? = doctorRepository.findCanonicalSlugByMergedSlug(slug)
 }

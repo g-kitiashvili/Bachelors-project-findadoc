@@ -8,6 +8,7 @@ Subcommands:
   seed-locations      → upsert the region/city taxonomy from YAML and exit
   seed-conditions     → upsert medical conditions from YAML (run after seed-specialties) and exit
   remap-specialties   → re-map every doctor's specialties from stored data and exit
+  dedup               → merge cross-source duplicate doctors and clinics and exit
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ from pathlib import Path
 import structlog
 
 from pipeline.config import Settings
+from pipeline.core.deduplicator import Deduplicator
 from pipeline.core.location_matcher import LocationMatcher
 from pipeline.core.location_seeder import LocationSeeder
 from pipeline.core.non_providers import NonProviderList
@@ -60,6 +62,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("seed-locations", help="Upsert the region/city taxonomy from YAML.")
     sub.add_parser("seed-conditions", help="Upsert medical conditions from YAML (run after seed-specialties).")
     sub.add_parser("remap-specialties", help="Re-map all doctors' specialties from stored data.")
+    sub.add_parser("dedup", help="Merge cross-source duplicate doctors and clinics.")
     return parser
 
 
@@ -89,6 +92,7 @@ def _make_runner(settings: Settings) -> Runner:
         persister=persister,
         specialty_seeder=specialty_seeder,
         location_seeder=location_seeder,
+        deduplicator=Deduplicator(settings.database_url),
     )
 
 
@@ -120,6 +124,10 @@ def main(argv: list[str] | None = None) -> int:
             Remapper(settings.database_url, matcher=matcher, non_providers=non_providers).remap_all()
         except RemapRegression:
             return 1
+        return 0
+
+    if args.cmd == "dedup":
+        Deduplicator(settings.database_url).run()
         return 0
 
     runner = _make_runner(settings)

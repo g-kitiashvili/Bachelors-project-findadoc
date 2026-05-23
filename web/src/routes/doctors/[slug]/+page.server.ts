@@ -1,4 +1,4 @@
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:8080";
@@ -30,7 +30,13 @@ interface DoctorProfile {
 export const load: PageServerLoad = async ({ params, fetch }) => {
   const res = await fetch(
     `${API_BASE}/api/v1/doctors/${encodeURIComponent(params.slug)}`,
+    { redirect: "manual" },
   );
+  if (res.status === 301) {
+    const loc = res.headers.get("location") ?? "";
+    const canonical = loc.split("/").pop();
+    if (canonical && canonical !== params.slug) throw redirect(301, `/doctors/${canonical}`);
+  }
   if (res.status === 404) {
     error(404, "Doctor not found");
   }

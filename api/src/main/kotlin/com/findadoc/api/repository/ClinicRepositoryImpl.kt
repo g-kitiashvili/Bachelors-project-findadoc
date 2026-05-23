@@ -21,7 +21,10 @@ class ClinicRepositoryImpl(
         specialtySlugs: List<String>,
         limit: Int,
     ): List<ClinicListItemDto> {
-        val conditions = mutableListOf<Condition>(DSL.field("d.status").eq("ACTIVE"))
+        val conditions = mutableListOf<Condition>(
+            DSL.field("c.status").eq("ACTIVE"),
+            DSL.field("d.status").eq("ACTIVE"),
+        )
         region?.let { conditions += DSL.field("reg.slug").eq(it).or(DSL.field("loc.slug").eq(it)) }
         city?.let { conditions += DSL.field("loc.slug").eq(it) }
         if (specialtySlugs.isNotEmpty()) {
@@ -64,7 +67,7 @@ class ClinicRepositoryImpl(
 
     override fun countDoctorsBySlug(slug: String): Long =
         dsl.selectCount().from("doctor_clinic dc").join("clinic c").on("c.id = dc.clinic_id").join("doctor d").on("d.id = dc.doctor_id")
-            .where(DSL.field("c.slug").eq(slug).and(DSL.field("d.status").eq("ACTIVE")))
+            .where(DSL.field("c.slug").eq(slug).and(DSL.field("c.status").eq("ACTIVE")).and(DSL.field("d.status").eq("ACTIVE")))
             .fetchOne(0, Long::class.java) ?: 0L
 
     override fun autocomplete(q: String, threshold: Double, limit: Int): List<ClinicSuggestionDto> {
@@ -74,7 +77,7 @@ class ClinicRepositoryImpl(
         )
         return dsl.select(DSL.field("c.slug"), DSL.field("c.name_en"), DSL.field("c.name_ka"))
             .from("clinic c")
-            .where(sim.gt(threshold))
+            .where(DSL.field("c.status").eq("ACTIVE").and(sim.gt(threshold)))
             .orderBy(sim.desc(), DSL.field("c.name_en").asc())
             .limit(limit)
             .fetch { r ->

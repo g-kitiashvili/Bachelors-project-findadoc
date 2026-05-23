@@ -70,6 +70,9 @@ class Doctor(
     @Column(name = "status", nullable = false)
     val status: String = "ACTIVE",
 
+    @field:Column(name = "merged_into_id")
+    val mergedIntoId: Long? = null,
+
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: OffsetDateTime = OffsetDateTime.now(),
 
