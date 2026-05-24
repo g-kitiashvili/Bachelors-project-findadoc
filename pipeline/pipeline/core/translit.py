@@ -76,6 +76,7 @@ _CLINIC_WORD_OVERRIDES: dict[str, str] = {
     "რეპროდუქტოლოგიის": "Reproductive",
     "ლაბორატორია": "Laboratory",
     "ლაბორატორიული": "Laboratory",
+    "ფილიალი": "Branch",
     "ბავშვთა": "Children's",
     "ქალთა": "Women's",
     "ონკოლოგიური": "Oncology",
@@ -178,6 +179,38 @@ def clinic_name_to_en(name_ka: str) -> str:
             out.append(_clinic_token_to_en(part))
     latin = "".join(out).strip()
     return " ".join(_title_word(w) for w in latin.split()) or name_ka
+
+
+_ADDRESS_TYPE_RULES = (
+    (re.compile(r"\bქუჩა\b"), "St."),
+    (re.compile(r"\bქ\.(?=\s|$)"), "St."),
+    (re.compile(r"\bგამზირი\b"), "Ave."),
+    (re.compile(r"\bგამზ\.?(?=\s|$)"), "Ave."),
+    (re.compile(r"\bშესახვევი\b"), "Ln."),
+    (re.compile(r"\bჩიხი\b"), "Lane"),
+    (re.compile(r"\bმოედანი\b"), "Sq."),
+    (re.compile(r"\bსართული\b"), "floor"),
+    (re.compile(r"\bკორპუსი\b"), "bldg."),
+    (re.compile(r"\bდასახლება\b"), "settlement"),
+    (re.compile(r"\bმიკრორაიონი\b"), "microdistrict"),
+)
+_CITY_PREFIX_RE = re.compile(r"^\s*ქ\.?\s*[ა-ჰ]+\s*,\s*")
+_NUM_MARKER_RE = re.compile(r"[№N]\s*(?=\d)")
+
+
+def address_to_en(address: str | None) -> str | None:
+    """Romanize a Georgian street address: drop the redundant "ქ. <city>," prefix,
+    translate the address-type words (ქუჩა → St., გამზირი → Ave.), normalize the
+    №/N number marker to #, and romanize the remaining proper nouns."""
+    if not address:
+        return None
+    s = _CITY_PREFIX_RE.sub("", address)
+    s = _NUM_MARKER_RE.sub("#", s)
+    for rx, repl in _ADDRESS_TYPE_RULES:
+        s = rx.sub(repl, s)
+    latin = kartuli_to_latin(s)
+    words = [_title_word(w) if w[:1].isalpha() else w for w in latin.split()]
+    return " ".join(words).strip() or None
 
 
 def normalize(record: DoctorRecord) -> DoctorRecord:

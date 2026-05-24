@@ -17,7 +17,7 @@ class SearchSchemaTest @Autowired constructor(
     @Test
     @Sql("/sql/search-test-fixture.sql")
     fun `search term tables accept seeded rows`() {
-        assertEquals(3, dsl.fetchCount(DSL.table("specialty_alias")))
+        assertEquals(4, dsl.fetchCount(DSL.table("specialty_alias")))
         assertEquals(2, dsl.fetchCount(DSL.table("condition_synonym")))
     }
 }

@@ -20,7 +20,7 @@
     specialtyKa: string | null;
     specialtyEn: string | null;
     specialties: SpecialtyRef[];
-    clinics: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null }>;
+    clinics: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null; addressEn: string | null }>;
   }
 
   let { doctor }: { doctor: Doctor } = $props();
@@ -97,7 +97,7 @@
       <div class="clinic-row">
         {#each doctor.clinics as c (c.slug)}
           <a class="profile-clinic-pill" href={`/clinics/${c.slug}`}>
-            {c.nameEn}{#if c.address} · <span class="clinic-addr">{c.address}</span>{/if}
+            {c.nameEn}{#if c.addressEn ?? c.address} · <span class="clinic-addr">{c.addressEn ?? c.address}</span>{/if}
           </a>
         {/each}
       </div>

@@ -7,13 +7,15 @@ DELETE FROM medical_condition;
 DELETE FROM specialty;
 
 INSERT INTO specialty (slug, name_ka, name_en, sort_order) VALUES
-  ('cardiology',  'კარდიოლოგია',  'Cardiology',  10),
-  ('dermatology', 'დერმატოლოგია', 'Dermatology', 40);
+  ('cardiology',   'კარდიოლოგია',  'Cardiology',    10),
+  ('dermatology',  'დერმატოლოგია', 'Dermatology',   40),
+  ('ophthalmology','ოფთალმოლოგია', 'Ophthalmology', 60);
 
 INSERT INTO specialty_alias (specialty_id, term, lang)
 SELECT id, 'heart', 'en' FROM specialty WHERE slug = 'cardiology'
 UNION ALL SELECT id, 'გული', 'ka' FROM specialty WHERE slug = 'cardiology'
-UNION ALL SELECT id, 'კანი', 'ka' FROM specialty WHERE slug = 'dermatology';
+UNION ALL SELECT id, 'კანი', 'ka' FROM specialty WHERE slug = 'dermatology'
+UNION ALL SELECT id, 'eyes', 'en' FROM specialty WHERE slug = 'ophthalmology';
 
 INSERT INTO medical_condition (slug, name_ka, name_en, sort_order) VALUES
   ('hypertension', 'არტერიული ჰიპერტენზია', 'Hypertension', 100);

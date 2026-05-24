@@ -21,6 +21,7 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
+from pipeline.core.clinic_normalize import is_role_phrase
 from pipeline.core.fetcher import FetchError
 from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
@@ -122,6 +123,8 @@ class VipmedScraper(StaticHtmlScraper):
             if counts_match and i < len(en_texts):
                 en_raw = _CLINIC_NAME_SPLIT.split(en_texts[i], maxsplit=1)[0].strip(" ;.")
                 name_en = english_or_none(en_raw)
+            if is_role_phrase(name_en, name):
+                continue  # a doctor role/affiliation phrase, not a clinic
             clinics.append(ClinicRef(source_url=source_url, name_ka=name, name_en=name_en))
         return clinics
 

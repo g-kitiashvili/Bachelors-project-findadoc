@@ -57,12 +57,14 @@ class AutocompleteControllerTest @Autowired constructor(
 
     @Test
     @Sql("/sql/doctors-test-fixture.sql")
-    fun `getSuggestions returns both groups for a specialty term`() {
+    fun `getSuggestions maps a specialty term to the specialty group, not doctors by their specialty text`() {
+        // 'kardio' matches the Cardiology specialty; the doctors group is name-only,
+        // so a cardiologist whose name is not 'kardio' must NOT appear there.
         mockMvc.get("/api/v1/autocomplete") { param("q", "kardio") }
             .andExpect {
                 status { isOk() }
                 jsonPath("$.specialties[?(@.slug=='cardiology')].nameEn") { value("Cardiology") }
-                jsonPath("$.doctors[?(@.slug=='giorgi-tsintsadze')].fullNameEn") { value("Giorgi Tsintsadze") }
+                jsonPath("$.doctors[?(@.slug=='giorgi-tsintsadze')]") { doesNotExist() }
             }
     }
 

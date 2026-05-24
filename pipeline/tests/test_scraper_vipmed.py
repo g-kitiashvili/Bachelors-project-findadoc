@@ -2,6 +2,7 @@ import re
 from pathlib import Path
 
 import pytest
+from bs4 import BeautifulSoup
 
 from pipeline.core.fetcher import FetchError
 from pipeline.scrapers.vipmed import VipmedScraper, _strip_md
@@ -47,6 +48,19 @@ def test_extract_doctor_with_multiple_clinics(scraper):
 
 def test_extract_returns_none_for_non_profile(scraper):
     assert scraper.extract(_read("non_profile.html"), "https://vipmed.ge/") is None
+
+
+def test_clinics_filters_role_phrases(scraper):
+    html = (
+        '<div class="elementor-widget"><h3>სამუშაო ადგილი/თანამდებობა</h3></div>'
+        '<div class="elementor-widget" data-widget_type="text-editor.default">'
+        "<ul><li>ავერსის კლინიკა</li>"
+        "<li>ავერსის კლინიკის ექიმი-ნევროლოგი</li></ul></div>"
+    )
+    clinics = scraper._clinics(BeautifulSoup(html, "lxml"), None)
+    names = [c.name_ka for c in clinics]
+    assert "ავერსის კლინიკა" in names
+    assert all("ექიმ" not in n for n in names)
 
 
 def test_strip_md():

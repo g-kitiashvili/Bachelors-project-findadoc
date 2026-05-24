@@ -14,6 +14,8 @@
   }
 
   const total = $derived(data.total ?? 0);
+  const specialtyCount = $derived(data.specialtyCount ?? 0);
+  const conditionCount = $derived(data.conditionCount ?? 0);
 </script>
 
 <svelte:head>
@@ -29,8 +31,8 @@
         <span class="hero-title-accent">you can trust.</span>
       </h1>
       <p class="hero-sub">
-        Search {total > 0 ? `${total}+ ` : ""}verified Georgian doctors across
-        specialties, clinics, and conditions — in Georgian and English.
+        Search {total > 0 ? `${total} ` : ""}Georgian doctors across
+        specialties, clinics, and conditions.
       </p>
 
       <SearchBar autofocus={false} />
@@ -49,8 +51,8 @@
       <div class="hero-photo hero-photo-2">{initial(slot2)}</div>
       <div class="hero-photo hero-photo-3">{initial(slot3)}</div>
       <div class="hero-badge">
-        <div class="hero-badge-num">{total}+</div>
-        <div class="hero-badge-text">verified<br />profiles</div>
+        <div class="hero-badge-num">{total}</div>
+        <div class="hero-badge-text">doctor<br />profiles</div>
       </div>
     </div>
   </div>
@@ -59,20 +61,16 @@
 <section class="stats">
   <div class="stats-inner">
     <div>
-      <div class="stat-num">{total}<span class="stat-num-accent">+</span></div>
+      <div class="stat-num">{total}</div>
       <div class="stat-label">Doctors indexed</div>
     </div>
     <div>
-      <div class="stat-num">16</div>
+      <div class="stat-num">{specialtyCount}</div>
       <div class="stat-label">Specialties</div>
     </div>
     <div>
-      <div class="stat-num">2</div>
-      <div class="stat-label">Sources (and growing)</div>
-    </div>
-    <div>
-      <div class="stat-num">EN<span class="stat-num-accent">·</span>KA</div>
-      <div class="stat-label">Bilingual</div>
+      <div class="stat-num">{conditionCount}</div>
+      <div class="stat-label">Conditions</div>
     </div>
   </div>
 </section>
@@ -255,9 +253,6 @@
     line-height: 1;
     color: var(--ink);
     letter-spacing: -0.02em;
-  }
-  .stat-num-accent {
-    color: var(--accent);
   }
   .stat-label {
     margin-top: 0.5rem;

@@ -91,12 +91,12 @@ class SpecialtyRepositoryImpl(
                 "word_similarity({0}, lower(s.name_en)), " +
                 "word_similarity({0}, lower(s.name_ka)), " +
                 "coalesce((select 1.0 from specialty_alias a " +
-                "where a.specialty_id = s.id and lower(a.term) = {0} limit 1), 0))",
+                "where a.specialty_id = s.id and (lower(a.term) = {0} or regexp_replace(lower(a.term), 's$', '') = regexp_replace({0}, 's$', '')) limit 1), 0))",
             SQLDataType.DOUBLE, DSL.`val`(q),
         ).`as`("score")
         val isExact = DSL.field(
             "(lower(s.name_en) = {0} or lower(s.name_ka) = {0} or exists " +
-                "(select 1 from specialty_alias a where a.specialty_id = s.id and lower(a.term) = {0}))",
+                "(select 1 from specialty_alias a where a.specialty_id = s.id and (lower(a.term) = {0} or regexp_replace(lower(a.term), 's$', '') = regexp_replace({0}, 's$', ''))))",
             SQLDataType.BOOLEAN, DSL.`val`(q),
         ).`as`("is_exact")
         val doctorCount = DSL.field(
@@ -107,7 +107,7 @@ class SpecialtyRepositoryImpl(
         val matches = DSL.condition(
             "(word_similarity({0}, lower(s.name_en)) > {1} or word_similarity({0}, lower(s.name_ka)) > {1} " +
                 "or exists (select 1 from specialty_alias a where a.specialty_id = s.id " +
-                "and lower(a.term) = {0}))",
+                "and (lower(a.term) = {0} or regexp_replace(lower(a.term), 's$', '') = regexp_replace({0}, 's$', ''))))",
             DSL.`val`(q), DSL.`val`(threshold),
         )
         return dsl.select(DSL.field("s.slug"), DSL.field("s.name_en"), DSL.field("s.name_ka"), score, isExact, doctorCount)

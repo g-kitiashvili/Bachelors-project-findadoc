@@ -3,6 +3,7 @@ package com.findadoc.api.web
 import com.findadoc.api.service.ClinicService
 import com.findadoc.api.web.dto.ClinicDetailDto
 import com.findadoc.api.web.dto.ClinicListItemDto
+import com.findadoc.api.web.dto.PageResponseDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,22 +18,26 @@ import org.springframework.web.bind.annotation.RestController
 class ClinicController(
     private val clinicService: ClinicService,
 ) {
-    @Operation(summary = "Top clinics with doctor counts, faceted by region/city/specialty and name search")
+    @Operation(summary = "Clinics with doctor counts, faceted by region/city/specialty and name search, paginated")
     @GetMapping
     fun getAll(
         @RequestParam(required = false) q: String?,
         @RequestParam(required = false) region: String?,
         @RequestParam(required = false) city: String?,
         @RequestParam(required = false) specialty: String?,
-    ): Map<String, List<ClinicListItemDto>> {
+        @RequestParam(defaultValue = "1") page: Int,
+        @RequestParam(defaultValue = "50") pageSize: Int,
+    ): PageResponseDto<ClinicListItemDto> {
         val slugs = specialty?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-        return mapOf(
-            "items" to clinicService.listFacet(
-                q?.trim()?.takeIf { it.isNotEmpty() },
-                region?.trim()?.takeIf { it.isNotEmpty() },
-                city?.trim()?.takeIf { it.isNotEmpty() },
-                slugs,
-            ),
+        val safePage = maxOf(page, 1)
+        val safeSize = pageSize.coerceIn(1, 100)
+        return clinicService.listFacet(
+            q?.trim()?.takeIf { it.isNotEmpty() },
+            region?.trim()?.takeIf { it.isNotEmpty() },
+            city?.trim()?.takeIf { it.isNotEmpty() },
+            slugs,
+            safePage,
+            safeSize,
         )
     }
 

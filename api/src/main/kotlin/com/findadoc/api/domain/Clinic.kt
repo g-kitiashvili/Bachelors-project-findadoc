@@ -17,6 +17,7 @@ class Clinic(
     @Column(name = "name_ka", nullable = false) val nameKa: String,
     @Column(name = "name_en", nullable = false) val nameEn: String,
     @Column(name = "address") val address: String? = null,
+    @Column(name = "address_en") val addressEn: String? = null,
     @Column(name = "phone") val phone: String? = null,
     @Column(name = "website") val website: String? = null,
     @Column(name = "status", nullable = false) val status: String = "ACTIVE",

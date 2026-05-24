@@ -119,39 +119,72 @@ def test_regression_rolls_back(dedup_db):
         assert cur.fetchone()[0] == 0
 
 
-def _insert_clinic(cur, slug, name_en, src, phone=None, website=None):
+def _insert_clinic(cur, slug, name_en, src, phone=None, website=None, address=None):
     cur.execute(
-        "INSERT INTO clinic (slug, name_ka, name_en, phone, website, last_source_url, "
-        "last_updated_at, status) VALUES (%s,%s,%s,%s,%s,%s, now(), 'ACTIVE') RETURNING id",
-        (slug, name_en, name_en, phone, website, f"https://{src}/{slug}"),
+        "INSERT INTO clinic (slug, name_ka, name_en, phone, website, address, last_source_url, "
+        "last_updated_at, status) VALUES (%s,%s,%s,%s,%s,%s,%s, now(), 'ACTIVE') RETURNING id",
+        (slug, name_en, name_en, phone, website, address, f"https://{src}/{slug}"),
     )
     return cur.fetchone()[0]
 
 
-def test_merges_clinic_same_name_and_phone(dedup_db):
+def test_merges_clinic_same_name_across_sources(dedup_db):
+    # Aggregators relist a clinic with no phone/website to correlate on; matching on
+    # the shared name across distinct sources is enough to merge.
     with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
-        c1 = _insert_clinic(cur, "alpha-evex", "Alpha Clinic", "evex.ge", phone="+995 32 100")
-        c2 = _insert_clinic(cur, "alpha-cmc",  "Alpha Clinic", "cmc.ge",  phone="+995 32 100")
-        d = _insert_doctor(cur, "dc1", "Doc One", "დ ერთი", "cmc.ge", "cardiology")
+        _insert_clinic(cur, "alpha-evex", "Alpha Clinic", "evex.ge")
+        c2 = _insert_clinic(cur, "alpha-tsamali", "Alpha Clinic", "tsamali.ge")
+        d = _insert_doctor(cur, "dc1", "Doc One", "დ ერთი", "tsamali.ge", "cardiology")
         cur.execute("INSERT INTO doctor_clinic (doctor_id, clinic_id) VALUES (%s,%s)", (d, c2))
     Deduplicator(dedup_db).run()
     with psycopg.connect(dedup_db) as conn, conn.cursor() as cur:
         cur.execute("SELECT status FROM clinic WHERE slug='alpha-evex'")
-        s1 = cur.fetchone()[0]
-        cur.execute("SELECT status FROM clinic WHERE slug='alpha-cmc'")
-        s2 = cur.fetchone()[0]
-        assert {s1, s2} == {"ACTIVE", "MERGED"}
+        assert cur.fetchone()[0] == "ACTIVE"
+        cur.execute("SELECT status FROM clinic WHERE slug='alpha-tsamali'")
+        assert cur.fetchone()[0] == "MERGED"
         cur.execute(
             "SELECT count(*) FROM doctor_clinic dc JOIN clinic c ON c.id=dc.clinic_id "
             "WHERE c.status='ACTIVE' AND dc.doctor_id=%s", (d,))
         assert cur.fetchone()[0] >= 1
 
 
-def test_does_not_merge_clinic_branches_different_phone(dedup_db):
+def test_clinic_merge_prefers_official_and_enriches(dedup_db):
+    # Official source is canonical even when the aggregator copy is more complete;
+    # the official record absorbs the aggregator's address.
     with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
-        _insert_clinic(cur, "br-1", "Chain Hospital", "evex.ge", phone="+995 1")
-        _insert_clinic(cur, "br-2", "Chain Hospital", "cmc.ge",  phone="+995 2")
+        _insert_clinic(cur, "beta-newhosp", "Beta Hospital", "newhospitals.ge")
+        _insert_clinic(cur, "beta-tsamali", "Beta Hospital", "tsamali.ge", address="Krtsanisi St. 12")
+    Deduplicator(dedup_db).run()
+    with psycopg.connect(dedup_db) as conn, conn.cursor() as cur:
+        cur.execute("SELECT status, address FROM clinic WHERE slug='beta-newhosp'")
+        status, address = cur.fetchone()
+        assert status == "ACTIVE"
+        assert address == "Krtsanisi St. 12"
+        cur.execute("SELECT status FROM clinic WHERE slug='beta-tsamali'")
+        assert cur.fetchone()[0] == "MERGED"
+
+
+def test_merges_same_name_within_one_source(dedup_db):
+    # A source can list one clinic under near-identical names for different doctors;
+    # they collapse to a single entry.
+    with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
+        _insert_clinic(cur, "gamma-1", "Gamma Clinic", "tsamali.ge")
+        _insert_clinic(cur, "gamma-2", "Gamma Clinic", "tsamali.ge")
     Deduplicator(dedup_db).run()
     with psycopg.connect(dedup_db) as conn, conn.cursor() as cur:
         cur.execute("SELECT count(*) FROM clinic WHERE status='ACTIVE'")
-        assert cur.fetchone()[0] == 2
+        assert cur.fetchone()[0] == 1
+
+
+def test_merges_across_quote_punctuation_differences(dedup_db):
+    # vipmed wraps names in curly quotes; the dedup key ignores quotes so the quoted
+    # and unquoted copies merge.
+    with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
+        _insert_clinic(cur, "delta-evex", "Delta Clinic", "evex.ge")
+        _insert_clinic(cur, "delta-vipmed", "“Delta Clinic”", "vipmed.ge")
+    Deduplicator(dedup_db).run()
+    with psycopg.connect(dedup_db) as conn, conn.cursor() as cur:
+        cur.execute("SELECT status FROM clinic WHERE slug='delta-evex'")
+        assert cur.fetchone()[0] == "ACTIVE"
+        cur.execute("SELECT status FROM clinic WHERE slug='delta-vipmed'")
+        assert cur.fetchone()[0] == "MERGED"

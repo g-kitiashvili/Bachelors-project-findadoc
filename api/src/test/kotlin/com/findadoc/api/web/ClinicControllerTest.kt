@@ -67,4 +67,18 @@ class ClinicControllerTest @Autowired constructor(
                 jsonPath("$.items[?(@.slug=='alpha-clinic')].doctorCount") { value(1) }
             }
     }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    @Sql("/sql/clinics-test-fixture.sql")
+    fun `getAll returns a paginated envelope`() {
+        mockMvc.get("/api/v1/clinics") { param("pageSize", "1") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.page") { value(1) }
+                jsonPath("$.pageSize") { value(1) }
+                jsonPath("$.total") { exists() }
+                jsonPath("$.items.length()") { value(org.hamcrest.Matchers.lessThanOrEqualTo(1)) }
+            }
+    }
 }

@@ -12,19 +12,39 @@ data class DoctorFilter(
     val city: String? = null,
     val clinicSlugs: List<String> = emptyList(),
     val conditionSlugs: List<String> = emptyList(),
+    val nameOnly: Boolean = false,
 )
 
 const val FUZZY_THRESHOLD = 0.30
 
+// Georgian surnames overwhelmingly end in -შვილი or -ძე (Latin -shvili / -dze). Those
+// suffixes' trigrams match thousands of unrelated surnames, so a full-surname query clears
+// the fuzzy threshold against everyone. Match on the distinctive stem by dropping the suffix
+// from the query; a bare suffix collapses to an empty stem and matches no one.
+private val PATRONYMIC_SUFFIX = Regex("(შვილი|ძე|shvili|dze)$", RegexOption.IGNORE_CASE)
+
+private fun nameStem(q: String): String = PATRONYMIC_SUFFIX.replace(q.trim(), "")
+
 private fun wordSim(q: String, column: String): Field<Double> =
     DSL.field("word_similarity({0}, lower({1}))", SQLDataType.DOUBLE, DSL.`val`(q), DSL.field(column))
 
-fun relevance(q: String): Field<Double> = DSL.greatest(
-    wordSim(q, "d.full_name_en"),
-    wordSim(q, "d.full_name_ka"),
-    DSL.field("word_similarity({0}, coalesce(lower(d.specialty_en), ''))", SQLDataType.DOUBLE, DSL.`val`(q)),
-    DSL.field("word_similarity({0}, coalesce(lower(d.specialty_ka), ''))", SQLDataType.DOUBLE, DSL.`val`(q)),
-)
+fun relevance(q: String): Field<Double> {
+    val stem = nameStem(q)
+    return DSL.greatest(
+        wordSim(stem, "d.full_name_en"),
+        wordSim(stem, "d.full_name_ka"),
+        DSL.field("word_similarity({0}, coalesce(lower(d.specialty_en), ''))", SQLDataType.DOUBLE, DSL.`val`(q)),
+        DSL.field("word_similarity({0}, coalesce(lower(d.specialty_ka), ''))", SQLDataType.DOUBLE, DSL.`val`(q)),
+    )
+}
+
+fun nameRelevance(q: String): Field<Double> {
+    val stem = nameStem(q)
+    return DSL.greatest(
+        wordSim(stem, "d.full_name_en"),
+        wordSim(stem, "d.full_name_ka"),
+    )
+}
 
 fun doctorConditions(
     f: DoctorFilter,
@@ -63,5 +83,7 @@ fun doctorConditions(
             ),
         )
     }
-    f.q?.takeIf { it.isNotEmpty() }?.let { add(relevance(it).gt(FUZZY_THRESHOLD)) }
+    f.q?.takeIf { it.isNotEmpty() }?.let {
+        add((if (f.nameOnly) nameRelevance(it) else relevance(it)).gt(FUZZY_THRESHOLD))
+    }
 }

@@ -16,8 +16,8 @@
 <section class="hero">
   <h1>{data.detail.nameEn}</h1>
   <div class="details">
-    {#if data.detail.address}
-      <span class="detail">{data.detail.address}</span>
+    {#if data.detail.addressEn ?? data.detail.address}
+      <span class="detail">{data.detail.addressEn ?? data.detail.address}</span>
     {/if}
     {#if data.detail.phone}
       <span class="detail">{data.detail.phone}</span>

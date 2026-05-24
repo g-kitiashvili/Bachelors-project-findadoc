@@ -22,11 +22,23 @@ interface DoctorPage {
 }
 
 export const load: PageServerLoad = async ({ fetch }) => {
-  // Pull a small batch of doctors for the hero collage initials + the total count.
-  const res = await fetch(`${API_BASE}/api/v1/doctors?page=1&pageSize=3`);
-  if (!res.ok) {
-    return { total: 0, sample: [] as DoctorListItem[] };
-  }
-  const page = (await res.json()) as DoctorPage;
-  return { total: page.total, sample: page.items };
+  // Doctors (count + hero collage initials) + live specialty/clinic counts for the stats strip.
+  const [docRes, specRes, condRes] = await Promise.all([
+    fetch(`${API_BASE}/api/v1/doctors?page=1&pageSize=3`),
+    fetch(`${API_BASE}/api/v1/specialties`),
+    fetch(`${API_BASE}/api/v1/conditions`),
+  ]);
+  const page = docRes.ok
+    ? ((await docRes.json()) as DoctorPage)
+    : { items: [] as DoctorListItem[], page: 1, pageSize: 3, total: 0 };
+  const specialties = specRes.ok
+    ? ((await specRes.json()) as { items: Array<{ doctorCount: number }> }).items
+    : [];
+  const conditions = condRes.ok ? ((await condRes.json()) as { items: unknown[] }).items : [];
+  return {
+    total: page.total,
+    sample: page.items,
+    specialtyCount: specialties.filter((s) => s.doctorCount > 0).length,
+    conditionCount: conditions.length,
+  };
 };

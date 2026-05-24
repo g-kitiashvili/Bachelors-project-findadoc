@@ -54,6 +54,18 @@ def _source(url: str | None) -> str:
     return urlsplit(url or "").netloc
 
 
+# Aggregators relist clinics that official sites own; the official record is the
+# authoritative one and wins as the merge canonical.
+_AGGREGATOR_HOSTS = frozenset({"tsamali.ge", "vipmed.ge"})
+
+_QUOTE_CHARS = str.maketrans("", "", "“”\"'„«»")
+
+
+def _clinic_key(name: str | None) -> str:
+    """Dedup key for a clinic name: drop quote marks, then lowercase + collapse space."""
+    return normalize_alias((name or "").translate(_QUOTE_CHARS))
+
+
 class Deduplicator:
     def __init__(self, dsn: str, *, max_merge_fraction: float = 0.8) -> None:
         self._dsn = dsn
@@ -178,10 +190,10 @@ class Deduplicator:
         total = len(rows)
         meta: dict[int, dict] = {}
         for cid, nen, nka, url, phone, website, address in rows:
+            src = _source(url)
             meta[cid] = {
-                "en": normalize_alias(nen or ""), "ka": normalize_alias(nka or ""),
-                "src": _source(url), "phone": normalize_alias(phone or ""),
-                "web": normalize_alias(website or ""),
+                "en": _clinic_key(nen), "ka": _clinic_key(nka),
+                "src": src, "official": src not in _AGGREGATOR_HOSTS,
                 "complete": bool(address) + bool(phone) + bool(website),
             }
         name_dsu = _DSU()
@@ -200,31 +212,23 @@ class Deduplicator:
         for ids in name_dsu.groups().values():
             if len(ids) < 2:
                 continue
-            srcs = [meta[i]["src"] for i in ids]
-            if len(set(srcs)) < len(srcs):
-                flagged += 1
-                log.warning("dedup_flagged", kind="clinic", ids=ids, name=meta[ids[0]]["en"])
-                continue
-            corr = _DSU()
-            for i in ids:
-                corr.find(i)
-            for a in range(len(ids)):
-                for b in range(a + 1, len(ids)):
-                    ma, mb = meta[ids[a]], meta[ids[b]]
-                    if (ma["phone"] and ma["phone"] == mb["phone"]) or (ma["web"] and ma["web"] == mb["web"]):
-                        corr.union(ids[a], ids[b])
-            for sub in corr.groups().values():
-                if len(sub) < 2:
-                    continue
-                merged += self._merge_clinic_cluster(cur, sub, meta)
+            # Same clinic name (modulo quotes/case) is one clinic, whether relisted
+            # across sources or duplicated within one; the official copy is canonical.
+            merged += self._merge_clinic_cluster(cur, ids, meta)
         return total, merged, flagged
 
     def _merge_clinic_cluster(self, cur: psycopg.Cursor, ids: list[int], meta: dict) -> int:
-        canonical = max(ids, key=lambda i: (meta[i]["complete"], -i))
+        canonical = max(ids, key=lambda i: (meta[i]["official"], meta[i]["complete"], -i))
         merged = 0
         for member in ids:
             if member == canonical:
                 continue
+            cur.execute(
+                "UPDATE clinic c SET address = COALESCE(c.address, m.address), "
+                "phone = COALESCE(c.phone, m.phone), website = COALESCE(c.website, m.website) "
+                "FROM clinic m WHERE c.id=%s AND m.id=%s",
+                (canonical, member),
+            )
             cur.execute(
                 "INSERT INTO doctor_clinic (doctor_id, clinic_id, via_merge) "
                 "SELECT doctor_id, %s, TRUE FROM doctor_clinic WHERE clinic_id=%s "

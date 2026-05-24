@@ -14,15 +14,7 @@
         <li><a href="/doctors">All doctors</a></li>
         <li><a href="/specialties">By specialty</a></li>
         <li><a href="/conditions">By condition</a></li>
-        <li><span class="soon" title="Coming soon">By clinic</span></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Project</h4>
-      <ul>
-        <li><a href="/about">About</a></li>
-        <li><a href="/sources">Data sources</a></li>
-        <li><a href="/thesis">Thesis</a></li>
+        <li><a href="/clinics">By clinic</a></li>
       </ul>
     </div>
   </div>
@@ -44,7 +36,7 @@
     margin: 0 auto;
     padding: 0 2rem;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
     gap: 3rem;
   }
   .footer-brand {
@@ -87,11 +79,6 @@
   }
   .footer-col a:hover {
     color: white;
-  }
-  .footer-col .soon {
-    color: rgba(255, 255, 255, 0.35);
-    font-size: 0.92rem;
-    cursor: not-allowed;
   }
   .footer-bottom {
     max-width: 1280px;

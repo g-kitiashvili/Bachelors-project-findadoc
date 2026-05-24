@@ -27,7 +27,7 @@ class AutocompleteService(
         val lower = term.lowercase()
 
         val doctors = doctorRepository.findFiltered(
-            filter = DoctorFilter(q = lower),
+            filter = DoctorFilter(q = lower, nameOnly = true),
             sort = "relevancy",
             pageable = PageRequest.of(0, GROUP_CAP),
         ).content.map { it.toSuggestionDto() }

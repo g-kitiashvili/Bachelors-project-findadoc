@@ -5,6 +5,7 @@ data class ClinicDetailDto(
     val nameKa: String,
     val nameEn: String,
     val address: String?,
+    val addressEn: String?,
     val phone: String?,
     val website: String?,
     val doctorCount: Long,

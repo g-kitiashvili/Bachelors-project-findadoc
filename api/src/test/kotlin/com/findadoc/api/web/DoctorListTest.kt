@@ -168,6 +168,39 @@ class DoctorListTest @Autowired constructor(
 
     @Test
     @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q full shvili surname matches only that surname`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "ჯავახიშვილი") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("luka-javakhishvili") }
+                jsonPath("$.items[?(@.slug=='davit-gelashvili')]") { isEmpty() }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q full dze surname matches only that surname`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "ბერიძე") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("mariam-beridze") }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
+    fun `getAll with q bare patronymic suffix matches no doctors`() {
+        mockMvc.get("/api/v1/doctors") { param("q", "shvili") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(0) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/doctors-test-fixture.sql")
     fun `getAll with q ranks exact match first`() {
         mockMvc.get("/api/v1/doctors") { param("q", "Giorgi") }
             .andExpect {
@@ -411,14 +444,18 @@ class DoctorListTest @Autowired constructor(
     @Test
     @Sql("/sql/doctors-test-fixture.sql")
     fun `getAll sort=atoz with query overrides relevancy ordering`() {
+        // "ologist" matches the four doctors whose English specialty ends in -ologist;
+        // sort=atoz orders them by family name instead of by match score.
         mockMvc.get("/api/v1/doctors") {
-            param("q", "shvili")
+            param("q", "ologist")
             param("sort", "atoz")
         }.andExpect {
             status { isOk() }
-            jsonPath("$.total") { value(2) }
-            jsonPath("$.items[0].slug") { value("davit-gelashvili") }
-            jsonPath("$.items[1].slug") { value("luka-javakhishvili") }
+            jsonPath("$.total") { value(4) }
+            jsonPath("$.items[0].slug") { value("mariam-beridze") }
+            jsonPath("$.items[1].slug") { value("ana-eradze") }
+            jsonPath("$.items[2].slug") { value("luka-javakhishvili") }
+            jsonPath("$.items[3].slug") { value("giorgi-tsintsadze") }
         }
     }
 

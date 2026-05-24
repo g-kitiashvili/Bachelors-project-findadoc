@@ -20,8 +20,9 @@ fun Doctor.toListItemDto(): DoctorListItemDto {
     val primary = doctorSpecialties.firstOrNull { it.isPrimary }?.specialty?.toRefDto()
     val primaryClinic = doctorClinics
         .map { it.clinic }
+        .filter { it.status == "ACTIVE" }
         .minByOrNull { it.nameEn }
-        ?.let { ClinicRefDto(slug = it.slug, nameKa = it.nameKa, nameEn = it.nameEn, address = it.address) }
+        ?.let { ClinicRefDto(slug = it.slug, nameKa = it.nameKa, nameEn = it.nameEn, address = it.address, addressEn = it.addressEn) }
     return DoctorListItemDto(
         slug = slug,
         fullNameKa = fullNameKa,

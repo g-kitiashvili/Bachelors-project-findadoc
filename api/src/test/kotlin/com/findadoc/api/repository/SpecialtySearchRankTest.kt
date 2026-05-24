@@ -40,6 +40,15 @@ class SpecialtySearchRankTest @Autowired constructor(
 
     @Test
     @Sql("/sql/search-test-fixture.sql")
+    fun `searchRank matches a singular query against a plural alias`() {
+        // alias is 'eyes'; the singular 'eye' must still resolve to ophthalmology
+        val hits = specialtyRepository.searchRank("eye", 0.30, 5)
+        val ophthalmology = hits.first { it.slug == "ophthalmology" }
+        assertTrue(ophthalmology.exact)
+    }
+
+    @Test
+    @Sql("/sql/search-test-fixture.sql")
     fun `searchRank returns nothing below threshold`() {
         assertTrue(specialtyRepository.searchRank("zzzzqqqq", 0.30, 5).isEmpty())
     }

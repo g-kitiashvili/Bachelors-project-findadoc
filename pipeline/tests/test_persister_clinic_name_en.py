@@ -32,6 +32,19 @@ def test_source_name_en_used_verbatim(clinic_db: str) -> None:
     assert _name_en(clinic_db, "კავკასიის მედიცინის ცენტრი") == "Caucasus Medical Centre"
 
 
+def test_address_en_is_romanized(clinic_db: str) -> None:
+    persister = Persister(clinic_db)
+    record = normalize(DoctorRecord(
+        source="tsamali", source_url="https://example.com/d/3", full_name_ka="ა ბ",
+        clinics=(ClinicRef(source_url="https://tsamali.ge/klinika/x", name_ka="ტესტ კლინიკა",
+                           address="ლუბლიანას ქ. 15"),),
+    ))
+    persister.upsert(record)
+    with psycopg.connect(clinic_db) as conn, conn.cursor() as cur:
+        cur.execute("SELECT address_en FROM clinic WHERE name_ka = %s", ("ტესტ კლინიკა",))
+        assert cur.fetchone()[0] == "Lublianas St. 15"
+
+
 def test_missing_name_en_falls_back_to_algorithm(clinic_db: str) -> None:
     persister = Persister(clinic_db)
     record = normalize(DoctorRecord(

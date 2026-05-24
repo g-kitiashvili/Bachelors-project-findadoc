@@ -21,6 +21,7 @@ from pathlib import Path
 import structlog
 
 from pipeline.config import Settings
+from pipeline.core.clinic_pass import ClinicNormalizePass
 from pipeline.core.deduplicator import Deduplicator
 from pipeline.core.location_matcher import LocationMatcher
 from pipeline.core.location_seeder import LocationSeeder
@@ -63,6 +64,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("seed-conditions", help="Upsert medical conditions from YAML (run after seed-specialties).")
     sub.add_parser("remap-specialties", help="Re-map all doctors' specialties from stored data.")
     sub.add_parser("dedup", help="Merge cross-source duplicate doctors and clinics.")
+    sub.add_parser("normalize-clinics", help="Normalize existing clinic rows (names, junk, address_en).")
     return parser
 
 
@@ -128,6 +130,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "dedup":
         Deduplicator(settings.database_url).run()
+        return 0
+
+    if args.cmd == "normalize-clinics":
+        ClinicNormalizePass(settings.database_url).run()
         return 0
 
     runner = _make_runner(settings)

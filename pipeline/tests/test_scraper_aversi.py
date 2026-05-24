@@ -158,7 +158,8 @@ def test_extract_clinic_has_name_ka_and_name_en():
     assert len(rec.clinics) == 1
     clinic = rec.clinics[0]
     assert any("ა" <= c <= "ჰ" for c in clinic.name_ka)  # KA branch title
-    assert clinic.name_en == "Central Branch"
+    assert clinic.name_ka.startswith("ავერსი")  # brand-prefixed
+    assert clinic.name_en == "Aversi – Central Branch"
     assert clinic.address
     assert str(clinic.source_url).startswith("https://")
 
@@ -170,7 +171,7 @@ def test_extract_clinics_pair_by_branch_id():
     assert rec is not None
     assert len(rec.clinics) == 3
     en_names = {c.name_en for c in rec.clinics}
-    assert {"Central Branch", "Isani Branch", "Gori №1 Branch"} == en_names
+    assert {"Aversi – Central Branch", "Aversi – Isani Branch", "Aversi – Gori №1 Branch"} == en_names
     # every clinic has a distinct stable source_url
     assert len({str(c.source_url) for c in rec.clinics}) == 3
 

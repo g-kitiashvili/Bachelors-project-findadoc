@@ -9,8 +9,7 @@
       <a href="/doctors" class:active={active === "doctors"}>Find a Doctor</a>
       <a href="/specialties" class:active={active === "specialties"}>Specialties</a>
       <a href="/conditions" class:active={active === "conditions"}>Conditions</a>
-      <a href="/clinics" class:disabled={true}>Clinics</a>
-      <a href="/about" class:disabled={true}>About</a>
+      <a href="/clinics" class:active={active === "clinics"}>Clinics</a>
     </div>
     <div class="nav-right">
       <button class="nav-cta" type="button" disabled aria-disabled="true">Request callback</button>
@@ -59,11 +58,6 @@
   }
   .nav-links a:hover {
     color: var(--ink);
-  }
-  .nav-links a.disabled {
-    color: var(--ink-faint);
-    cursor: not-allowed;
-    pointer-events: none;
   }
   .nav-links a.active {
     color: var(--accent);

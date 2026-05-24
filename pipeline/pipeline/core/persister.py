@@ -21,7 +21,7 @@ from pipeline.core.non_providers import NonProviderList
 from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.specialty_matcher import SpecialtyMatcher, infer_age_groups
 from pipeline.core.specialty_writer import maybe_deactivate, write_doctor_specialties
-from pipeline.core.translit import clinic_name_to_en, next_slug_candidate, slugify
+from pipeline.core.translit import address_to_en, clinic_name_to_en, next_slug_candidate, slugify
 
 
 SOURCE_CITY = {
@@ -59,10 +59,10 @@ RETURNING id, (xmax = 0) AS inserted
 """
 
 _UPSERT_CLINIC_SQL = """
-INSERT INTO clinic (slug, name_ka, name_en, address, phone, website, last_source_url, last_updated_at, status)
-VALUES (%(slug)s, %(name_ka)s, %(name_en)s, %(address)s, %(phone)s, %(website)s, %(source_url)s, NOW(), 'ACTIVE')
+INSERT INTO clinic (slug, name_ka, name_en, address, address_en, phone, website, last_source_url, last_updated_at, status)
+VALUES (%(slug)s, %(name_ka)s, %(name_en)s, %(address)s, %(address_en)s, %(phone)s, %(website)s, %(source_url)s, NOW(), 'ACTIVE')
 ON CONFLICT (last_source_url) DO UPDATE SET
-    name_ka = EXCLUDED.name_ka, name_en = EXCLUDED.name_en, address = EXCLUDED.address,
+    name_ka = EXCLUDED.name_ka, name_en = EXCLUDED.name_en, address = EXCLUDED.address, address_en = EXCLUDED.address_en,
     phone = EXCLUDED.phone, website = EXCLUDED.website, last_updated_at = EXCLUDED.last_updated_at
 RETURNING id
 """
@@ -171,6 +171,7 @@ class Persister:
                 "name_ka": clinic.name_ka,
                 "name_en": name_en,
                 "address": clinic.address,
+                "address_en": address_to_en(clinic.address),
                 "phone": clinic.phone,
                 "website": str(clinic.website) if clinic.website else None,
                 "source_url": str(clinic.source_url),

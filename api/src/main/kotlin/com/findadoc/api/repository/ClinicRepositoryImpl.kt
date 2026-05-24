@@ -20,6 +20,7 @@ class ClinicRepositoryImpl(
         city: String?,
         specialtySlugs: List<String>,
         limit: Int,
+        offset: Int,
     ): List<ClinicListItemDto> {
         val conditions = mutableListOf<Condition>(
             DSL.field("c.status").eq("ACTIVE"),
@@ -55,6 +56,7 @@ class ClinicRepositoryImpl(
             .groupBy(DSL.field("c.id"), DSL.field("c.slug"), DSL.field("c.name_ka"), DSL.field("c.name_en"))
             .orderBy(DSL.count(DSL.field("d.id")).desc(), DSL.field("c.name_en").asc())
             .limit(limit)
+            .offset(offset)
             .fetch { r ->
                 ClinicListItemDto(
                     slug = r.get("c.slug", String::class.java),
@@ -63,6 +65,36 @@ class ClinicRepositoryImpl(
                     doctorCount = r.get("doctor_count", Long::class.java),
                 )
             }
+    }
+
+    override fun countFacet(q: String?, region: String?, city: String?, specialtySlugs: List<String>): Long {
+        val conditions = mutableListOf<Condition>(
+            DSL.field("c.status").eq("ACTIVE"),
+            DSL.field("d.status").eq("ACTIVE"),
+        )
+        region?.let { conditions += DSL.field("reg.slug").eq(it).or(DSL.field("loc.slug").eq(it)) }
+        city?.let { conditions += DSL.field("loc.slug").eq(it) }
+        if (specialtySlugs.isNotEmpty()) {
+            conditions += DSL.exists(
+                DSL.selectOne().from("doctor_specialty ds").join("specialty s").on("s.id = ds.specialty_id")
+                    .where(DSL.field("ds.doctor_id").eq(DSL.field("d.id")))
+                    .and(DSL.field("s.slug").`in`(specialtySlugs)),
+            )
+        }
+        q?.takeIf { it.isNotEmpty() }?.let {
+            conditions += DSL.greatest(
+                DSL.field("word_similarity({0}, lower(c.name_en))", SQLDataType.DOUBLE, DSL.`val`(it)),
+                DSL.field("word_similarity({0}, c.name_ka)", SQLDataType.DOUBLE, DSL.`val`(it)),
+            ).gt(FUZZY_THRESHOLD)
+        }
+        return dsl.select(DSL.countDistinct(DSL.field("c.id")))
+            .from("clinic c")
+            .join("doctor_clinic dc").on("dc.clinic_id = c.id")
+            .join("doctor d").on("d.id = dc.doctor_id")
+            .leftJoin("location loc").on("loc.id = d.location_id")
+            .leftJoin("location reg").on("reg.id = loc.parent_id")
+            .where(conditions)
+            .fetchOne(0, Long::class.java) ?: 0L
     }
 
     override fun countDoctorsBySlug(slug: String): Long =

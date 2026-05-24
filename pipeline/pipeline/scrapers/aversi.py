@@ -18,10 +18,15 @@ from __future__ import annotations
 import json
 from collections.abc import Iterator
 
+from pipeline.core.clinic_normalize import brand_prefixed, strip_sublabel
 from pipeline.core.fetcher import FetchError, HttpxFetcher
 from pipeline.core.record import ClinicRef, DoctorRecord
 from pipeline.core.registry import register
 from pipeline.core.translit import english_or_none
+
+
+_BRAND_KA = "ავერსი"
+_BRAND_EN = "Aversi"
 
 
 _DASHBOARD = "https://dashboard.aversiclinic.ge"
@@ -63,11 +68,12 @@ def _clinics(ka_doctor: dict, en_doctor: dict | None) -> tuple[ClinicRef, ...]:
             continue
         seen.add(branch_id)
         en_branch = en_by_id.get(branch_id) or {}
+        en_title = english_or_none(en_branch.get("title"))
         clinics.append(
             ClinicRef(
                 source_url=f"{_BRANCH_BASE}/{branch_id}",
-                name_ka=name_ka,
-                name_en=english_or_none(en_branch.get("title")),
+                name_ka=brand_prefixed(strip_sublabel(name_ka), _BRAND_KA),
+                name_en=brand_prefixed(strip_sublabel(en_title), _BRAND_EN) if en_title else None,
                 address=(branch.get("address") or "").strip() or None,
             )
         )
