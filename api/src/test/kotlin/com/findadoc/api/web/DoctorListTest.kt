@@ -242,6 +242,28 @@ class DoctorListTest @Autowired constructor(
     }
 
     @Test
+    @Sql("/sql/subspecialty-test-fixture.sql")
+    fun `getAll parent specialty filter includes sub-specialty doctors`() {
+        mockMvc.get("/api/v1/doctors") { param("specialty", "surgery") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(2) }
+                jsonPath("$.items[?(@.slug=='jaw-surgeon')]") { isNotEmpty() }
+            }
+    }
+
+    @Test
+    @Sql("/sql/subspecialty-test-fixture.sql")
+    fun `getAll child specialty filter narrows to that sub-specialty`() {
+        mockMvc.get("/api/v1/doctors") { param("specialty", "maxillofacial-surgery") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.total") { value(1) }
+                jsonPath("$.items[0].slug") { value("jaw-surgeon") }
+            }
+    }
+
+    @Test
     @Sql("/sql/doctors-test-fixture.sql")
     fun `getAll with multiple specialty slugs returns union`() {
         mockMvc.get("/api/v1/doctors") { param("specialty", "cardiology,pediatrics") }

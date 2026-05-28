@@ -105,6 +105,15 @@ class SpecialtyMatcher:
             return None
         return MatchResult(id=specialty_id, slug=slug, score=1.0)
 
+    def match_whole(self, *, raw_ka: str | None, raw_en: str | None) -> MatchResult | None:
+        """Exact-alias match on the full raw string, before the tokenizer splits a
+        compound (e.g. "ყბა-სახის ქირურგი" → maxillofacial surgery, not surgery)."""
+        for token in (raw_ka, raw_en):
+            hit = self._resolve_alias(token)
+            if hit is not None:
+                return hit
+        return None
+
     def match(self, *, token_ka: str | None, token_en: str | None) -> MatchResult | None:
         if not token_ka and not token_en:
             return None

@@ -59,9 +59,11 @@ class SpecialtyRepositoryImpl(
             DSL.field("s.slug"),
             DSL.field("s.name_ka"),
             DSL.field("s.name_en"),
+            DSL.field("p.slug").`as`("parent_slug"),
             DSL.count(DSL.field("d.id")).`as`("doctor_count"),
         )
             .from("specialty s")
+            .leftJoin("specialty p").on("p.id = s.parent_id")
             .leftJoin("doctor_specialty ds").on("ds.specialty_id = s.id")
             .leftJoin("doctor d").on("d.id = ds.doctor_id")
             .leftJoin("location loc").on("loc.id = d.location_id")
@@ -72,6 +74,7 @@ class SpecialtyRepositoryImpl(
                 DSL.field("s.slug"),
                 DSL.field("s.name_ka"),
                 DSL.field("s.name_en"),
+                DSL.field("p.slug"),
                 DSL.field("s.sort_order"),
             )
             .orderBy(DSL.field("s.sort_order").asc(), DSL.field("s.name_en").asc())
@@ -81,6 +84,7 @@ class SpecialtyRepositoryImpl(
                     nameKa = r.get("s.name_ka", String::class.java),
                     nameEn = r.get("s.name_en", String::class.java),
                     doctorCount = r.get("doctor_count", Long::class.java),
+                    parentSlug = r.get("parent_slug", String::class.java),
                 )
             }
     }

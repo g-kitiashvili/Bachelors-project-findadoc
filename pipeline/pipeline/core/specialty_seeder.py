@@ -51,6 +51,7 @@ class SpecialtySeeder:
                 if term and term.strip():
                     aliases_by_slug.setdefault(slug, []).append((lang, term.strip()))
 
+        id_by_slug: dict[str, int] = {}
         with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
             for row in rows:
                 cur.execute(_UPSERT_SQL, {
@@ -62,6 +63,7 @@ class SpecialtySeeder:
                     "sort_order": row.get("sort_order", 1000),
                 })
                 spec_id = cur.fetchone()[0]
+                id_by_slug[row["slug"]] = spec_id
                 cur.execute("DELETE FROM specialty_alias WHERE specialty_id = %s", (spec_id,))
                 seen: set[tuple[str, str]] = set()
                 for lang, term in aliases_by_slug.get(row["slug"], []):
@@ -73,6 +75,14 @@ class SpecialtySeeder:
                         "INSERT INTO specialty_alias (specialty_id, term, lang) VALUES (%s, %s, %s)",
                         (spec_id, term, lang),
                     )
+
+            # Second pass: resolve parent_id by slug now that every row has an id.
+            for row in rows:
+                parent_slug = row.get("parent")
+                parent_id = id_by_slug.get(parent_slug) if parent_slug else None
+                if parent_slug and parent_id is None:
+                    log.warning("specialty_parent_unknown", slug=row["slug"], parent=parent_slug)
+                cur.execute("UPDATE specialty SET parent_id = %s WHERE slug = %s", (parent_id, row["slug"]))
 
             known = {row["slug"] for row in rows}
             for kw in keywords:

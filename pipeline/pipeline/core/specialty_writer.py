@@ -29,6 +29,16 @@ def write_doctor_specialties(
     """Tokenize the raw specialty strings, match each token, and upsert
     doctor_specialty rows (first resolved token is primary). Returns the number
     of distinct specialties written."""
+    # A full string that is itself a canonical (sub-)specialty alias maps as one
+    # specialty, before the tokenizer would split a hyphen compound into its parts.
+    whole = matcher.match_whole(raw_ka=specialty_ka, raw_en=specialty_en)
+    if whole is not None:
+        cur.execute(
+            _UPSERT_DOCTOR_SPECIALTY_SQL,
+            {"doctor_id": doctor_id, "specialty_id": whole.id, "is_primary": True},
+        )
+        return 1
+
     ka_tokens = tokenize(specialty_ka)
     en_tokens = tokenize(specialty_en)
     max_len = max(len(ka_tokens), len(en_tokens))

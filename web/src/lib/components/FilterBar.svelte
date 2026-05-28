@@ -3,7 +3,7 @@
   import { page } from "$app/stores";
   import FilterDrawer from "./FilterDrawer.svelte";
 
-  interface SpecialtyOption { slug: string; nameKa: string; nameEn: string; doctorCount: number }
+  interface SpecialtyOption { slug: string; nameKa: string; nameEn: string; doctorCount: number; parentSlug?: string | null }
   interface ClinicOption { slug: string; nameKa: string; nameEn: string; doctorCount: number }
   interface LocationCity { slug: string; nameKa: string; nameEn: string; doctorCount: number }
   interface LocationRegion extends LocationCity { cities: LocationCity[] }

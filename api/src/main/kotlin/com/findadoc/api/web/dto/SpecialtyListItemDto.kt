@@ -5,4 +5,5 @@ data class SpecialtyListItemDto(
     val nameKa: String,
     val nameEn: String,
     val doctorCount: Long,
+    val parentSlug: String? = null,
 )

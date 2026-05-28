@@ -45,6 +45,26 @@ def test_match_near_match_above_threshold(matcher_db: str) -> None:
     assert result is not None and result.slug == "cardiology"
 
 
+def test_match_whole_maps_hyphen_compound_to_child(matcher_db: str) -> None:
+    with psycopg.connect(matcher_db, autocommit=True) as conn, conn.cursor() as cur:
+        cur.execute(
+            "INSERT INTO specialty (slug, name_ka, name_en, sort_order) VALUES "
+            "('surgery', 'ქირურგია', 'Surgery', 49), "
+            "('maxillofacial-surgery', 'ყბა-სახის ქირურგია', 'Maxillofacial Surgery', 52)"
+        )
+    aliases = {normalize_alias("ყბა-სახის ქირურგი"): "maxillofacial-surgery"}
+    matcher = SpecialtyMatcher(dsn=matcher_db, aliases=aliases)
+    result = matcher.match_whole(raw_ka="ყბა-სახის ქირურგი", raw_en=None)
+    assert result is not None and result.slug == "maxillofacial-surgery"
+    # the tokenizer would split this compound apart, which is why whole-match runs first
+    assert "ყბა" in tokenize("ყბა-სახის ქირურგი")
+
+
+def test_match_whole_returns_none_without_alias(matcher_db: str) -> None:
+    matcher = SpecialtyMatcher(dsn=matcher_db)
+    assert matcher.match_whole(raw_ka="კარდიოლოგი", raw_en=None) is None
+
+
 def test_tokenize_splits_on_en_dash():
     assert tokenize("ექიმი – თერაპევტი") == ["ექიმი", "თერაპევტი"]
 

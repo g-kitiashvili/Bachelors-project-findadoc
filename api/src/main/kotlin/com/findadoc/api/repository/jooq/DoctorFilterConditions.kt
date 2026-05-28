@@ -55,11 +55,20 @@ fun doctorConditions(
     f.region?.let { add(DSL.field("reg.slug").eq(it).or(DSL.field("loc.slug").eq(it))) }
     f.city?.let { add(DSL.field("loc.slug").eq(it)) }
     if (!excludeSpecialty && f.specialtySlugs.isNotEmpty()) {
+        // Parent-aware: selecting a parent specialty includes doctors mapped to any of
+        // its sub-specialties; selecting a child narrows to just that one.
         add(
             DSL.exists(
                 DSL.selectOne().from("doctor_specialty ds").join("specialty s").on("s.id = ds.specialty_id")
                     .where(DSL.field("ds.doctor_id").eq(DSL.field("d.id")))
-                    .and(DSL.field("s.slug").`in`(f.specialtySlugs)),
+                    .and(
+                        DSL.field("s.slug").`in`(f.specialtySlugs).or(
+                            DSL.field("s.parent_id").`in`(
+                                DSL.select(DSL.field("id")).from("specialty")
+                                    .where(DSL.field("slug").`in`(f.specialtySlugs)),
+                            ),
+                        ),
+                    ),
             ),
         )
     }

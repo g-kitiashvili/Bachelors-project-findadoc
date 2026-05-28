@@ -454,3 +454,82 @@
   name_en: Speech Therapy
   sort_order: 1000
   aliases: [ლოგოპედი, ფონოპედი]
+
+# Sub-specialties (parent_id tree). Aliases carry the scraped strings so a hyphen
+# compound like "ყბა-სახის ქირურგი" maps to the child before the tokenizer splits it.
+- slug: pediatric-cardiology
+  name_ka: ბავშვთა კარდიოლოგია
+  name_en: Pediatric Cardiology
+  parent: cardiology
+  sort_order: 11
+  aliases: [ბავშვთა კარდიოლოგი, pediatric cardiologist]
+
+- slug: pediatric-surgery
+  name_ka: ბავშვთა ქირურგია
+  name_en: Pediatric Surgery
+  parent: surgery
+  sort_order: 51
+  aliases: [ბავშვთა ქირურგი, pediatric surgeon]
+
+- slug: maxillofacial-surgery
+  name_ka: ყბა-სახის ქირურგია
+  name_en: Maxillofacial Surgery
+  parent: surgery
+  sort_order: 52
+  aliases: [ყბა-სახის ქირურგი, maxillofacial surgeon]
+
+- slug: surgical-oncology
+  name_ka: ონკოქირურგია
+  name_en: Surgical Oncology
+  parent: surgery
+  sort_order: 53
+  aliases: [ონკოქირურგი, ონკოლოგ-ქირურგი, ონკო-ქირურგი, surgical oncologist]
+
+- slug: pediatric-neurology
+  name_ka: ბავშვთა ნევროლოგია
+  name_en: Pediatric Neurology
+  parent: neurology
+  sort_order: 71
+  aliases: [ბავშვთა ნევროლოგი, pediatric neurologist]
+
+- slug: pediatric-endocrinology
+  name_ka: ბავშვთა ენდოკრინოლოგია
+  name_en: Pediatric Endocrinology
+  parent: endocrinology
+  sort_order: 81
+  aliases: [ბავშვთა ენდოკრინოლოგი, pediatric endocrinologist]
+
+- slug: pediatric-orthopedics
+  name_ka: ბავშვთა ორთოპედია
+  name_en: Pediatric Orthopedics
+  parent: orthopedics
+  sort_order: 91
+  aliases: [ბავშვთა ორთოპედი]
+
+- slug: gynecologic-oncology
+  name_ka: ონკოგინეკოლოგია
+  name_en: Gynecologic Oncology
+  parent: gynecology
+  sort_order: 101
+  aliases: [ონკოგინეკოლოგი, ონკო-გინეკოლოგი, gynecologic oncologist]
+
+- slug: breast-oncology
+  name_ka: ონკომამოლოგია
+  name_en: Breast Oncology
+  parent: oncology
+  sort_order: 121
+  aliases: [ონკოლოგ-მამოლოგი, ონკომამოლოგი]
+
+- slug: pediatric-gastroenterology
+  name_ka: ბავშვთა გასტროენტეროლოგია
+  name_en: Pediatric Gastroenterology
+  parent: gastroenterology
+  sort_order: 151
+  aliases: [ბავშვთა გასტროენტეროლოგი]
+
+- slug: pediatric-urology
+  name_ka: ბავშვთა უროლოგია
+  name_en: Pediatric Urology
+  parent: urology
+  sort_order: 161
+  aliases: [ბავშვთა უროლოგი]

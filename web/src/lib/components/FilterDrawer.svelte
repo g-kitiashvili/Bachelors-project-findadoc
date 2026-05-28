@@ -10,7 +10,7 @@
   interface Props {
     open: boolean;
     selectedSlugs: string[];
-    specialties: Array<{ slug: string; nameEn: string; nameKa: string; doctorCount: number }>;
+    specialties: Array<{ slug: string; nameEn: string; nameKa: string; doctorCount: number; parentSlug?: string | null }>;
     onClose: () => void;
     regions: LocationRegion[];
     selectedRegion: string;
@@ -84,7 +84,11 @@
     const extras = draft
       .filter((slug) => !present.has(slug))
       .map((slug) => ({ slug, nameEn: nameBySlug[slug]?.nameEn ?? slug, doctorCount: 0 }));
-    return [...liveSpecialties, ...extras].map((s) => ({ value: s.slug, label: s.nameEn, count: s.doctorCount }));
+    return [...liveSpecialties, ...extras].map((s) => ({
+      value: s.slug,
+      label: ("parentSlug" in s && s.parentSlug) ? `↳ ${s.nameEn}` : s.nameEn,
+      count: s.doctorCount,
+    }));
   });
 
   let liveRegions = $state<LocationRegion[]>([...regions]);

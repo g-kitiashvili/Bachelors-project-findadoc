@@ -62,6 +62,26 @@ def test_seeder_updates_existing_rows_on_rerun(clean_specialty_table: str, tmp_p
         assert cur.fetchone() == ("Cardiology Updated", 5)
 
 
+def test_seeder_resolves_parent_id_by_slug(clean_specialty_table: str, tmp_path: Path) -> None:
+    yaml_file = tmp_path / "specialties.yaml"
+    yaml_file.write_text(
+        "- slug: surgery\n  name_ka: ქირურგია\n  name_en: Surgery\n  sort_order: 50\n"
+        "- slug: maxillofacial-surgery\n  name_ka: ყბა-სახის ქირურგია\n  name_en: Maxillofacial Surgery\n"
+        "  parent: surgery\n  sort_order: 52\n",
+        encoding="utf-8",
+    )
+    SpecialtySeeder(dsn=clean_specialty_table, yaml_path=yaml_file).seed()
+    SpecialtySeeder(dsn=clean_specialty_table, yaml_path=yaml_file).seed()  # idempotent
+    with psycopg.connect(clean_specialty_table) as conn, conn.cursor() as cur:
+        cur.execute(
+            "SELECT p.slug FROM specialty c JOIN specialty p ON p.id = c.parent_id "
+            "WHERE c.slug = 'maxillofacial-surgery'"
+        )
+        assert cur.fetchone()[0] == "surgery"
+        cur.execute("SELECT parent_id FROM specialty WHERE slug = 'surgery'")
+        assert cur.fetchone()[0] is None
+
+
 def test_seeds_aliases_and_keywords_into_specialty_alias(clean_specialty_table, tmp_path):
     spec_yaml = tmp_path / "specialties.yaml"
     spec_yaml.write_text(
