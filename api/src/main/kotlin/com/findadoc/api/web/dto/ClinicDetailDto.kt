@@ -8,5 +8,9 @@ data class ClinicDetailDto(
     val addressEn: String?,
     val phone: String?,
     val website: String?,
+    val lat: Double?,
+    val lng: Double?,
     val doctorCount: Long,
+    val brand: ClinicBrandRefDto?,
+    val branches: List<ClinicBranchDto>,
 )

@@ -23,6 +23,7 @@ import structlog
 from pipeline.config import Settings
 from pipeline.core.clinic_pass import ClinicNormalizePass
 from pipeline.core.deduplicator import Deduplicator
+from pipeline.core.geocoder import GeocodeClinicsPass
 from pipeline.core.location_matcher import LocationMatcher
 from pipeline.core.location_seeder import LocationSeeder
 from pipeline.core.non_providers import NonProviderList
@@ -33,6 +34,7 @@ from pipeline.core.scheduler import run_blocking_scheduler
 from pipeline.core.specialty_matcher import SpecialtyMatcher
 from pipeline.core.medical_condition_seeder import MedicalConditionSeeder
 from pipeline.core.specialty_seeder import SpecialtySeeder
+from pipeline.core.brand_linker import BrandLinkingPass
 from pipeline.core.taxonomy import build_alias_index, load_specialties
 
 log = structlog.get_logger("pipeline.cli")
@@ -41,6 +43,7 @@ _SPECIALTY_YAML_PATH = Path(__file__).parent / "data" / "specialties.yaml"
 _LOCATION_YAML_PATH = Path(__file__).parent / "data" / "locations.yaml"
 _CONDITIONS_YAML_PATH = Path(__file__).parent / "data" / "conditions.yaml"
 _NON_PROVIDERS_YAML_PATH = Path(__file__).parent / "data" / "non_providers.yaml"
+_BRANDS_YAML_PATH = Path(__file__).parent / "data" / "brands.yaml"
 _SEARCH_KEYWORDS_YAML_PATH = Path(__file__).parent / "data" / "search_keywords.yaml"
 
 
@@ -65,6 +68,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("remap-specialties", help="Re-map all doctors' specialties from stored data.")
     sub.add_parser("dedup", help="Merge cross-source duplicate doctors and clinics.")
     sub.add_parser("normalize-clinics", help="Normalize existing clinic rows (names, junk, address_en).")
+    sub.add_parser("geocode-clinics", help="Geocode clinic addresses to coordinates via Nominatim.")
+    sub.add_parser("link-brands", help="Link clinics to curated brands by name (run after dedup).")
     return parser
 
 
@@ -134,6 +139,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "normalize-clinics":
         ClinicNormalizePass(settings.database_url).run()
+        return 0
+
+    if args.cmd == "geocode-clinics":
+        GeocodeClinicsPass(settings.database_url).run()
+        return 0
+
+    if args.cmd == "link-brands":
+        BrandLinkingPass(dsn=settings.database_url, yaml_path=_BRANDS_YAML_PATH).run()
         return 0
 
     runner = _make_runner(settings)

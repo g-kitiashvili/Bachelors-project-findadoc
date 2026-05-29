@@ -26,7 +26,7 @@ def _apply_migrations(dsn: str) -> None:
 
 @pytest.fixture(scope="session")
 def postgres_container():
-    with PostgresContainer("postgres:16-alpine", driver=None) as pg:
+    with PostgresContainer("postgis/postgis:16-3.4", driver=None) as pg:
         dsn = (
             f"host={pg.get_container_host_ip()} "
             f"port={pg.get_exposed_port(5432)} "

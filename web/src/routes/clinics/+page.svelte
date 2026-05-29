@@ -2,6 +2,7 @@
   import Pagination from "$lib/components/Pagination.svelte";
 
   let { data } = $props();
+  let open = $state<Record<string, boolean>>({});
 </script>
 
 <svelte:head>
@@ -38,10 +39,24 @@
     <ul class="list">
       {#each data.items as c (c.slug)}
         <li>
-          <a href={`/clinics/${c.slug}`}>
-            <span class="name">{c.nameEn}</span>
-            <span class="count">{c.doctorCount} {c.doctorCount === 1 ? "doctor" : "doctors"}</span>
-          </a>
+          {#if c.branches && c.branches.length > 0}
+            <button type="button" class="row brandrow" aria-expanded={open[c.slug] ?? false} onclick={() => (open[c.slug] = !open[c.slug])}>
+              <span class="name">{c.nameEn} <span class="brandtag">{c.branches.length} branches</span></span>
+              <span class="count">{c.doctorCount} {c.doctorCount === 1 ? "doctor" : "doctors"} <span class="chev">{(open[c.slug] ?? false) ? "▾" : "▸"}</span></span>
+            </button>
+            {#if open[c.slug]}
+              <ul class="branches">
+                {#each c.branches as b (b.slug)}
+                  <li><a href={`/clinics/${b.slug}`}><span class="bname">{b.nameEn}</span>{#if b.address}<span class="baddr">{b.address}</span>{/if}</a></li>
+                {/each}
+              </ul>
+            {/if}
+          {:else}
+            <a class="row" href={`/clinics/${c.slug}`}>
+              <span class="name">{c.nameEn}</span>
+              <span class="count">{c.doctorCount} {c.doctorCount === 1 ? "doctor" : "doctors"}</span>
+            </a>
+          {/if}
         </li>
       {/each}
     </ul>
@@ -83,8 +98,14 @@
   .clear-link:hover { color: var(--ink); }
 
   .list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
-  .list li a { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--line); color: var(--ink); transition: color 0.15s; text-decoration: none; }
-  .list li a:hover { color: var(--accent); }
+  .row { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 1rem 0; border: 0; border-bottom: 1px solid var(--line); color: var(--ink); transition: color 0.15s; text-decoration: none; background: none; font: inherit; text-align: left; cursor: pointer; }
+  .row:hover { color: var(--accent); }
+  .brandtag { color: var(--ink-faint); font-size: 0.78rem; font-weight: 400; margin-left: 0.5rem; }
+  .chev { color: var(--ink-faint); margin-left: 0.4rem; }
+  .branches { list-style: none; margin: 0 0 0.5rem; padding: 0 0 0 1.25rem; }
+  .branches li a { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.55rem 0; border-bottom: 1px solid var(--line); color: var(--ink-muted); text-decoration: none; }
+  .branches li a:hover { color: var(--accent); }
+  .branches .baddr { color: var(--ink-faint); font-size: 0.82rem; }
   .name { font-weight: 500; }
   .count { color: var(--ink-faint); font-size: 0.86rem; }
 

@@ -17,14 +17,21 @@ class ClinicService(
         specialtySlugs: List<String>,
         page: Int,
         pageSize: Int,
+        located: Boolean = false,
+        collapseBrands: Boolean = false,
     ): PageResponseDto<ClinicListItemDto> {
-        val items = clinicRepository.facet(q, region, city, specialtySlugs, pageSize, (page - 1) * pageSize)
-        val total = clinicRepository.countFacet(q, region, city, specialtySlugs)
+        val items = clinicRepository.facet(q, region, city, specialtySlugs, located, collapseBrands, pageSize, (page - 1) * pageSize)
+        val total = clinicRepository.countFacet(q, region, city, specialtySlugs, located, collapseBrands)
         return PageResponseDto(items = items, page = page, pageSize = pageSize, total = total)
     }
 
     fun getBySlug(slug: String): ClinicDetailDto {
         val c = clinicRepository.findBySlug(slug) ?: throw ClinicNotFoundException(slug)
-        return ClinicDetailDto(c.slug, c.nameKa, c.nameEn, c.address, c.addressEn, c.phone, c.website, clinicRepository.countDoctorsBySlug(slug))
+        val coords = clinicRepository.coordinatesBySlug(slug)
+        return ClinicDetailDto(
+            c.slug, c.nameKa, c.nameEn, c.address, c.addressEn, c.phone, c.website,
+            coords?.first, coords?.second, clinicRepository.countDoctorsBySlug(slug),
+            clinicRepository.brandBySlug(slug), clinicRepository.branchesBySlug(slug),
+        )
     }
 }

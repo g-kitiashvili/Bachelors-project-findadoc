@@ -1,0 +1,60 @@
+- slug: aversi
+  name_en: Aversi
+  name_ka: ავერსი
+  sort_order: 10
+  match_ka: [ავერსი]
+- slug: evex
+  name_en: Evex
+  name_ka: ევექსი
+  sort_order: 20
+  match_ka: [ევექს]
+- slug: geo-hospitals
+  name_en: Geo Hospitals
+  name_ka: ჯეო ჰოსპიტალსი
+  sort_order: 30
+  match_ka: [ჯეო ჰოსპიტალს]
+- slug: innova
+  name_en: Innova
+  name_ka: ინოვა
+  sort_order: 40
+  match_ka: [ინოვა, ინ ვიტრო]
+- slug: mardaleishvili
+  name_en: Mardaleishvili
+  name_ka: მარდალეიშვილი
+  sort_order: 50
+  match_ka: [მარდალეიშვილ]
+- slug: enmeditsi
+  name_en: Enmeditsi
+  name_ka: ენმედიცი
+  sort_order: 60
+  match_ka: [ენმედიცი]
+- slug: new-hospitals
+  name_en: New Hospitals
+  name_ka: ნიუ ჰოსპიტალსი
+  sort_order: 70
+  match_ka: [ნიუ ჰოსპიტალს]
+- slug: new-vision
+  name_en: New Vision
+  name_ka: ნიუ ვიჟენ
+  sort_order: 80
+  match_ka: [ნიუ ვიჟენ]
+- slug: davit-tatishvili
+  name_en: Davit Tatishvili
+  name_ka: დავით ტატიშვილი
+  sort_order: 90
+  match_ka: [დავით ტატიშვილ]
+- slug: joann
+  name_en: JoAnn
+  name_ka: ჯო ენი
+  sort_order: 100
+  match_ka: [ჯო ენი]
+- slug: globalmedi
+  name_en: Globalmedi
+  name_ka: გლობალმედი
+  sort_order: 110
+  match_ka: [გლობალმედი]
+- slug: oxford
+  name_en: Oxford
+  name_ka: ოქსფორდი
+  sort_order: 120
+  match_ka: [ოქსფორდ]

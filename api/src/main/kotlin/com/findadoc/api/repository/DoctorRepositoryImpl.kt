@@ -6,10 +6,13 @@ import com.findadoc.api.repository.jooq.nameRelevance
 import com.findadoc.api.repository.jooq.relevance
 import com.findadoc.api.web.dto.ClinicRefDto
 import com.findadoc.api.web.dto.DoctorListItemDto
+import com.findadoc.api.web.dto.MapPinDto
 import com.findadoc.api.web.dto.SpecialtyRefDto
+import org.jooq.Condition
 import org.jooq.DSLContext
 import org.jooq.SortField
 import org.jooq.impl.DSL
+import org.jooq.impl.SQLDataType
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -91,6 +94,55 @@ class DoctorRepositoryImpl(
             .fetchOne(0, Long::class.java) ?: 0L
 
         return PageImpl(records, pageable, total)
+    }
+
+    override fun mapPins(filter: DoctorFilter, centerLat: Double?, centerLng: Double?, radiusKm: Double?): List<MapPinDto> {
+        // The clinic facet picks which pins to show, not merely which doctors qualify. Constrain the
+        // projected clinic to the selected slugs (and drop the now-redundant doctor-level EXISTS) so a
+        // clinic filter can't fan out to pins for the matching doctors' other workplaces.
+        val filterByClinic = filter.clinicSlugs.isNotEmpty()
+        val conditions: MutableList<Condition> = doctorConditions(filter, excludeClinic = filterByClinic).toMutableList()
+        conditions.add(DSL.field("c.status").eq("ACTIVE"))
+        conditions.add(DSL.field("c.location").isNotNull)
+        if (filterByClinic) {
+            conditions.add(DSL.field("c.slug").`in`(filter.clinicSlugs))
+        }
+        if (centerLat != null && centerLng != null && radiusKm != null) {
+            conditions.add(
+                DSL.condition(
+                    "ST_DWithin(c.location, ST_MakePoint({0}, {1})::geography, {2})",
+                    DSL.`val`(centerLng), DSL.`val`(centerLat), DSL.`val`(radiusKm * 1000.0),
+                ),
+            )
+        }
+        return dsl.select(
+            DSL.field("c.slug"),
+            DSL.field("c.name_ka"),
+            DSL.field("c.name_en"),
+            DSL.field("ST_Y(c.location::geometry)", SQLDataType.DOUBLE).`as`("lat"),
+            DSL.field("ST_X(c.location::geometry)", SQLDataType.DOUBLE).`as`("lng"),
+            DSL.countDistinct(DSL.field("d.id")).`as`("docs"),
+        )
+            .from("doctor d")
+            .leftJoin("location loc").on("loc.id = d.location_id")
+            .leftJoin("location reg").on("reg.id = loc.parent_id")
+            .join("doctor_clinic dc").on("dc.doctor_id = d.id")
+            .join("clinic c").on("c.id = dc.clinic_id")
+            .where(conditions)
+            .groupBy(
+                DSL.field("c.id"), DSL.field("c.slug"), DSL.field("c.name_ka"),
+                DSL.field("c.name_en"), DSL.field("c.location"),
+            )
+            .fetch { r ->
+                MapPinDto(
+                    slug = r.get("c.slug", String::class.java),
+                    nameKa = r.get("c.name_ka", String::class.java),
+                    nameEn = r.get("c.name_en", String::class.java),
+                    lat = r.get("lat", Double::class.java),
+                    lng = r.get("lng", Double::class.java),
+                    doctorCount = r.get("docs", Long::class.java),
+                )
+            }
     }
 
     private fun orderBy(filter: DoctorFilter, sort: String?): List<SortField<*>> = buildList {

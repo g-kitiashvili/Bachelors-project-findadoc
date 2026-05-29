@@ -1,9 +1,10 @@
 package com.findadoc.api.web.dto
 
-data class ClinicListItemDto(
+data class MapPinDto(
     val slug: String,
     val nameKa: String,
     val nameEn: String,
+    val lat: Double,
+    val lng: Double,
     val doctorCount: Long,
-    val branches: List<ClinicBranchDto>? = null,
 )

@@ -33,9 +33,25 @@ def test_english_or_none_handles_empty():
     ("ნიუ ჰოსპიტალსი", "New Hospitals"),
     ("ევექსის კლინიკა ვარკეთილში", "Evex Clinic Varketilshi"),
     ("ავერსის კლინიკა", "Aversi Clinic"),
+    ("დიაკორი", "Diacor"),
 ])
 def test_clinic_name_translates_common_words_and_transliterates_proper_nouns(input_, expected):
     assert clinic_name_to_en(input_) == expected
+
+
+def test_clinic_name_override_corrects_incomplete_source_name():
+    assert clinic_name_to_en("ინ ვიტრო") == "Innova In Vitro"
+
+
+@pytest.mark.parametrize("ka,expected", [
+    ("ჯეო ჰოსპიტალსი", "Geo Hospitals"),
+    ("ინოვა სამედიცინო ცენტრი", "Innova Medical Center"),
+    ("ნიუ ვიჟენ საუნივერსიტეტო ჰოსპიტალი", "New Vision University Hospital"),
+    ("ჯო ენის სამედიცინო ცენტრი", "JoAnn Medical Center"),
+    ("ჯო ენის საუნივერსიტეტო ჰოსპიტალი", "JoAnn University Hospital"),
+])
+def test_brand_romanization_fixes(ka, expected):
+    assert clinic_name_to_en(ka) == expected
 
 
 def test_clinic_genitive_named_after():

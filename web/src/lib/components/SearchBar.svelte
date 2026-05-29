@@ -5,10 +5,15 @@
     initialValue = "",
     placeholder = "Search by name, specialty, condition…",
     autofocus = false,
-  }: { initialValue?: string; placeholder?: string; autofocus?: boolean } = $props();
+    mapMode = false,
+  }: { initialValue?: string; placeholder?: string; autofocus?: boolean; mapMode?: boolean } = $props();
 
   interface DoctorSuggestion { slug: string; fullNameEn: string; fullNameKa: string; primarySpecialtyEn: string | null }
   interface EntitySuggestion { slug: string; nameEn: string; nameKa: string; doctorCount: number }
+
+  // On the map page, a pick filters the map (stays on /doctors/map) instead of navigating away.
+  const specialtyHref = (slug: string) => (mapMode ? `/doctors/map?specialty=${slug}` : `/doctors?specialty=${slug}`);
+  const conditionHref = (slug: string) => (mapMode ? `/doctors/map?condition=${slug}` : `/conditions/${slug}`);
 
   let value = $state(initialValue);
   let results = $state<{ doctors: DoctorSuggestion[]; specialties: EntitySuggestion[]; conditions: EntitySuggestion[] }>(
@@ -23,12 +28,13 @@
 
   const flat = $derived([
     ...results.doctors.map((d) => `/doctors/${d.slug}`),
-    ...results.specialties.map((s) => `/doctors?specialty=${s.slug}`),
-    ...results.conditions.map((c) => `/conditions/${c.slug}`),
+    ...results.specialties.map((s) => specialtyHref(s.slug)),
+    ...results.conditions.map((c) => conditionHref(c.slug)),
   ]);
 
   const hasResults = $derived(
-    results.doctors.length > 0 || results.specialties.length > 0 || results.conditions.length > 0,
+    results.doctors.length > 0 || results.specialties.length > 0 ||
+    results.conditions.length > 0,
   );
 
   function countLabel(n: number) {
@@ -82,9 +88,9 @@
     try {
       const res = await fetch(`/api/search/resolve?q=${encodeURIComponent(q)}`);
       const r = res.ok ? await res.json() : { type: "query", slug: null, label: q };
-      if (r.type === "specialty") goto(`/doctors?specialty=${r.slug}`);
-      else if (r.type === "condition") goto(`/conditions/${r.slug}`);
-      else goto(`/doctors?q=${encodeURIComponent(q)}`);
+      if (r.type === "specialty") goto(specialtyHref(r.slug));
+      else if (r.type === "condition") goto(conditionHref(r.slug));
+      else goto(mapMode ? `/doctors/map?q=${encodeURIComponent(q)}` : `/doctors?q=${encodeURIComponent(q)}`);
     } catch {
       goto(`/doctors?q=${encodeURIComponent(q)}`);
     }
@@ -169,7 +175,7 @@
               role="option"
               aria-selected={highlighted === results.doctors.length + j}
               onmouseenter={() => (highlighted = results.doctors.length + j)}
-              onclick={() => select(`/doctors?specialty=${s.slug}`)}>
+              onclick={() => select(specialtyHref(s.slug))}>
               <span class="label">{s.nameEn}</span>
               <span class="sub">{countLabel(s.doctorCount)}</span>
             </button>
@@ -185,7 +191,7 @@
               role="option"
               aria-selected={highlighted === results.doctors.length + results.specialties.length + k}
               onmouseenter={() => (highlighted = results.doctors.length + results.specialties.length + k)}
-              onclick={() => select(`/conditions/${c.slug}`)}>
+              onclick={() => select(conditionHref(c.slug))}>
               <span class="label">{c.nameEn}</span>
               <span class="sub">{countLabel(c.doctorCount)}</span>
             </button>

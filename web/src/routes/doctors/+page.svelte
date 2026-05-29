@@ -4,8 +4,11 @@
   import Pagination from "$lib/components/Pagination.svelte";
   import SearchBar from "$lib/components/SearchBar.svelte";
   import SortSelect from "$lib/components/SortSelect.svelte";
+  import { page } from "$app/stores";
 
   let { data } = $props();
+
+  const mapHref = $derived(`/doctors/map${$page.url.search}`);
 
   const hasQuery = $derived(Boolean(data.q));
   const headlineMain = $derived(
@@ -45,6 +48,10 @@
     <p>{headlineSub}</p>
   </div>
   <div class="meta">
+    <div class="view-toggle">
+      <span class="seg active" aria-current="page">☰ List</span>
+      <a class="seg" href={mapHref}>📍 Map</a>
+    </div>
     <SortSelect value={data.selectedSort} hasQuery={hasQuery} />
     {#if data.total > 0}
       <span class="page-indicator">Page {data.page} · {data.pageSize} per page</span>
@@ -140,6 +147,22 @@
     font-weight: 500;
     white-space: nowrap;
   }
+  .view-toggle {
+    display: inline-flex;
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .view-toggle .seg {
+    padding: 0.4rem 0.8rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    background: var(--surface);
+    white-space: nowrap;
+  }
+  .view-toggle .seg + .seg { border-left: 1px solid var(--line-strong); }
+  .view-toggle a.seg:hover { color: var(--accent); background: var(--accent-soft); }
+  .view-toggle .seg.active { background: var(--accent); color: white; }
 
   .grid {
     max-width: 1280px;

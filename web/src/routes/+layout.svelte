@@ -9,6 +9,7 @@
   // Determine which nav item is active based on the route id.
   const active = $derived.by(() => {
     const id = page.route.id ?? "";
+    if (id.startsWith("/doctors/map")) return "map";
     if (id.startsWith("/doctors")) return "doctors";
     if (id.startsWith("/specialties")) return "specialties";
     if (id.startsWith("/conditions")) return "conditions";

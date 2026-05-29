@@ -50,6 +50,49 @@ class ClinicControllerTest @Autowired constructor(
     }
 
     @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    @Sql("/sql/clinics-test-fixture.sql")
+    fun `getBySlug returns brand and sibling branches`() {
+        mockMvc.get("/api/v1/clinics/alpha-clinic")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.brand.slug") { value("acme") }
+                jsonPath("$.brand.nameEn") { value("Acme") }
+                jsonPath("$.branches.length()") { value(1) }
+                jsonPath("$.branches[0].slug") { value("alpha-saburtalo") }
+                jsonPath("$.branches[0].located") { value(true) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    @Sql("/sql/clinics-test-fixture.sql")
+    fun `getBySlug returns null brand and no branches for an unbranded clinic`() {
+        mockMvc.get("/api/v1/clinics/beta-clinic")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.brand") { value(null) }
+                jsonPath("$.branches.length()") { value(0) }
+            }
+    }
+
+    @Test
+    @Sql("/sql/locations-test-fixture.sql")
+    @Sql("/sql/clinics-test-fixture.sql")
+    fun `getAll collapse shows one expandable row per brand with its branches`() {
+        mockMvc.get("/api/v1/clinics?collapse=true")
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.items.length()") { value(1) }
+                jsonPath("$.items[0].nameEn") { value("Acme") }
+                jsonPath("$.items[0].doctorCount") { value(1) }
+                jsonPath("$.items[0].branches.length()") { value(2) }
+                jsonPath("$.items[0].branches[0].slug") { value("alpha-clinic") }
+                jsonPath("$.items[0].branches[1].slug") { value("alpha-saburtalo") }
+            }
+    }
+
+    @Test
     fun `getBySlug returns 404 for unknown slug`() {
         mockMvc.get("/api/v1/clinics/does-not-exist")
             .andExpect {

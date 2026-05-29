@@ -4,6 +4,7 @@ import com.findadoc.api.service.DoctorNotFoundException
 import com.findadoc.api.service.DoctorService
 import com.findadoc.api.web.dto.DoctorListItemDto
 import com.findadoc.api.web.dto.DoctorProfileDto
+import com.findadoc.api.web.dto.MapPinDto
 import com.findadoc.api.web.dto.PageResponseDto
 import com.findadoc.api.web.dto.toProfileDto
 import io.swagger.v3.oas.annotations.Operation
@@ -49,6 +50,34 @@ class DoctorController(
         val conditionSlugs = condition?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
         return doctorService.list(
             safePage, safePageSize, trimmedQ, slugs, regionSlug, citySlug, sortMode, clinicSlugs, conditionSlugs,
+        )
+    }
+
+    @Operation(summary = "Clinic map pins, optionally within a radius of a center point")
+    @GetMapping("/map-pins")
+    fun mapPins(
+        @RequestParam(required = false) center: String?,
+        @RequestParam(name = "radius_km", required = false) radiusKm: Double?,
+        @RequestParam(required = false) q: String?,
+        @RequestParam(required = false) specialty: String?,
+        @RequestParam(required = false) region: String?,
+        @RequestParam(required = false) city: String?,
+        @RequestParam(required = false) clinic: String?,
+        @RequestParam(required = false) condition: String?,
+    ): Map<String, List<MapPinDto>> {
+        val parts = center?.split(',')?.map { it.trim() }
+        val lat = parts?.getOrNull(0)?.toDoubleOrNull()
+        val lng = parts?.getOrNull(1)?.toDoubleOrNull()
+        val trimmedQ = q?.trim()?.take(100)?.takeIf { it.isNotEmpty() }
+        val slugs = specialty?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+        val regionSlug = region?.trim()?.takeIf { it.isNotEmpty() }
+        val citySlug = city?.trim()?.takeIf { it.isNotEmpty() }
+        val clinicSlugs = clinic?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+        val conditionSlugs = condition?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+        return mapOf(
+            "pins" to doctorService.mapPins(
+                lat, lng, radiusKm, trimmedQ, slugs, regionSlug, citySlug, clinicSlugs, conditionSlugs,
+            ),
         )
     }
 

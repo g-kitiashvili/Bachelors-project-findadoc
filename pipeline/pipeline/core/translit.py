@@ -35,6 +35,22 @@ _BRAND_OVERRIDES: dict[str, str] = {
     "ჰოსპიტალსი": "Hospitals",
     "ვივო":       "Vivo",
     "მედიქალ":    "Medical",
+    "დიაკორი":    "Diacor",
+    "დიაკორ":     "Diacor",
+    "ჯეო":        "Geo",
+    "ვიჟენ":      "Vision",
+    "ინოვა":      "Innova",
+    "ოქსფორდ":    "Oxford",
+}
+
+
+# Source clinic names that are wrong or incomplete at the source (a brand omitted,
+# a sub-clinic listed bare). Keyed by the exact Georgian source name; the value is
+# the full English display name, returned verbatim ahead of romanization.
+_CLINIC_NAME_OVERRIDES: dict[str, str] = {
+    "ინ ვიტრო": "Innova In Vitro",
+    "ჯო ენის საუნივერსიტეტო ჰოსპიტალი": "JoAnn University Hospital",
+    "ჯო ენის სამედიცინო ცენტრი": "JoAnn Medical Center",
 }
 
 
@@ -169,6 +185,9 @@ def _clinic_token_to_en(token: str) -> str:
 
 
 def clinic_name_to_en(name_ka: str) -> str:
+    override = _CLINIC_NAME_OVERRIDES.get(name_ka.strip())
+    if override is not None:
+        return override
     out: list[str] = []
     for part in _TOKEN_SPLIT.split(name_ka):
         if not part:

@@ -24,7 +24,10 @@ class SearchController(
         val best = searchResolver.resolve(term.lowercase())
             ?: return SearchResolutionDto("query", null, term)
         return SearchResolutionDto(
-            type = if (best.type == SearchTargetType.SPECIALTY) "specialty" else "condition",
+            type = when (best.type) {
+                SearchTargetType.SPECIALTY -> "specialty"
+                SearchTargetType.CONDITION -> "condition"
+            },
             slug = best.slug,
             label = best.nameEn,
         )

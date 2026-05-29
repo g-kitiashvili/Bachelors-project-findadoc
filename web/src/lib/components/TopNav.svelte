@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { active = "doctors" }: { active?: "doctors" | "specialties" | "conditions" | "clinics" | "about" } = $props();
+  let { active = "doctors" }: { active?: "doctors" | "map" | "specialties" | "conditions" | "clinics" | "about" } = $props();
 </script>
 
 <nav class="nav">
@@ -7,6 +7,7 @@
     <a href="/" class="brand">findadoc<span class="brand-dot">.</span></a>
     <div class="nav-links">
       <a href="/doctors" class:active={active === "doctors"}>Find a Doctor</a>
+      <a href="/doctors/map" class:active={active === "map"}>Map</a>
       <a href="/specialties" class:active={active === "specialties"}>Specialties</a>
       <a href="/conditions" class:active={active === "conditions"}>Conditions</a>
       <a href="/clinics" class:active={active === "clinics"}>Clinics</a>

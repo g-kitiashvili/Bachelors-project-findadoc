@@ -2,7 +2,6 @@ import re
 from pathlib import Path
 
 import pytest
-from bs4 import BeautifulSoup
 
 from pipeline.core.fetcher import FetchError
 from pipeline.scrapers.vipmed import VipmedScraper, _strip_md
@@ -28,39 +27,25 @@ def scraper():
     return VipmedScraper(fetcher=_FakeFetcher({}))
 
 
-def test_extract_returns_doctor_with_clinics(scraper):
+def test_extract_returns_doctor(scraper):
     record = scraper.extract(_read("profile_1.html"), "https://vipmed.ge/maia-mchedlidze/")
     assert record is not None
     assert record.source == "vipmed"
     assert record.full_name_ka == "მაია მჭედლიძე"
     assert not re.search(r"\bMD\b\s*$", record.full_name_ka, re.IGNORECASE)
-    assert len(record.clinics) >= 1
 
 
-def test_extract_doctor_with_multiple_clinics(scraper):
+def test_extract_emits_no_clinics(scraper):
+    # vipmed's free-text workplace lists are too noisy to mine for clinics; the doctor
+    # parses but carries no clinic refs, even on a profile whose workplace list is long.
     record = scraper.extract(_read("profile_2.html"), "https://vipmed.ge/avtandil-tataradze/")
     assert record is not None
     assert record.full_name_ka == "ავთანდილ თათარაძე"
-    assert not re.search(r"\bMD\b\s*$", record.full_name_ka, re.IGNORECASE)
-    assert len(record.clinics) > 1
-    assert all(str(c.source_url).startswith("https://vipmed.ge/clinic/") for c in record.clinics)
+    assert record.clinics == ()
 
 
 def test_extract_returns_none_for_non_profile(scraper):
     assert scraper.extract(_read("non_profile.html"), "https://vipmed.ge/") is None
-
-
-def test_clinics_filters_role_phrases(scraper):
-    html = (
-        '<div class="elementor-widget"><h3>სამუშაო ადგილი/თანამდებობა</h3></div>'
-        '<div class="elementor-widget" data-widget_type="text-editor.default">'
-        "<ul><li>ავერსის კლინიკა</li>"
-        "<li>ავერსის კლინიკის ექიმი-ნევროლოგი</li></ul></div>"
-    )
-    clinics = scraper._clinics(BeautifulSoup(html, "lxml"), None)
-    names = [c.name_ka for c in clinics]
-    assert "ავერსის კლინიკა" in names
-    assert all("ექიმ" not in n for n in names)
 
 
 def test_strip_md():
@@ -90,11 +75,10 @@ class _EnFetcher:
         return self._pages[url]
 
 
-def test_extract_sets_english_name_and_clinics():
+def test_extract_sets_english_name():
     ka_url = "https://vipmed.ge/maia-mchedlidze/"
     en_url = "https://vipmed.ge/maia-mchedlidze-en/"
     scraper = VipmedScraper(fetcher=_EnFetcher({en_url: _read("profile_1_en.html")}))
     record = scraper.extract(_read("profile_1.html"), ka_url)
     assert record.full_name_en and not any("ა" <= c <= "ჿ" for c in record.full_name_en)
-    assert any(c.name_en for c in record.clinics)
-    assert all((c.name_en is None) or not any("ა" <= ch <= "ჿ" for ch in c.name_en) for c in record.clinics)
+    assert record.clinics == ()

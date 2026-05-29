@@ -9,9 +9,10 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const pageSize = 24;
   const params = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
   if (q) params.set("q", q);
+  params.set("collapse", "true");
   const res = await fetch(`${API_BASE}/api/v1/clinics?${params}`);
   const data = res.ok
-    ? ((await res.json()) as { items: Array<{ slug: string; nameKa: string; nameEn: string; doctorCount: number }>; page: number; pageSize: number; total: number })
+    ? ((await res.json()) as { items: Array<{ slug: string; nameKa: string; nameEn: string; doctorCount: number; branches?: Array<{ slug: string; nameEn: string; address: string | null }> }>; page: number; pageSize: number; total: number })
     : { items: [], page, pageSize, total: 0 };
   return { ...data, q };
 };

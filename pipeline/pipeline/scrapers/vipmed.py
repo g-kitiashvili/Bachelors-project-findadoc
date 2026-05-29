@@ -8,9 +8,10 @@ the card is the clean source); parse() reads those back from the discovery map.
 
 vipmed appends "MD" to every doctor's name — stripped via _strip_md before persisting.
 
-As an aggregator each doctor lists their own workplace clinics (free text, one per
-<li> under the "სამუშაო ადგილი/თანამდებობა" heading). vipmed gives no clinic URL, so
-a stable clinic source_url is derived from the clinic name via slugify.
+vipmed contributes doctors only. Its per-doctor "workplace" lists are free-text role and
+affiliation phrases with no clinic URL, riddled with truncations, qualification fragments,
+and bare years; too unreliable to yield clean clinic records. Clinics come from the official
+clinic sites and tsamali instead. The workplace heading still gates parse() as a profile marker.
 """
 
 from __future__ import annotations
@@ -21,19 +22,16 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
-from pipeline.core.clinic_normalize import is_role_phrase
 from pipeline.core.fetcher import FetchError
-from pipeline.core.record import ClinicRef, DoctorRecord
+from pipeline.core.record import DoctorRecord
 from pipeline.core.registry import register
 from pipeline.core.static_scraper import StaticHtmlScraper
-from pipeline.core.translit import english_or_none, slugify
+from pipeline.core.translit import english_or_none
 
 
 _BASE = "https://vipmed.ge"
 _ROSTER = f"{_BASE}/doctors/"
 _WORKPLACE_HEADING = re.compile(r"სამუშაო ადგილი")
-_EN_WORKPLACE_HEADING = re.compile(r"Place of Work")
-_CLINIC_NAME_SPLIT = re.compile(r"\s*[–—]\s*|\s*,\s*")
 
 _DEGREE_SUFFIX = re.compile(r"(?:\s*[,.]?\s*(?:M\.?\s*D|Ph\.?\s*D)\.?)+\s*$", re.IGNORECASE)
 
@@ -89,45 +87,6 @@ class VipmedScraper(StaticHtmlScraper):
             if new_on_page == 0:
                 break
 
-    def _clinic_li_texts(self, soup: BeautifulSoup, heading_pattern: re.Pattern) -> list[str]:
-        heading = soup.find(["h2", "h3"], string=heading_pattern)
-        if heading is None:
-            return []
-        widget = heading.find_parent(class_="elementor-widget")
-        if widget is None:
-            return []
-        block = widget
-        while True:
-            block = block.find_next(class_="elementor-widget")
-            if block is None:
-                return []
-            if not str(block.get("data-widget_type", "")).startswith("text-editor"):
-                continue
-            return [li.get_text(" ", strip=True) for li in block.select("li")]
-
-    def _clinics(self, soup: BeautifulSoup, en_soup: BeautifulSoup | None) -> list[ClinicRef]:
-        ka_texts = self._clinic_li_texts(soup, _WORKPLACE_HEADING)
-        en_texts = self._clinic_li_texts(en_soup, _EN_WORKPLACE_HEADING) if en_soup is not None else []
-        counts_match = len(en_texts) == len(ka_texts)
-        clinics: list[ClinicRef] = []
-        seen: set[str] = set()
-        for i, raw in enumerate(ka_texts):
-            name = _CLINIC_NAME_SPLIT.split(raw, maxsplit=1)[0].strip(" ;.")
-            if not name:
-                continue
-            source_url = f"{_BASE}/clinic/{slugify(name)}"
-            if source_url in seen:
-                continue
-            seen.add(source_url)
-            name_en: str | None = None
-            if counts_match and i < len(en_texts):
-                en_raw = _CLINIC_NAME_SPLIT.split(en_texts[i], maxsplit=1)[0].strip(" ;.")
-                name_en = english_or_none(en_raw)
-            if is_role_phrase(name_en, name):
-                continue  # a doctor role/affiliation phrase, not a clinic
-            clinics.append(ClinicRef(source_url=source_url, name_ka=name, name_en=name_en))
-        return clinics
-
     def parse(self, soup: BeautifulSoup, url: str) -> DoctorRecord | None:
         if soup.find(["h2", "h3"], string=_WORKPLACE_HEADING) is None:
             return None
@@ -137,11 +96,9 @@ class VipmedScraper(StaticHtmlScraper):
         name = _strip_md(name_el.get_text(strip=True))
         if not name:
             return None
-        en_soup: BeautifulSoup | None = None
         full_name_en: str | None = None
         try:
-            en_html = self.fetcher.get(_en_url(url))
-            en_soup = BeautifulSoup(en_html, "lxml")
+            en_soup = BeautifulSoup(self.fetcher.get(_en_url(url)), "lxml")
             en_h1 = en_soup.find("h1")
             if en_h1 is not None:
                 full_name_en = english_or_none(_strip_md(en_h1.get_text(strip=True)))
@@ -154,7 +111,6 @@ class VipmedScraper(StaticHtmlScraper):
             full_name_en=full_name_en,
             specialty_ka=self._specialty_by_url.get(url),
             photo_url=self._photo_by_url.get(url),
-            clinics=self._clinics(soup, en_soup),
         )
 
 

@@ -25,6 +25,8 @@ class ClinicController(
         @RequestParam(required = false) region: String?,
         @RequestParam(required = false) city: String?,
         @RequestParam(required = false) specialty: String?,
+        @RequestParam(required = false) located: Boolean?,
+        @RequestParam(required = false) collapse: Boolean?,
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "50") pageSize: Int,
     ): PageResponseDto<ClinicListItemDto> {
@@ -38,6 +40,8 @@ class ClinicController(
             slugs,
             safePage,
             safeSize,
+            located == true,
+            collapse == true,
         )
     }
 

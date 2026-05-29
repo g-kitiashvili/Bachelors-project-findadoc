@@ -33,6 +33,10 @@ def load_conditions(yaml_path: Path | str) -> list[dict]:
     return rows
 
 
+def load_brands(yaml_path: Path | str) -> list[dict]:
+    return load_conditions(yaml_path)
+
+
 def detect_lang(text: str) -> str:
     """'ka' if the term contains any Georgian letter, else 'en'."""
     return "ka" if any("ა" <= ch <= "ჰ" for ch in text) else "en"
