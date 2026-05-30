@@ -43,5 +43,10 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
   if (!res.ok) {
     error(res.status, "Could not load doctor");
   }
-  return { doctor: (await res.json()) as DoctorProfile };
+  const doctor = (await res.json()) as DoctorProfile;
+
+  const similarRes = await fetch(`${API_BASE}/api/v1/doctors/${encodeURIComponent(params.slug)}/similar?limit=12`);
+  const similar = similarRes.ok ? await similarRes.json() : [];
+
+  return { doctor, similar };
 };

@@ -4,7 +4,7 @@ import com.findadoc.api.search.RankedTarget
 import com.findadoc.api.web.dto.SpecialtyListItemDto
 
 interface SpecialtyRepositoryCustom {
-    fun findAllWithDoctorCount(region: String?, city: String?, clinicSlugs: List<String>): List<SpecialtyListItemDto>
+    fun findAllWithDoctorCount(region: String?, city: String?, clinicSlugs: List<String>, treatsChildren: Boolean, treatsAdults: Boolean): List<SpecialtyListItemDto>
     fun countDoctorsBySlug(slug: String): Long
     fun countAcceptingBySlug(slug: String): Long
     fun countTreatsChildrenBySlug(slug: String): Long

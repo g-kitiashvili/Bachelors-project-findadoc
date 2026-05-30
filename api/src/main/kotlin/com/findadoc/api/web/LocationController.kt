@@ -20,12 +20,14 @@ class LocationController(
     fun getAll(
         @RequestParam(required = false) specialty: String?,
         @RequestParam(required = false) clinic: String?,
+        @RequestParam(name = "treats_children", required = false) treatsChildren: Boolean?,
+        @RequestParam(name = "treats_adults", required = false) treatsAdults: Boolean?,
     ): Map<String, List<LocationRegionDto>> {
         val slugs = specialty?.split(',')
             ?.map { it.trim() }
             ?.filter { it.isNotEmpty() }
             ?: emptyList()
         val clinicSlugs = clinic?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-        return mapOf("items" to locationService.listAll(slugs, clinicSlugs))
+        return mapOf("items" to locationService.listAll(slugs, clinicSlugs, treatsChildren == true, treatsAdults == true))
     }
 }

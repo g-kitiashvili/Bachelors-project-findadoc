@@ -16,9 +16,11 @@
     selectedCity: string;
     clinics: ClinicOption[];
     selectedClinics: string[];
+    selectedTreatsChildren: boolean;
+    selectedTreatsAdults: boolean;
   }
 
-  let { selectedSlugs, specialties, regions, selectedRegion, selectedCity, clinics, selectedClinics }: Props = $props();
+  let { selectedSlugs, specialties, regions, selectedRegion, selectedCity, clinics, selectedClinics, selectedTreatsChildren, selectedTreatsAdults }: Props = $props();
 
   let drawerOpen = $state(false);
 
@@ -71,12 +73,21 @@
     goto(url.pathname + url.search);
   }
 
+  function clearTreats(kind: "children" | "adults") {
+    const url = new URL($page.url);
+    url.searchParams.delete(kind === "children" ? "treats_children" : "treats_adults");
+    url.searchParams.delete("page");
+    goto(url.pathname + url.search);
+  }
+
   function clearAll() {
     const url = new URL($page.url);
     url.searchParams.delete("specialty");
     url.searchParams.delete("region");
     url.searchParams.delete("city");
     url.searchParams.delete("clinic");
+    url.searchParams.delete("treats_children");
+    url.searchParams.delete("treats_adults");
     url.searchParams.delete("page");
     goto(url.pathname + url.search);
   }
@@ -110,9 +121,21 @@
         <span class="x">✕</span>
       </button>
     {/each}
+    {#if selectedTreatsChildren}
+      <button class="chip" onclick={() => clearTreats("children")} aria-label="Remove treats children filter">
+        <span>Treats children</span>
+        <span class="x">✕</span>
+      </button>
+    {/if}
+    {#if selectedTreatsAdults}
+      <button class="chip" onclick={() => clearTreats("adults")} aria-label="Remove treats adults filter">
+        <span>Treats adults</span>
+        <span class="x">✕</span>
+      </button>
+    {/if}
   </div>
 
-  {#if selectedSlugs.length > 0 || regionLabel || cityLabel || selectedClinics.length > 0}
+  {#if selectedSlugs.length > 0 || regionLabel || cityLabel || selectedClinics.length > 0 || selectedTreatsChildren || selectedTreatsAdults}
     <button class="clear" onclick={clearAll}>Clear all</button>
   {/if}
 </div>
@@ -127,6 +150,8 @@
   {selectedCity}
   {clinics}
   {selectedClinics}
+  {selectedTreatsChildren}
+  {selectedTreatsAdults}
 />
 
 <style>

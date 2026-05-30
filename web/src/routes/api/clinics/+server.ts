@@ -5,7 +5,7 @@ const API_BASE = process.env.API_URL ?? "http://localhost:8080";
 
 export const GET: RequestHandler = async ({ url, fetch }) => {
   const p = new URLSearchParams();
-  for (const k of ["q", "region", "city", "specialty"]) {
+  for (const k of ["q", "region", "city", "specialty", "treats_children", "treats_adults"]) {
     const v = (url.searchParams.get(k) ?? "").trim();
     if (v) p.set(k, v);
   }

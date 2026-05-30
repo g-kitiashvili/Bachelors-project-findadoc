@@ -12,6 +12,8 @@ data class DoctorFilter(
     val city: String? = null,
     val clinicSlugs: List<String> = emptyList(),
     val conditionSlugs: List<String> = emptyList(),
+    val treatsChildren: Boolean = false,
+    val treatsAdults: Boolean = false,
     val nameOnly: Boolean = false,
 )
 
@@ -92,6 +94,8 @@ fun doctorConditions(
             ),
         )
     }
+    if (f.treatsChildren) add(DSL.field("d.treats_children").eq(true))
+    if (f.treatsAdults) add(DSL.field("d.treats_adults").eq(true))
     f.q?.takeIf { it.isNotEmpty() }?.let {
         add((if (f.nameOnly) nameRelevance(it) else relevance(it)).gt(FUZZY_THRESHOLD))
     }

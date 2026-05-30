@@ -12,8 +12,10 @@ class LocationService(
     fun listAll(
         specialtySlugs: List<String> = emptyList(),
         clinicSlugs: List<String> = emptyList(),
+        treatsChildren: Boolean = false,
+        treatsAdults: Boolean = false,
     ): List<LocationRegionDto> {
-        val counts = locationRepository.directDoctorCounts(specialtySlugs, clinicSlugs).toMap()
+        val counts = locationRepository.directDoctorCounts(specialtySlugs, clinicSlugs, treatsChildren, treatsAdults).toMap()
         val all = locationRepository.findAllByOrderBySortOrderAscNameEnAsc()
         val citiesByRegion = all.filter { it.parent != null }.groupBy { it.parent!!.id }
 

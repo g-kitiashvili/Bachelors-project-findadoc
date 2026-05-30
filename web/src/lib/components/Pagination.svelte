@@ -1,29 +1,19 @@
 <script lang="ts">
+  import { page as pageStore } from "$app/stores";
+
   let {
     page,
     pageSize,
     total,
-    q = "",
-    specialty = "",
-    condition = "",
-    region = "",
-    city = "",
-    sort = "",
-  }: { page: number; pageSize: number; total: number; q?: string; specialty?: string; condition?: string; region?: string; city?: string; sort?: string } = $props();
+  }: { page: number; pageSize: number; total: number } = $props();
 
   const totalPages = $derived(Math.max(1, Math.ceil(total / pageSize)));
   const prevDisabled = $derived(page <= 1);
   const nextDisabled = $derived(page >= totalPages);
 
   function linkFor(p: number): string {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams($pageStore.url.searchParams);
     params.set("page", String(p));
-    if (q) params.set("q", q);
-    if (specialty) params.set("specialty", specialty);
-    if (condition) params.set("condition", condition);
-    if (region) params.set("region", region);
-    if (city) params.set("city", city);
-    if (sort) params.set("sort", sort);
     return `?${params.toString()}`;
   }
 

@@ -9,4 +9,5 @@ import org.springframework.data.domain.Pageable
 interface DoctorRepositoryCustom {
     fun findFiltered(filter: DoctorFilter, sort: String?, pageable: Pageable): Page<DoctorListItemDto>
     fun mapPins(filter: DoctorFilter, centerLat: Double?, centerLng: Double?, radiusKm: Double?): List<MapPinDto>
+    fun findSimilar(slug: String, limit: Int): List<DoctorListItemDto>
 }

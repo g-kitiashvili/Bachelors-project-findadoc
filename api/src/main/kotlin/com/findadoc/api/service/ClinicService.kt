@@ -19,9 +19,11 @@ class ClinicService(
         pageSize: Int,
         located: Boolean = false,
         collapseBrands: Boolean = false,
+        treatsChildren: Boolean = false,
+        treatsAdults: Boolean = false,
     ): PageResponseDto<ClinicListItemDto> {
-        val items = clinicRepository.facet(q, region, city, specialtySlugs, located, collapseBrands, pageSize, (page - 1) * pageSize)
-        val total = clinicRepository.countFacet(q, region, city, specialtySlugs, located, collapseBrands)
+        val items = clinicRepository.facet(q, region, city, specialtySlugs, located, collapseBrands, treatsChildren, treatsAdults, pageSize, (page - 1) * pageSize)
+        val total = clinicRepository.countFacet(q, region, city, specialtySlugs, located, collapseBrands, treatsChildren, treatsAdults)
         return PageResponseDto(items = items, page = page, pageSize = pageSize, total = total)
     }
 

@@ -13,8 +13,10 @@ class SpecialtyService(
         region: String?,
         city: String?,
         clinicSlugs: List<String> = emptyList(),
+        treatsChildren: Boolean = false,
+        treatsAdults: Boolean = false,
     ): List<SpecialtyListItemDto> =
-        specialtyRepository.findAllWithDoctorCount(region, city, clinicSlugs)
+        specialtyRepository.findAllWithDoctorCount(region, city, clinicSlugs, treatsChildren, treatsAdults)
 
     fun getBySlug(slug: String): SpecialtyDetailDto {
         val specialty = specialtyRepository.findBySlug(slug)

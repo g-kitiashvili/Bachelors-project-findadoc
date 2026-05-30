@@ -23,3 +23,8 @@ def test_infer_age_groups_mixed_treats_both() -> None:
 
 def test_infer_age_groups_no_specialty_defaults_to_adults() -> None:
     assert infer_age_groups(None, None) == (False, True)
+
+
+def test_infer_age_groups_family_medicine_treats_both() -> None:
+    assert infer_age_groups("ოჯახის ექიმი", "Family Doctor") == (True, True)
+    assert infer_age_groups("საოჯახო მედიცინა", "Family Medicine") == (True, True)

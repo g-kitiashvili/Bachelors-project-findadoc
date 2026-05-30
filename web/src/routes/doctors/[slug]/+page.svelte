@@ -1,5 +1,6 @@
 <script lang="ts">
   import DoctorProfile from "$lib/components/DoctorProfile.svelte";
+  import SimilarDoctors from "$lib/components/SimilarDoctors.svelte";
 
   let { data } = $props();
 </script>
@@ -15,6 +16,8 @@
 </nav>
 
 <DoctorProfile doctor={data.doctor} />
+
+<SimilarDoctors doctors={data.similar} />
 
 <style>
   .breadcrumb {

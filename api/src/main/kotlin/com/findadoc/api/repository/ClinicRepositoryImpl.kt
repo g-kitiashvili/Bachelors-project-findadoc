@@ -23,10 +23,12 @@ class ClinicRepositoryImpl(
         specialtySlugs: List<String>,
         located: Boolean,
         collapseBrands: Boolean,
+        treatsChildren: Boolean,
+        treatsAdults: Boolean,
         limit: Int,
         offset: Int,
     ): List<ClinicListItemDto> {
-        if (collapseBrands) return facetCollapsed(q, limit, offset)
+        if (collapseBrands) return facetCollapsed(q, treatsChildren, treatsAdults, limit, offset)
         val conditions = mutableListOf<Condition>(
             DSL.field("c.status").eq("ACTIVE"),
             DSL.field("d.status").eq("ACTIVE"),
@@ -41,6 +43,8 @@ class ClinicRepositoryImpl(
                     .and(DSL.field("s.slug").`in`(specialtySlugs)),
             )
         }
+        if (treatsChildren) conditions += DSL.field("d.treats_children").eq(true)
+        if (treatsAdults) conditions += DSL.field("d.treats_adults").eq(true)
         q?.takeIf { it.isNotEmpty() }?.let {
             conditions += DSL.greatest(
                 DSL.field("word_similarity({0}, lower(c.name_en))", SQLDataType.DOUBLE, DSL.`val`(it)),
@@ -73,8 +77,8 @@ class ClinicRepositoryImpl(
             }
     }
 
-    override fun countFacet(q: String?, region: String?, city: String?, specialtySlugs: List<String>, located: Boolean, collapseBrands: Boolean): Long {
-        if (collapseBrands) return countFacetCollapsed(q)
+    override fun countFacet(q: String?, region: String?, city: String?, specialtySlugs: List<String>, located: Boolean, collapseBrands: Boolean, treatsChildren: Boolean, treatsAdults: Boolean): Long {
+        if (collapseBrands) return countFacetCollapsed(q, treatsChildren, treatsAdults)
         val conditions = mutableListOf<Condition>(
             DSL.field("c.status").eq("ACTIVE"),
             DSL.field("d.status").eq("ACTIVE"),
@@ -89,6 +93,8 @@ class ClinicRepositoryImpl(
                     .and(DSL.field("s.slug").`in`(specialtySlugs)),
             )
         }
+        if (treatsChildren) conditions += DSL.field("d.treats_children").eq(true)
+        if (treatsAdults) conditions += DSL.field("d.treats_adults").eq(true)
         q?.takeIf { it.isNotEmpty() }?.let {
             conditions += DSL.greatest(
                 DSL.field("word_similarity({0}, lower(c.name_en))", SQLDataType.DOUBLE, DSL.`val`(it)),
@@ -105,11 +111,13 @@ class ClinicRepositoryImpl(
             .fetchOne(0, Long::class.java) ?: 0L
     }
 
-    private fun collapsedConditions(q: String?): MutableList<Condition> {
+    private fun collapsedConditions(q: String?, treatsChildren: Boolean, treatsAdults: Boolean): MutableList<Condition> {
         val conditions = mutableListOf<Condition>(
             DSL.field("c.status").eq("ACTIVE"),
             DSL.field("d.status").eq("ACTIVE"),
         )
+        if (treatsChildren) conditions += DSL.field("d.treats_children").eq(true)
+        if (treatsAdults) conditions += DSL.field("d.treats_adults").eq(true)
         q?.takeIf { it.isNotEmpty() }?.let {
             conditions += DSL.greatest(
                 DSL.field("word_similarity({0}, lower(coalesce(cb.name_en, c.name_en)))", SQLDataType.DOUBLE, DSL.`val`(it)),
@@ -121,7 +129,7 @@ class ClinicRepositoryImpl(
 
     // One row per brand (branded clinics collapse to their brand; unbranded stay per-clinic),
     // with the brand's branches embedded so the browse UI can expand them inline.
-    private fun facetCollapsed(q: String?, limit: Int, offset: Int): List<ClinicListItemDto> {
+    private fun facetCollapsed(q: String?, treatsChildren: Boolean, treatsAdults: Boolean, limit: Int, offset: Int): List<ClinicListItemDto> {
         val rows = dsl.select(
             DSL.field("coalesce(max(cb.slug), min(c.slug))").`as`("slug"),
             DSL.field("coalesce(max(cb.name_ka), min(c.name_ka))").`as`("name_ka"),
@@ -133,7 +141,7 @@ class ClinicRepositoryImpl(
             .join("doctor_clinic dc").on("dc.clinic_id = c.id")
             .join("doctor d").on("d.id = dc.doctor_id")
             .leftJoin("clinic_brand cb").on("cb.id = c.brand_id")
-            .where(collapsedConditions(q))
+            .where(collapsedConditions(q, treatsChildren, treatsAdults))
             .groupBy(DSL.field("coalesce('b' || c.brand_id::text, 'c' || c.id::text)"))
             .orderBy(
                 DSL.countDistinct(DSL.field("d.id")).desc(),
@@ -182,13 +190,13 @@ class ClinicRepositoryImpl(
                 },
             )
 
-    private fun countFacetCollapsed(q: String?): Long =
+    private fun countFacetCollapsed(q: String?, treatsChildren: Boolean, treatsAdults: Boolean): Long =
         dsl.select(DSL.countDistinct(DSL.field("coalesce('b' || c.brand_id::text, 'c' || c.id::text)")))
             .from("clinic c")
             .join("doctor_clinic dc").on("dc.clinic_id = c.id")
             .join("doctor d").on("d.id = dc.doctor_id")
             .leftJoin("clinic_brand cb").on("cb.id = c.brand_id")
-            .where(collapsedConditions(q))
+            .where(collapsedConditions(q, treatsChildren, treatsAdults))
             .fetchOne(0, Long::class.java) ?: 0L
 
     override fun coordinatesBySlug(slug: String): Pair<Double, Double>? =

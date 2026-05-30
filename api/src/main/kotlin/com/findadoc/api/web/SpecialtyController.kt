@@ -23,11 +23,13 @@ class SpecialtyController(
         @RequestParam(required = false) region: String?,
         @RequestParam(required = false) city: String?,
         @RequestParam(required = false) clinic: String?,
+        @RequestParam(name = "treats_children", required = false) treatsChildren: Boolean?,
+        @RequestParam(name = "treats_adults", required = false) treatsAdults: Boolean?,
     ): Map<String, List<SpecialtyListItemDto>> {
         val regionSlug = region?.trim()?.takeIf { it.isNotEmpty() }
         val citySlug = city?.trim()?.takeIf { it.isNotEmpty() }
         val clinicSlugs = clinic?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-        return mapOf("items" to specialtyService.listAll(regionSlug, citySlug, clinicSlugs))
+        return mapOf("items" to specialtyService.listAll(regionSlug, citySlug, clinicSlugs, treatsChildren == true, treatsAdults == true))
     }
 
     @Operation(summary = "Get specialty by slug")

@@ -37,6 +37,8 @@ class SpecialtyRepositoryImpl(
         region: String?,
         city: String?,
         clinicSlugs: List<String>,
+        treatsChildren: Boolean,
+        treatsAdults: Boolean,
     ): List<SpecialtyListItemDto> {
         val conditions = mutableListOf<Condition>(
             DSL.field("d.id").isNull.or(DSL.field("d.status").eq("ACTIVE"))
@@ -54,6 +56,8 @@ class SpecialtyRepositoryImpl(
                     .and(DSL.field("c.slug").`in`(clinicSlugs)),
             )
         }
+        if (treatsChildren) conditions += DSL.field("d.treats_children").eq(true)
+        if (treatsAdults) conditions += DSL.field("d.treats_adults").eq(true)
 
         return dsl.select(
             DSL.field("s.slug"),

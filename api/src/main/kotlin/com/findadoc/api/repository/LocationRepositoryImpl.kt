@@ -13,6 +13,8 @@ class LocationRepositoryImpl(
     override fun directDoctorCounts(
         specialtySlugs: List<String>,
         clinicSlugs: List<String>,
+        treatsChildren: Boolean,
+        treatsAdults: Boolean,
     ): List<Pair<Long, Long>> {
         val conditions = mutableListOf<Condition>(
             DSL.field("d.status").eq("ACTIVE"),
@@ -32,6 +34,8 @@ class LocationRepositoryImpl(
                     .and(DSL.field("c.slug").`in`(clinicSlugs)),
             )
         }
+        if (treatsChildren) conditions += DSL.field("d.treats_children").eq(true)
+        if (treatsAdults) conditions += DSL.field("d.treats_adults").eq(true)
         return dsl.select(DSL.field("d.location_id"), DSL.count().`as`("cnt"))
             .from("doctor d")
             .where(conditions)

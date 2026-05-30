@@ -62,7 +62,7 @@
     </ul>
   {/if}
 
-  <Pagination page={data.page} pageSize={data.pageSize} total={data.total} q={data.q} />
+  <Pagination page={data.page} pageSize={data.pageSize} total={data.total} />
 </section>
 
 <style>

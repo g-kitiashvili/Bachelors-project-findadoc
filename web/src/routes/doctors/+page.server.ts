@@ -48,6 +48,8 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const city = (url.searchParams.get("city") ?? "").trim();
   const sort = (url.searchParams.get("sort") ?? "").trim();
   const clinic = (url.searchParams.get("clinic") ?? "").trim();
+  const treatsChildren = url.searchParams.get("treats_children") === "true";
+  const treatsAdults = url.searchParams.get("treats_adults") === "true";
 
   const params = new URLSearchParams({ page: String(page), pageSize: "12" });
   if (q) params.set("q", q);
@@ -56,6 +58,8 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   if (city) params.set("city", city);
   if (sort) params.set("sort", sort);
   if (clinic) params.set("clinic", clinic);
+  if (treatsChildren) params.set("treats_children", "true");
+  if (treatsAdults) params.set("treats_adults", "true");
 
   const res = await fetch(`${API_BASE}/api/v1/doctors?${params.toString()}`);
   const data = res.ok
@@ -69,6 +73,8 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   if (region) specParams.set("region", region);
   if (city) specParams.set("city", city);
   if (clinic) specParams.set("clinic", clinic);
+  if (treatsChildren) specParams.set("treats_children", "true");
+  if (treatsAdults) specParams.set("treats_adults", "true");
   const specQuery = specParams.toString();
   const specRes = await fetch(
     `${API_BASE}/api/v1/specialties${specQuery ? `?${specQuery}` : ""}`,
@@ -82,6 +88,8 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const locParams = new URLSearchParams();
   if (specialty) locParams.set("specialty", specialty);
   if (clinic) locParams.set("clinic", clinic);
+  if (treatsChildren) locParams.set("treats_children", "true");
+  if (treatsAdults) locParams.set("treats_adults", "true");
   const locRes = await fetch(`${API_BASE}/api/v1/locations${locParams.toString() ? `?${locParams}` : ""}`);
   const regions = locRes.ok
     ? ((await locRes.json()) as { items: LocationRegion[] }).items
@@ -91,10 +99,12 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   if (region) clinicParams.set("region", region);
   if (city) clinicParams.set("city", city);
   if (specialty) clinicParams.set("specialty", specialty);
+  if (treatsChildren) clinicParams.set("treats_children", "true");
+  if (treatsAdults) clinicParams.set("treats_adults", "true");
   const clinicsRes = await fetch(`${API_BASE}/api/v1/clinics${clinicParams.toString() ? `?${clinicParams}` : ""}`);
   const clinics = clinicsRes.ok
     ? ((await clinicsRes.json()) as { items: ClinicRef[] }).items
     : [];
 
-  return { ...data, q, selectedSlugs, specialties, regions, selectedRegion: region, selectedCity: city, sort, selectedSort, clinics, selectedClinics: clinic ? clinic.split(",").filter(Boolean) : [] };
+  return { ...data, q, selectedSlugs, specialties, regions, selectedRegion: region, selectedCity: city, sort, selectedSort, clinics, selectedClinics: clinic ? clinic.split(",").filter(Boolean) : [], selectedTreatsChildren: treatsChildren, selectedTreatsAdults: treatsAdults };
 };

@@ -24,6 +24,8 @@ class DoctorService(
         sort: String?,
         clinicSlugs: List<String> = emptyList(),
         conditionSlugs: List<String> = emptyList(),
+        treatsChildren: Boolean = false,
+        treatsAdults: Boolean = false,
     ): PageResponseDto<DoctorListItemDto> {
         val pageable = PageRequest.of(page - 1, pageSize)
         val filter = DoctorFilter(
@@ -33,6 +35,8 @@ class DoctorService(
             city = city,
             clinicSlugs = clinicSlugs,
             conditionSlugs = conditionSlugs,
+            treatsChildren = treatsChildren,
+            treatsAdults = treatsAdults,
         )
         val result = doctorRepository.findFiltered(filter, sort, pageable)
         return PageResponseDto(
@@ -70,6 +74,8 @@ class DoctorService(
             ?: throw DoctorNotFoundException(slug)
         return doctor.toProfileDto()
     }
+
+    fun similar(slug: String, limit: Int = 6): List<DoctorListItemDto> = doctorRepository.findSimilar(slug, limit)
 
     fun findEntityBySlug(slug: String): com.findadoc.api.domain.Doctor? = doctorRepository.findBySlug(slug)
 

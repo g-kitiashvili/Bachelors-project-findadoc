@@ -11,6 +11,8 @@ export const GET: RequestHandler = async ({ url, fetch }) => {
   if (region) params.set("region", region);
   if (city) params.set("city", city);
   if (clinic) params.set("clinic", clinic);
+  if (url.searchParams.get("treats_children") === "true") params.set("treats_children", "true");
+  if (url.searchParams.get("treats_adults") === "true") params.set("treats_adults", "true");
   const query = params.toString();
   try {
     const res = await fetch(`${API_BASE}/api/v1/specialties${query ? `?${query}` : ""}`);

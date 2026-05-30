@@ -34,7 +34,7 @@
     {/each}
   </section>
   <div class="pagination-wrap">
-    <Pagination page={data.list.page} pageSize={data.list.pageSize} total={data.list.total} q={""} condition={data.detail.slug} />
+    <Pagination page={data.list.page} pageSize={data.list.pageSize} total={data.list.total} />
   </div>
 {/if}
 

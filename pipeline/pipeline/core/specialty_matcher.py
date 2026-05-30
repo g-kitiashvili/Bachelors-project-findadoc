@@ -21,6 +21,9 @@ DEFAULT_THRESHOLD = 0.45
 
 _PEDIATRIC_MARKERS = ("პედიატ", "ბავშვთა", "ნეონ", "pediatr", "paediatr", "neonat", "child")
 
+# Family / general medicine treats all ages. "ოჯახ" matches ოჯახის ექიმი / საოჯახო მედიცინა.
+_FAMILY_MEDICINE_MARKERS = ("ოჯახ", "family")
+
 # Job-title fragments stripped before tokenizing so an embedded specialty surfaces
 # (e.g. "არითმოლოგიის ცენტრის ხელმძღვანელი" -> "არითმოლოგიის").
 _ADMIN_PHRASE_RE = re.compile(
@@ -51,6 +54,10 @@ def _is_pediatric(token: str) -> bool:
     return any(marker in token for marker in _PEDIATRIC_MARKERS)
 
 
+def _is_family_medicine(token: str) -> bool:
+    return any(marker in token for marker in _FAMILY_MEDICINE_MARKERS)
+
+
 def infer_age_groups(
     specialty_ka: str | None, specialty_en: str | None
 ) -> tuple[bool, bool]:
@@ -64,6 +71,8 @@ def infer_age_groups(
     tokens = tokenize(specialty_ka) + tokenize(specialty_en)
     if not tokens:
         return (False, True)
+    if any(_is_family_medicine(t) for t in tokens):
+        return (True, True)
     treats_children = any(_is_pediatric(t) for t in tokens)
     treats_adults = any(not _is_pediatric(t) for t in tokens)
     return (treats_children, treats_adults)

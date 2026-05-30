@@ -17,9 +17,11 @@
     selectedCity: string;
     clinics: Array<{ slug: string; nameKa: string; nameEn: string; doctorCount: number }>;
     selectedClinics: string[];
+    selectedTreatsChildren: boolean;
+    selectedTreatsAdults: boolean;
   }
 
-  let { open, selectedSlugs, specialties, onClose, regions, selectedRegion, selectedCity, clinics, selectedClinics }: Props = $props();
+  let { open, selectedSlugs, specialties, onClose, regions, selectedRegion, selectedCity, clinics, selectedClinics, selectedTreatsChildren, selectedTreatsAdults }: Props = $props();
 
   let draft = $state<string[]>([...selectedSlugs]);
   let regionDraft = $state(selectedRegion);
@@ -34,6 +36,9 @@
   let clinicNameBySlug = $state<Record<string, { nameEn: string; nameKa: string }>>(
     Object.fromEntries(clinics.map((c) => [c.slug, { nameEn: c.nameEn, nameKa: c.nameKa }]))
   );
+
+  let treatsChildrenDraft = $state(selectedTreatsChildren);
+  let treatsAdultsDraft = $state(selectedTreatsAdults);
 
   function rememberNames(items: Props["specialties"]) {
     const acc = { ...untrack(() => nameBySlug) };
@@ -51,12 +56,16 @@
   $effect(() => { clinicDraft = [...selectedClinics]; });
   $effect(() => { regionDraft = selectedRegion; });
   $effect(() => { cityDraft = selectedCity; });
+  $effect(() => { treatsChildrenDraft = selectedTreatsChildren; });
+  $effect(() => { treatsAdultsDraft = selectedTreatsAdults; });
 
   $effect(() => {
     if (
       regionDraft === selectedRegion &&
       cityDraft === selectedCity &&
-      clinicDraft.join(",") === selectedClinics.join(",")
+      clinicDraft.join(",") === selectedClinics.join(",") &&
+      treatsChildrenDraft === selectedTreatsChildren &&
+      treatsAdultsDraft === selectedTreatsAdults
     ) {
       liveSpecialties = [...specialties];
       rememberNames(specialties);
@@ -66,6 +75,8 @@
     if (regionDraft) params.set("region", regionDraft);
     if (cityDraft) params.set("city", cityDraft);
     if (clinicDraft.length > 0) params.set("clinic", clinicDraft.join(","));
+    if (treatsChildrenDraft) params.set("treats_children", "true");
+    if (treatsAdultsDraft) params.set("treats_adults", "true");
     let cancelled = false;
     fetch(`/api/specialties?${params.toString()}`)
       .then((r) => (r.ok ? r.json() : { items: [] }))
@@ -94,13 +105,15 @@
   let liveRegions = $state<LocationRegion[]>([...regions]);
 
   $effect(() => {
-    if (draft.length === 0 && clinicDraft.length === 0) {
+    if (draft.length === 0 && clinicDraft.length === 0 && treatsChildrenDraft === selectedTreatsChildren && treatsAdultsDraft === selectedTreatsAdults) {
       liveRegions = [...regions];
       return;
     }
     const params = new URLSearchParams();
     if (draft.length > 0) params.set("specialty", draft.join(","));
     if (clinicDraft.length > 0) params.set("clinic", clinicDraft.join(","));
+    if (treatsChildrenDraft) params.set("treats_children", "true");
+    if (treatsAdultsDraft) params.set("treats_adults", "true");
     let cancelled = false;
     fetch(`/api/locations?${params.toString()}`)
       .then((r) => (r.ok ? r.json() : { items: [] }))
@@ -126,7 +139,9 @@
     if (
       regionDraft === selectedRegion &&
       cityDraft === selectedCity &&
-      draft.join(",") === selectedSlugs.join(",")
+      draft.join(",") === selectedSlugs.join(",") &&
+      treatsChildrenDraft === selectedTreatsChildren &&
+      treatsAdultsDraft === selectedTreatsAdults
     ) {
       liveClinics = [...clinics];
       rememberClinicNames(clinics);
@@ -136,6 +151,8 @@
     if (regionDraft) params.set("region", regionDraft);
     if (cityDraft) params.set("city", cityDraft);
     if (draft.length > 0) params.set("specialty", draft.join(","));
+    if (treatsChildrenDraft) params.set("treats_children", "true");
+    if (treatsAdultsDraft) params.set("treats_adults", "true");
     let cancelled = false;
     fetch(`/api/clinics?${params.toString()}`)
       .then((r) => (r.ok ? r.json() : { items: [] }))
@@ -172,6 +189,10 @@
     else url.searchParams.delete("city");
     if (clinicDraft.length > 0) url.searchParams.set("clinic", clinicDraft.join(","));
     else url.searchParams.delete("clinic");
+    if (treatsChildrenDraft) url.searchParams.set("treats_children", "true");
+    else url.searchParams.delete("treats_children");
+    if (treatsAdultsDraft) url.searchParams.set("treats_adults", "true");
+    else url.searchParams.delete("treats_adults");
     url.searchParams.delete("page");
     goto(url.pathname + url.search);
     onClose();
@@ -182,6 +203,8 @@
     regionDraft = "";
     cityDraft = "";
     clinicDraft = [];
+    treatsChildrenDraft = false;
+    treatsAdultsDraft = false;
   }
 </script>
 
@@ -232,6 +255,12 @@
         selected={clinicDraft}
         onChange={(next) => (clinicDraft = next)}
       />
+
+      <div class="agegroup">
+        <span class="ag-label">Patients</span>
+        <label><input type="checkbox" bind:checked={treatsChildrenDraft} /> Treats children</label>
+        <label><input type="checkbox" bind:checked={treatsAdultsDraft} /> Treats adults</label>
+      </div>
     </div>
 
     <footer>
@@ -256,4 +285,7 @@
   .apply:hover { background: var(--accent-deep); }
   .clear { background: none; border: 1px solid var(--line); padding: 0.7rem 1rem; border-radius: 8px; font: inherit; cursor: pointer; color: var(--ink); }
   .clear:hover { border-color: var(--line-strong); }
+  .agegroup { display: flex; flex-direction: column; gap: 0.4rem; }
+  .ag-label { font-size: 0.8rem; font-weight: 600; color: var(--ink-muted); }
+  .agegroup label { display: flex; gap: 0.5rem; align-items: center; font-size: 0.92rem; cursor: pointer; }
 </style>

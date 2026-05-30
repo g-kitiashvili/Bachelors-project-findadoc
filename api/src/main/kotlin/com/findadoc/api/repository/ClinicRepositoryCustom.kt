@@ -6,8 +6,8 @@ import com.findadoc.api.web.dto.ClinicListItemDto
 import com.findadoc.api.web.dto.ClinicSuggestionDto
 
 interface ClinicRepositoryCustom {
-    fun facet(q: String?, region: String?, city: String?, specialtySlugs: List<String>, located: Boolean, collapseBrands: Boolean, limit: Int, offset: Int): List<ClinicListItemDto>
-    fun countFacet(q: String?, region: String?, city: String?, specialtySlugs: List<String>, located: Boolean, collapseBrands: Boolean): Long
+    fun facet(q: String?, region: String?, city: String?, specialtySlugs: List<String>, located: Boolean, collapseBrands: Boolean, treatsChildren: Boolean, treatsAdults: Boolean, limit: Int, offset: Int): List<ClinicListItemDto>
+    fun countFacet(q: String?, region: String?, city: String?, specialtySlugs: List<String>, located: Boolean, collapseBrands: Boolean, treatsChildren: Boolean, treatsAdults: Boolean): Long
     fun countDoctorsBySlug(slug: String): Long
     fun autocomplete(q: String, threshold: Double, limit: Int): List<ClinicSuggestionDto>
     fun coordinatesBySlug(slug: String): Pair<Double, Double>?

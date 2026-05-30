@@ -40,7 +40,7 @@
   </div>
 </div>
 
-<FilterBar selectedSlugs={data.selectedSlugs} specialties={data.specialties} regions={data.regions} selectedRegion={data.selectedRegion} selectedCity={data.selectedCity} clinics={data.clinics} selectedClinics={data.selectedClinics} />
+<FilterBar selectedSlugs={data.selectedSlugs} specialties={data.specialties} regions={data.regions} selectedRegion={data.selectedRegion} selectedCity={data.selectedCity} clinics={data.clinics} selectedClinics={data.selectedClinics} selectedTreatsChildren={data.selectedTreatsChildren} selectedTreatsAdults={data.selectedTreatsAdults} />
 
 <div class="section-head">
   <div>
@@ -78,16 +78,7 @@
 {/if}
 
 <div class="pagination-wrap">
-  <Pagination
-    page={data.page}
-    pageSize={data.pageSize}
-    total={data.total}
-    q={data.q ?? ""}
-    specialty={data.selectedSlugs.join(",")}
-    region={data.selectedRegion}
-    city={data.selectedCity}
-    sort={data.sort}
-  />
+  <Pagination page={data.page} pageSize={data.pageSize} total={data.total} />
 </div>
 
 <style>

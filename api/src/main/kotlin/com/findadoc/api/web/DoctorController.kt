@@ -35,6 +35,8 @@ class DoctorController(
         @RequestParam(required = false) sort: String?,
         @RequestParam(required = false) clinic: String?,
         @RequestParam(required = false) condition: String?,
+        @RequestParam(name = "treats_children", required = false) treatsChildren: Boolean?,
+        @RequestParam(name = "treats_adults", required = false) treatsAdults: Boolean?,
     ): PageResponseDto<DoctorListItemDto> {
         val safePage = maxOf(page, 1)
         val safePageSize = pageSize.coerceIn(1, 50)
@@ -50,6 +52,7 @@ class DoctorController(
         val conditionSlugs = condition?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
         return doctorService.list(
             safePage, safePageSize, trimmedQ, slugs, regionSlug, citySlug, sortMode, clinicSlugs, conditionSlugs,
+            treatsChildren == true, treatsAdults == true,
         )
     }
 
@@ -80,6 +83,13 @@ class DoctorController(
             ),
         )
     }
+
+    @Operation(summary = "Doctors similar to the given one (same specialty, ranked by shared specialties and proximity)")
+    @GetMapping("/{slug}/similar")
+    fun similar(
+        @PathVariable slug: String,
+        @RequestParam(defaultValue = "6") limit: Int,
+    ): List<DoctorListItemDto> = doctorService.similar(slug, limit.coerceIn(1, 24))
 
     @Operation(summary = "Get a doctor by slug")
     @GetMapping("/{slug}")
