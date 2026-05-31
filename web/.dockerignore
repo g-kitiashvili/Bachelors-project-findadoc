@@ -4,3 +4,4 @@ build
 .git
 .idea
 *.log
+src/lib/paraglide

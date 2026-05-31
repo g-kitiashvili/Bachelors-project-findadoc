@@ -5,37 +5,37 @@
   import SearchBar from "$lib/components/SearchBar.svelte";
   import SortSelect from "$lib/components/SortSelect.svelte";
   import { page } from "$app/stores";
+  import * as m from "$lib/paraglide/messages";
+  import { href } from "$lib/i18n";
 
   let { data } = $props();
 
-  const mapHref = $derived(`/doctors/map${$page.url.search}`);
+  const mapHref = $derived(href("/doctors/map") + $page.url.search);
 
   const hasQuery = $derived(Boolean(data.q));
   const headlineMain = $derived(
-    !hasQuery
+    hasQuery
       ? data.total > 0
-        ? `${data.total} doctors`
-        : "Doctors"
+        ? `${data.total} ${data.total === 1 ? m.noun_result() : m.noun_results()}`
+        : m.doctors_no_matches()
       : data.total > 0
-        ? `${data.total} ${data.total === 1 ? "result" : "results"}`
-        : "No matches",
+        ? `${data.total} ${data.total === 1 ? m.noun_doctor() : m.noun_doctors()}`
+        : m.doctors_heading(),
   );
   const headlineSub = $derived(
-    hasQuery
-      ? `For "${data.q}"`
-      : "Verified profiles, indexed daily from public sources.",
+    hasQuery ? m.doctors_sub_query({ q: data.q }) : m.doctors_sub_default(),
   );
 </script>
 
 <svelte:head>
-  <title>{hasQuery ? `Search · ${data.q}` : "Doctors"} — Find-a-Doc</title>
+  <title>{hasQuery ? m.meta_search({ q: data.q }) : m.meta_doctors()}</title>
 </svelte:head>
 
 <div class="search-strip">
   <div class="search-strip-inner">
     <SearchBar initialValue={data.q ?? ""} />
     {#if hasQuery}
-      <a class="clear" href="/doctors">Clear search</a>
+      <a class="clear" href={href("/doctors")}>{m.doctors_clear_search()}</a>
     {/if}
   </div>
 </div>
@@ -49,12 +49,12 @@
   </div>
   <div class="meta">
     <div class="view-toggle">
-      <span class="seg active" aria-current="page">☰ List</span>
-      <a class="seg" href={mapHref}>📍 Map</a>
+      <span class="seg active" aria-current="page">{m.doctors_view_list()}</span>
+      <a class="seg" href={mapHref}>{m.doctors_view_map()}</a>
     </div>
     <SortSelect value={data.selectedSort} hasQuery={hasQuery} />
     {#if data.total > 0}
-      <span class="page-indicator">Page {data.page} · {data.pageSize} per page</span>
+      <span class="page-indicator">{m.doctors_page_indicator({ page: data.page, pageSize: data.pageSize })}</span>
     {/if}
   </div>
 </div>
@@ -62,11 +62,11 @@
 {#if data.items.length === 0}
   <section class="empty">
     {#if hasQuery}
-      <h2>No matches for "{data.q}"</h2>
-      <p>Try a different name or specialty.</p>
+      <h2>{m.doctors_empty_query_title({ q: data.q })}</h2>
+      <p>{m.doctors_empty_query_hint()}</p>
     {:else}
-      <h2>No doctors found</h2>
-      <p>Try a broader search, or browse all specialties.</p>
+      <h2>{m.doctors_empty_title()}</h2>
+      <p>{m.doctors_empty_hint()}</p>
     {/if}
   </section>
 {:else}

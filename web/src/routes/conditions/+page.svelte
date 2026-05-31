@@ -1,18 +1,22 @@
 <script lang="ts">
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
+
   let { data } = $props();
 </script>
 
-<svelte:head><title>Conditions — Find-a-Doc</title></svelte:head>
+<svelte:head><title>{m.meta_conditions()}</title></svelte:head>
 
 <section class="wrap">
-  <h1>Conditions</h1>
-  <p class="sub">Browse {data.conditions.length} conditions — each links to the specialists who treat it.</p>
+  <h1>{m.conditions_heading()}</h1>
+  <p class="sub">{m.conditions_intro({ count: data.conditions.length })}</p>
   <ul class="list">
     {#each data.conditions as c (c.slug)}
       <li>
-        <a href={`/conditions/${c.slug}`}>
-          <span class="name">{c.nameEn}</span>
-          <span class="count">{c.doctorCount} {c.doctorCount === 1 ? "doctor" : "doctors"}</span>
+        <a href={href(`/conditions/${c.slug}`)}>
+          <span class="name">{localizedField(c.nameKa, c.nameEn, getLocale())}</span>
+          <span class="count">{c.doctorCount} {c.doctorCount === 1 ? m.noun_doctor() : m.noun_doctors()}</span>
         </a>
       </li>
     {/each}

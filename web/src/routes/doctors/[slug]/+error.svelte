@@ -1,22 +1,24 @@
 <script lang="ts">
   import { page } from "$app/state";
+  import * as m from "$lib/paraglide/messages";
+  import { href } from "$lib/i18n";
 </script>
 
 <svelte:head>
-  <title>Not found — Find-a-Doc</title>
+  <title>{m.meta_not_found()}</title>
 </svelte:head>
 
 <section class="not-found">
-  <div class="eyebrow">{page.status === 404 ? "404 · Not found" : `${page.status} · Error`}</div>
+  <div class="eyebrow">{page.status === 404 ? m.error_404_title() : m.error_generic_title({ status: page.status })}</div>
   <h1>
     {#if page.status === 404}
-      We couldn't find that doctor.
+      {m.error_doctor_not_found()}
     {:else}
-      Something went wrong.
+      {m.error_something_wrong()}
     {/if}
   </h1>
-  <p class="detail">{page.error?.message ?? "The page you requested doesn't exist or is no longer available."}</p>
-  <a class="back" href="/doctors">← Back to all doctors</a>
+  <p class="detail">{page.error?.message ?? m.error_default_message()}</p>
+  <a class="back" href={href("/doctors")}>{m.error_back_all_doctors()}</a>
 </section>
 
 <style>

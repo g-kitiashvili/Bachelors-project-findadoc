@@ -1,4 +1,8 @@
 <script lang="ts">
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
+
   interface SpecialtyRef {
     slug: string;
     nameKa: string;
@@ -25,6 +29,16 @@
 
   let { doctor }: { doctor: Doctor } = $props();
 
+  const name = $derived(localizedField(doctor.fullNameKa, doctor.fullNameEn, getLocale()));
+  const specialty = $derived(localizedField(doctor.specialtyKa, doctor.specialtyEn, getLocale()));
+  const bio = $derived(localizedField(doctor.bioKa, doctor.bioEn, getLocale()));
+
+  const genderLabel = $derived.by(() => {
+    if (doctor.gender === "female") return m.gender_female();
+    if (doctor.gender === "male") return m.gender_male();
+    return doctor.gender;
+  });
+
   const initial = doctor.fullNameEn.trim().charAt(0).toUpperCase() || "·";
 
   // Deterministic photo gradient based on slug (matches DoctorCard logic)
@@ -34,12 +48,12 @@
     return buckets[sum % buckets.length];
   })();
 
-  const treatsLabel = (() => {
+  const treatsLabel = $derived.by(() => {
     const parts: string[] = [];
-    if (doctor.treatsAdults) parts.push("Adults");
-    if (doctor.treatsChildren) parts.push("Children");
+    if (doctor.treatsAdults) parts.push(m.profile_adults());
+    if (doctor.treatsChildren) parts.push(m.profile_children());
     return parts.length ? parts.join(" · ") : "—";
-  })();
+  });
 </script>
 
 <section class="profile">
@@ -53,51 +67,51 @@
     </div>
     <div class="card-meta">
       <div class="meta-row">
-        <span class="meta-label">Treats</span>
+        <span class="meta-label">{m.profile_treats()}</span>
         <span class="meta-val">{treatsLabel}</span>
       </div>
       {#if doctor.gender}
         <div class="meta-row">
-          <span class="meta-label">Gender</span>
-          <span class="meta-val">{doctor.gender}</span>
+          <span class="meta-label">{m.profile_gender()}</span>
+          <span class="meta-val">{genderLabel}</span>
         </div>
       {/if}
       <div class="meta-row">
-        <span class="meta-label">Accepting</span>
+        <span class="meta-label">{m.profile_accepting()}</span>
         <span class="meta-val" class:success={doctor.isAcceptingNewPatients}>
-          {doctor.isAcceptingNewPatients ? "Yes" : "No"}
+          {doctor.isAcceptingNewPatients ? m.common_yes() : m.common_no()}
         </span>
       </div>
       <button class="cta-btn" type="button" disabled aria-disabled="true">
-        Request callback
+        {m.nav_request_callback()}
       </button>
     </div>
   </aside>
 
   <div class="body">
-    <div class="eyebrow">Doctor profile</div>
-    <h1 class="name">{doctor.fullNameEn}</h1>
+    <div class="eyebrow">{m.profile_aria()}</div>
+    <h1 class="name">{name}</h1>
 
     {#if doctor.specialties && doctor.specialties.length > 0}
       <div class="specialty-row">
         {#each doctor.specialties as s (s.slug)}
-          <a class="profile-specialty-pill" href={`/specialties/${s.slug}`} class:primary={s.isPrimary}>
-            {s.nameEn}
-            {#if s.isPrimary}<span class="primary-dot" title="Primary">●</span>{/if}
+          <a class="profile-specialty-pill" href={href(`/specialties/${s.slug}`)} class:primary={s.isPrimary}>
+            {localizedField(s.nameKa, s.nameEn, getLocale())}
+            {#if s.isPrimary}<span class="primary-dot" title={m.profile_primary()}>●</span>{/if}
           </a>
         {/each}
       </div>
-    {:else if doctor.specialtyEn}
+    {:else if specialty}
       <div class="specialty-row">
-        <span class="profile-specialty-pill profile-specialty-pill--raw">{doctor.specialtyEn}</span>
+        <span class="profile-specialty-pill profile-specialty-pill--raw">{specialty}</span>
       </div>
     {/if}
 
     {#if doctor.clinics && doctor.clinics.length > 0}
       <div class="clinic-row">
         {#each doctor.clinics as c (c.slug)}
-          <a class="profile-clinic-pill" href={`/clinics/${c.slug}`}>
-            {c.nameEn}{#if c.addressEn ?? c.address} · <span class="clinic-addr">{c.addressEn ?? c.address}</span>{/if}
+          <a class="profile-clinic-pill" href={href(`/clinics/${c.slug}`)}>
+            {localizedField(c.nameKa, c.nameEn, getLocale())}{#if c.addressEn ?? c.address} · <span class="clinic-addr">{c.addressEn ?? c.address}</span>{/if}
           </a>
         {/each}
       </div>
@@ -105,23 +119,23 @@
 
     <div class="quick-meta">
       <div class="quick">
-        <span class="quick-label">Treats</span>
+        <span class="quick-label">{m.profile_treats()}</span>
         <span class="quick-val">{treatsLabel}</span>
       </div>
       <div class="quick">
-        <span class="quick-label">Accepting</span>
+        <span class="quick-label">{m.profile_accepting()}</span>
         <span class="quick-val" class:success={doctor.isAcceptingNewPatients}>
-          {doctor.isAcceptingNewPatients ? "Yes" : "No"}
+          {doctor.isAcceptingNewPatients ? m.common_yes() : m.common_no()}
         </span>
       </div>
     </div>
 
-    <h2 class="bio-head">Biography</h2>
+    <h2 class="bio-head">{m.profile_biography()}</h2>
     <div class="bio">
-      {#if doctor.bioEn}
-        <p>{doctor.bioEn}</p>
+      {#if bio}
+        <p>{bio}</p>
       {:else}
-        <p class="empty">No biography available.</p>
+        <p class="empty">{m.profile_no_bio()}</p>
       {/if}
     </div>
   </div>

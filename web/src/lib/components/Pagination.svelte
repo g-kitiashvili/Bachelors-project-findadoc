@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
+  import * as m from "$lib/paraglide/messages";
 
   let {
     page,
@@ -38,12 +39,12 @@
 </script>
 
 {#if total > 0 && totalPages > 1}
-  <nav class="pagination" aria-label="Pagination">
+  <nav class="pagination" aria-label={m.pagination_aria()}>
     <a
       href={prevDisabled ? null : linkFor(page - 1)}
       class:disabled={prevDisabled}
       aria-disabled={prevDisabled}>
-      ← Prev
+      {m.pagination_prev()}
     </a>
 
     <ul class="pages">
@@ -62,7 +63,7 @@
       href={nextDisabled ? null : linkFor(page + 1)}
       class:disabled={nextDisabled}
       aria-disabled={nextDisabled}>
-      Next →
+      {m.pagination_next()}
     </a>
   </nav>
 {/if}

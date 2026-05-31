@@ -1,19 +1,23 @@
 <script lang="ts">
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
+
   let { data } = $props();
 </script>
 
-<svelte:head><title>Specialties — Find-a-Doc</title></svelte:head>
+<svelte:head><title>{m.meta_specialties()}</title></svelte:head>
 
 <section class="wrap">
-  <h1>Specialties</h1>
-  <p class="sub">Browse {data.specialties.length} medical specialties — filter the doctor list or read about each field.</p>
+  <h1>{m.specialties_heading()}</h1>
+  <p class="sub">{m.specialties_intro({ count: data.specialties.length })}</p>
 
   <ul class="list">
     {#each data.specialties as s (s.slug)}
       <li>
-        <a href={`/specialties/${s.slug}`}>
-          <span class="name">{s.nameEn}</span>
-          <span class="count">{s.doctorCount} {s.doctorCount === 1 ? "doctor" : "doctors"}</span>
+        <a href={href(`/specialties/${s.slug}`)}>
+          <span class="name">{localizedField(s.nameKa, s.nameEn, getLocale())}</span>
+          <span class="count">{s.doctorCount} {s.doctorCount === 1 ? m.noun_doctor() : m.noun_doctors()}</span>
         </a>
       </li>
     {/each}

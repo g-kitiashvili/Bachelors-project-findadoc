@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   params.set("collapse", "true");
   const res = await fetch(`${API_BASE}/api/v1/clinics?${params}`);
   const data = res.ok
-    ? ((await res.json()) as { items: Array<{ slug: string; nameKa: string; nameEn: string; doctorCount: number; branches?: Array<{ slug: string; nameEn: string; address: string | null }> }>; page: number; pageSize: number; total: number })
+    ? ((await res.json()) as { items: Array<{ slug: string; nameKa: string; nameEn: string; doctorCount: number; branches?: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null }> }>; page: number; pageSize: number; total: number })
     : { items: [], page, pageSize, total: 0 };
   return { ...data, q };
 };

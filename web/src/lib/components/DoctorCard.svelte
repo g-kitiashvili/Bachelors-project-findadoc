@@ -15,9 +15,26 @@
     primaryClinic: { slug: string; nameKa: string; nameEn: string; address: string | null } | null;
   }
 
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
+
   let { doctor }: { doctor: Doctor } = $props();
 
-  const initial = doctor.fullNameEn.trim().charAt(0).toUpperCase() || "·";
+  const displayName = $derived(
+    localizedField(doctor.fullNameKa, doctor.fullNameEn, getLocale()),
+  );
+  const displaySpecialty = $derived(
+    localizedField(
+      doctor.primarySpecialty?.nameKa ?? doctor.specialtyKa,
+      doctor.primarySpecialty?.nameEn ?? doctor.specialtyEn,
+      getLocale(),
+    ),
+  );
+  const displayClinic = $derived(
+    localizedField(doctor.primaryClinic?.nameKa, doctor.primaryClinic?.nameEn, getLocale()),
+  );
+  const initial = $derived(displayName.trim().charAt(0).toUpperCase() || "·");
   const bgClass = (() => {
     const sum = doctor.slug.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
     const buckets = ["bg-a", "bg-b", "bg-c", "bg-d", "bg-e", "bg-f"] as const;
@@ -27,7 +44,7 @@
 </script>
 
 <div class="card">
-  <a class="card-link" href="/doctors/{doctor.slug}">
+  <a class="card-link" href={href(`/doctors/${doctor.slug}`)}>
     <div class="photo {bgClass}">
       {#if doctor.photoUrl}
         <img src={doctor.photoUrl} alt="" />
@@ -35,7 +52,7 @@
         <span class="initial">{initial}</span>
       {/if}
       {#if doctor.isAcceptingNewPatients}
-        <span class="tag-accepting"><span class="dot"></span>Accepting</span>
+        <span class="tag-accepting"><span class="dot"></span>{m.accepting_short()}</span>
       {/if}
       {#if sourceHost}
         <span class="tag-source">{sourceHost}</span>
@@ -43,25 +60,25 @@
     </div>
   </a>
   <div class="info">
-    <a class="name-link" href="/doctors/{doctor.slug}">
-      <h3 class="name">{doctor.fullNameEn}</h3>
+    <a class="name-link" href={href(`/doctors/${doctor.slug}`)}>
+      <h3 class="name">{displayName}</h3>
     </a>
     {#if doctor.primarySpecialty}
-      <a class="specialty-pill" href={`/specialties/${doctor.primarySpecialty.slug}`}>
-        {doctor.primarySpecialty.nameEn}
+      <a class="specialty-pill" href={href(`/specialties/${doctor.primarySpecialty.slug}`)}>
+        {displaySpecialty}
       </a>
     {:else if doctor.specialtyEn}
-      <span class="specialty-pill specialty-pill--raw">{doctor.specialtyEn}</span>
+      <span class="specialty-pill specialty-pill--raw">{displaySpecialty}</span>
     {/if}
     {#if doctor.primaryClinic}
-      <a class="clinic-pill" href={`/clinics/${doctor.primaryClinic.slug}`}>{doctor.primaryClinic.nameEn}</a>
+      <a class="clinic-pill" href={href(`/clinics/${doctor.primaryClinic.slug}`)}>{displayClinic}</a>
     {/if}
     <div class="meta">
       {#if doctor.treatsAdults}
-        <span class="pill">Adults</span>
+        <span class="pill">{m.card_adults()}</span>
       {/if}
       {#if doctor.treatsChildren}
-        <span class="pill">Children</span>
+        <span class="pill">{m.card_children()}</span>
       {/if}
     </div>
   </div>

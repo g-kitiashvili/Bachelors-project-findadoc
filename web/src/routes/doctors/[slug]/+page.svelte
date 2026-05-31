@@ -1,17 +1,20 @@
 <script lang="ts">
   import DoctorProfile from "$lib/components/DoctorProfile.svelte";
   import SimilarDoctors from "$lib/components/SimilarDoctors.svelte";
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
 
   let { data } = $props();
 </script>
 
 <svelte:head>
-  <title>{data.doctor.fullNameEn} — Find-a-Doc</title>
+  <title>{localizedField(data.doctor.fullNameKa, data.doctor.fullNameEn, getLocale())}{m.meta_suffix()}</title>
 </svelte:head>
 
-<nav class="breadcrumb" aria-label="Breadcrumb">
+<nav class="breadcrumb" aria-label={m.aria_breadcrumb()}>
   <div class="breadcrumb-inner">
-    <a href="/doctors">← All doctors</a>
+    <a href={href("/doctors")}>{m.back_all_doctors()}</a>
   </div>
 </nav>
 

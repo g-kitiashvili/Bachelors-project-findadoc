@@ -1,14 +1,15 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
+  import * as m from "$lib/paraglide/messages";
   import MultiSelect from "./MultiSelect.svelte";
 
   let { value, hasQuery }: { value: string; hasQuery: boolean } = $props();
 
   const options = $derived([
-    ...(hasQuery ? [{ value: "relevancy", label: "Relevancy" }] : []),
-    { value: "atoz", label: "A→Z" },
-    { value: "ztoa", label: "Z→A" },
+    ...(hasQuery ? [{ value: "relevancy", label: m.sort_relevancy() }] : []),
+    { value: "atoz", label: m.sort_atoz() },
+    { value: "ztoa", label: m.sort_ztoa() },
   ]);
 
   function onChange(next: string[]) {
@@ -22,10 +23,10 @@
 </script>
 
 <div class="sort">
-  <span>Sort</span>
+  <span>{m.sort_label()}</span>
   <div class="sort-ctl">
     <MultiSelect
-      placeholder="A→Z"
+      placeholder={m.sort_atoz()}
       multiple={false}
       searchable={false}
       compact

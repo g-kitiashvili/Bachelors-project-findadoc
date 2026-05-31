@@ -1,38 +1,41 @@
 <script lang="ts">
   import Pagination from "$lib/components/Pagination.svelte";
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
 
   let { data } = $props();
   let open = $state<Record<string, boolean>>({});
 </script>
 
 <svelte:head>
-  <title>{data.q ? `Search · ${data.q}` : "Clinics"} — Find-a-Doc</title>
+  <title>{data.q ? m.meta_search({ q: data.q }) : m.meta_clinics()}</title>
 </svelte:head>
 
 <section class="wrap">
-  <h1>Clinics</h1>
-  <p class="sub">{data.total} {data.total === 1 ? "clinic" : "clinics"} with active doctors</p>
+  <h1>{m.clinics_heading()}</h1>
+  <p class="sub">{`${data.total} ${data.total === 1 ? m.noun_clinic() : m.noun_clinics()} ${m.clinics_subtitle_suffix()}`}</p>
 
   <form method="get" action="/clinics" class="search-form">
     <input
       type="search"
       name="q"
       value={data.q}
-      placeholder="Search by clinic name…"
+      placeholder={m.clinics_search_placeholder()}
       class="search-input"
     />
-    <button type="submit" class="search-btn">Search</button>
+    <button type="submit" class="search-btn">{m.search_button()}</button>
     {#if data.q}
-      <a href="/clinics" class="clear-link">Clear</a>
+      <a href={href('/clinics')} class="clear-link">{m.drawer_clear()}</a>
     {/if}
   </form>
 
   {#if data.items.length === 0}
     <div class="empty">
       {#if data.q}
-        <p>No clinics matched <strong>"{data.q}"</strong>. Try a different name.</p>
+        <p>{m.clinics_no_match({ q: data.q })}</p>
       {:else}
-        <p>No clinics found.</p>
+        <p>{m.clinics_none()}</p>
       {/if}
     </div>
   {:else}
@@ -41,20 +44,20 @@
         <li>
           {#if c.branches && c.branches.length > 0}
             <button type="button" class="row brandrow" aria-expanded={open[c.slug] ?? false} onclick={() => (open[c.slug] = !open[c.slug])}>
-              <span class="name">{c.nameEn} <span class="brandtag">{c.branches.length} branches</span></span>
-              <span class="count">{c.doctorCount} {c.doctorCount === 1 ? "doctor" : "doctors"} <span class="chev">{(open[c.slug] ?? false) ? "▾" : "▸"}</span></span>
+              <span class="name">{localizedField(c.nameKa, c.nameEn, getLocale())} <span class="brandtag">{c.branches.length} {m.noun_branches()}</span></span>
+              <span class="count">{c.doctorCount} {c.doctorCount === 1 ? m.noun_doctor() : m.noun_doctors()} <span class="chev">{(open[c.slug] ?? false) ? "▾" : "▸"}</span></span>
             </button>
             {#if open[c.slug]}
               <ul class="branches">
                 {#each c.branches as b (b.slug)}
-                  <li><a href={`/clinics/${b.slug}`}><span class="bname">{b.nameEn}</span>{#if b.address}<span class="baddr">{b.address}</span>{/if}</a></li>
+                  <li><a href={href(`/clinics/${b.slug}`)}><span class="bname">{localizedField(b.nameKa, b.nameEn, getLocale())}</span>{#if b.address}<span class="baddr">{b.address}</span>{/if}</a></li>
                 {/each}
               </ul>
             {/if}
           {:else}
-            <a class="row" href={`/clinics/${c.slug}`}>
-              <span class="name">{c.nameEn}</span>
-              <span class="count">{c.doctorCount} {c.doctorCount === 1 ? "doctor" : "doctors"}</span>
+            <a class="row" href={href(`/clinics/${c.slug}`)}>
+              <span class="name">{localizedField(c.nameKa, c.nameEn, getLocale())}</span>
+              <span class="count">{c.doctorCount} {c.doctorCount === 1 ? m.noun_doctor() : m.noun_doctors()}</span>
             </a>
           {/if}
         </li>

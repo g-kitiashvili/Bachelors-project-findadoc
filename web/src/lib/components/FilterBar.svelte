@@ -1,6 +1,9 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
+  import * as m from "$lib/paraglide/messages";
+  import { localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
   import FilterDrawer from "./FilterDrawer.svelte";
 
   interface SpecialtyOption { slug: string; nameKa: string; nameEn: string; doctorCount: number; parentSlug?: string | null }
@@ -36,10 +39,14 @@
       .filter((c): c is ClinicOption => c !== undefined)
   );
 
-  const regionLabel = $derived(regions.find((r) => r.slug === selectedRegion)?.nameEn ?? "");
-  const cityLabel = $derived(
-    regions.flatMap((r) => r.cities).find((c) => c.slug === selectedCity)?.nameEn ?? ""
-  );
+  const regionLabel = $derived.by(() => {
+    const r = regions.find((r) => r.slug === selectedRegion);
+    return r ? localizedField(r.nameKa, r.nameEn, getLocale()) : "";
+  });
+  const cityLabel = $derived.by(() => {
+    const c = regions.flatMap((r) => r.cities).find((c) => c.slug === selectedCity);
+    return c ? localizedField(c.nameKa, c.nameEn, getLocale()) : "";
+  });
 
   function removeSlug(slug: string) {
     const next = selectedSlugs.filter((s) => s !== slug);
@@ -95,48 +102,50 @@
 
 <div class="bar">
   <button class="filters-btn" onclick={() => (drawerOpen = true)}>
-    <span>Filters{selectedSlugs.length > 0 ? ` (${selectedSlugs.length})` : ""}</span>
+    <span>{m.filter_filters()}{selectedSlugs.length > 0 ? ` (${selectedSlugs.length})` : ""}</span>
   </button>
 
   <div class="chips">
     {#each selectedSpecialties as s (s.slug)}
-      <button class="chip" onclick={() => removeSlug(s.slug)} aria-label={`Remove ${s.nameEn} filter`}>
-        <span>{s.nameEn}</span>
+      {@const label = localizedField(s.nameKa, s.nameEn, getLocale())}
+      <button class="chip" onclick={() => removeSlug(s.slug)} aria-label={m.filter_remove_aria({ label })}>
+        <span>{label}</span>
         <span class="x">✕</span>
       </button>
     {/each}
     {#if regionLabel}
-      <button class="chip" onclick={() => clearLocation("region")} aria-label={`Remove ${regionLabel} filter`}>
+      <button class="chip" onclick={() => clearLocation("region")} aria-label={m.filter_remove_aria({ label: regionLabel })}>
         <span>{regionLabel}</span><span class="x">✕</span>
       </button>
     {/if}
     {#if cityLabel}
-      <button class="chip" onclick={() => clearLocation("city")} aria-label={`Remove ${cityLabel} filter`}>
+      <button class="chip" onclick={() => clearLocation("city")} aria-label={m.filter_remove_aria({ label: cityLabel })}>
         <span>{cityLabel}</span><span class="x">✕</span>
       </button>
     {/if}
     {#each selectedClinicOptions as c (c.slug)}
-      <button class="chip" onclick={() => removeClinic(c.slug)} aria-label={`Remove ${c.nameEn} filter`}>
-        <span>{c.nameEn}</span>
+      {@const label = localizedField(c.nameKa, c.nameEn, getLocale())}
+      <button class="chip" onclick={() => removeClinic(c.slug)} aria-label={m.filter_remove_aria({ label })}>
+        <span>{label}</span>
         <span class="x">✕</span>
       </button>
     {/each}
     {#if selectedTreatsChildren}
-      <button class="chip" onclick={() => clearTreats("children")} aria-label="Remove treats children filter">
-        <span>Treats children</span>
+      <button class="chip" onclick={() => clearTreats("children")} aria-label={m.filter_remove_aria({ label: m.filter_treats_children() })}>
+        <span>{m.filter_treats_children()}</span>
         <span class="x">✕</span>
       </button>
     {/if}
     {#if selectedTreatsAdults}
-      <button class="chip" onclick={() => clearTreats("adults")} aria-label="Remove treats adults filter">
-        <span>Treats adults</span>
+      <button class="chip" onclick={() => clearTreats("adults")} aria-label={m.filter_remove_aria({ label: m.filter_treats_adults() })}>
+        <span>{m.filter_treats_adults()}</span>
         <span class="x">✕</span>
       </button>
     {/if}
   </div>
 
   {#if selectedSlugs.length > 0 || regionLabel || cityLabel || selectedClinics.length > 0 || selectedTreatsChildren || selectedTreatsAdults}
-    <button class="clear" onclick={clearAll}>Clear all</button>
+    <button class="clear" onclick={clearAll}>{m.filter_clear_all()}</button>
   {/if}
 </div>
 

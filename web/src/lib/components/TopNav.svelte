@@ -1,19 +1,23 @@
 <script lang="ts">
+  import * as m from "$lib/paraglide/messages";
+  import { href } from "$lib/i18n";
+  import LanguageSwitcher from "./LanguageSwitcher.svelte";
+
   let { active = "doctors" }: { active?: "doctors" | "map" | "specialties" | "conditions" | "clinics" | "about" } = $props();
 </script>
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="brand">findadoc<span class="brand-dot">.</span></a>
+    <a href={href('/')} class="brand">findadoc<span class="brand-dot">.</span></a>
     <div class="nav-links">
-      <a href="/doctors" class:active={active === "doctors"}>Find a Doctor</a>
-      <a href="/doctors/map" class:active={active === "map"}>Map</a>
-      <a href="/specialties" class:active={active === "specialties"}>Specialties</a>
-      <a href="/conditions" class:active={active === "conditions"}>Conditions</a>
-      <a href="/clinics" class:active={active === "clinics"}>Clinics</a>
+      <a href={href('/doctors')} class:active={active === "doctors"}>{m.nav_find_doctor()}</a>
+      <a href={href('/doctors/map')} class:active={active === "map"}>{m.nav_map()}</a>
+      <a href={href('/specialties')} class:active={active === "specialties"}>{m.nav_specialties()}</a>
+      <a href={href('/conditions')} class:active={active === "conditions"}>{m.nav_conditions()}</a>
+      <a href={href('/clinics')} class:active={active === "clinics"}>{m.nav_clinics()}</a>
     </div>
     <div class="nav-right">
-      <button class="nav-cta" type="button" disabled aria-disabled="true">Request callback</button>
+      <LanguageSwitcher />
     </div>
   </div>
 </nav>
@@ -78,24 +82,6 @@
     gap: 1rem;
     align-items: center;
   }
-  .nav-cta {
-    background: var(--ink);
-    color: white;
-    border: none;
-    padding: 0.6rem 1.1rem;
-    border-radius: 6px;
-    font-size: 0.88rem;
-    font-weight: 500;
-    transition: background 0.15s;
-  }
-  .nav-cta:not(:disabled):hover {
-    background: var(--accent);
-  }
-  .nav-cta:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-
   @media (max-width: 900px) {
     .nav-inner {
       padding: 1rem 1.25rem;

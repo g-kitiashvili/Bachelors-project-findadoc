@@ -2,6 +2,9 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import { untrack } from "svelte";
+  import * as m from "$lib/paraglide/messages";
+  import { localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
   import MultiSelect from "./MultiSelect.svelte";
 
   interface LocationCity { slug: string; nameKa: string; nameEn: string; doctorCount: number }
@@ -94,12 +97,15 @@
     const present = new Set(liveSpecialties.map((s) => s.slug));
     const extras = draft
       .filter((slug) => !present.has(slug))
-      .map((slug) => ({ slug, nameEn: nameBySlug[slug]?.nameEn ?? slug, doctorCount: 0 }));
-    return [...liveSpecialties, ...extras].map((s) => ({
-      value: s.slug,
-      label: ("parentSlug" in s && s.parentSlug) ? `↳ ${s.nameEn}` : s.nameEn,
-      count: s.doctorCount,
-    }));
+      .map((slug) => ({ slug, nameEn: nameBySlug[slug]?.nameEn ?? slug, nameKa: nameBySlug[slug]?.nameKa ?? "", doctorCount: 0 }));
+    return [...liveSpecialties, ...extras].map((s) => {
+      const name = localizedField(s.nameKa, s.nameEn, getLocale()) || s.slug;
+      return {
+        value: s.slug,
+        label: ("parentSlug" in s && s.parentSlug) ? `↳ ${name}` : name,
+        count: s.doctorCount,
+      };
+    });
   });
 
   let liveRegions = $state<LocationRegion[]>([...regions]);
@@ -127,12 +133,12 @@
   const cityList = $derived(liveRegions.find((r) => r.slug === regionDraft)?.cities ?? []);
 
   const regionOptions = $derived([
-    { value: "", label: "All regions" },
-    ...liveRegions.map((r) => ({ value: r.slug, label: r.nameEn, count: r.doctorCount })),
+    { value: "", label: m.drawer_all_regions() },
+    ...liveRegions.map((r) => ({ value: r.slug, label: localizedField(r.nameKa, r.nameEn, getLocale()), count: r.doctorCount })),
   ]);
   const cityOptions = $derived([
-    { value: "", label: "All cities" },
-    ...cityList.map((c) => ({ value: c.slug, label: c.nameEn, count: c.doctorCount })),
+    { value: "", label: m.drawer_all_cities() },
+    ...cityList.map((c) => ({ value: c.slug, label: localizedField(c.nameKa, c.nameEn, getLocale()), count: c.doctorCount })),
   ]);
 
   $effect(() => {
@@ -170,8 +176,8 @@
     const present = new Set(liveClinics.map((c) => c.slug));
     const extras = clinicDraft
       .filter((slug) => !present.has(slug))
-      .map((slug) => ({ slug, nameEn: clinicNameBySlug[slug]?.nameEn ?? slug, doctorCount: 0 }));
-    return [...liveClinics, ...extras].map((c) => ({ value: c.slug, label: c.nameEn, count: c.doctorCount }));
+      .map((slug) => ({ slug, nameEn: clinicNameBySlug[slug]?.nameEn ?? slug, nameKa: clinicNameBySlug[slug]?.nameKa ?? "", doctorCount: 0 }));
+    return [...liveClinics, ...extras].map((c) => ({ value: c.slug, label: localizedField(c.nameKa, c.nameEn, getLocale()) || c.slug, count: c.doctorCount }));
   });
 
   function onRegionChange(value: string) {
@@ -210,25 +216,25 @@
 
 {#if open}
   <div class="backdrop" onclick={onClose} role="presentation"></div>
-  <aside class="drawer" role="dialog" aria-label="Filters">
+  <aside class="drawer" role="dialog" aria-label={m.filter_filters()}>
     <header>
-      <h2>Filters</h2>
-      <button class="close" onclick={onClose} aria-label="Close">✕</button>
+      <h2>{m.filter_filters()}</h2>
+      <button class="close" onclick={onClose} aria-label={m.drawer_close()}>✕</button>
     </header>
 
     <div class="body">
       <MultiSelect
-        label="Specialty"
-        placeholder="Select specialty"
-        searchPlaceholder="Search specialties..."
+        label={m.drawer_specialty()}
+        placeholder={m.drawer_select_specialty()}
+        searchPlaceholder={m.drawer_search_specialties()}
         options={specialtyOptions}
         selected={draft}
         onChange={(next) => (draft = next)}
       />
 
       <MultiSelect
-        label="Region"
-        placeholder="All regions"
+        label={m.drawer_region()}
+        placeholder={m.drawer_all_regions()}
         multiple={false}
         options={regionOptions}
         selected={regionDraft ? [regionDraft] : []}
@@ -237,8 +243,8 @@
 
       {#if cityList.length > 0}
         <MultiSelect
-          label="City"
-          placeholder="All cities"
+          label={m.drawer_city()}
+          placeholder={m.drawer_all_cities()}
           multiple={false}
           searchable={false}
           options={cityOptions}
@@ -248,24 +254,24 @@
       {/if}
 
       <MultiSelect
-        label="Clinic"
-        placeholder="Select clinic"
-        searchPlaceholder="Search clinics..."
+        label={m.drawer_clinic()}
+        placeholder={m.drawer_select_clinic()}
+        searchPlaceholder={m.drawer_search_clinics()}
         options={clinicOptions}
         selected={clinicDraft}
         onChange={(next) => (clinicDraft = next)}
       />
 
       <div class="agegroup">
-        <span class="ag-label">Patients</span>
-        <label><input type="checkbox" bind:checked={treatsChildrenDraft} /> Treats children</label>
-        <label><input type="checkbox" bind:checked={treatsAdultsDraft} /> Treats adults</label>
+        <span class="ag-label">{m.drawer_patients()}</span>
+        <label><input type="checkbox" bind:checked={treatsChildrenDraft} /> {m.filter_treats_children()}</label>
+        <label><input type="checkbox" bind:checked={treatsAdultsDraft} /> {m.filter_treats_adults()}</label>
       </div>
     </div>
 
     <footer>
-      <button class="clear" onclick={clearDraft}>Clear</button>
-      <button class="apply" onclick={apply}>Apply</button>
+      <button class="clear" onclick={clearDraft}>{m.drawer_clear()}</button>
+      <button class="apply" onclick={apply}>{m.drawer_apply()}</button>
     </footer>
   </aside>
 {/if}

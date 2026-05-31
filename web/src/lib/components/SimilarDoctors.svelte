@@ -1,10 +1,16 @@
 <script lang="ts">
-  interface SpecialtyRef { slug: string; nameEn: string }
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
+
+  interface SpecialtyRef { slug: string; nameKa: string; nameEn: string }
   interface Doc {
     slug: string;
+    fullNameKa: string;
     fullNameEn: string;
     photoUrl: string | null;
     primarySpecialty: SpecialtyRef | null;
+    specialtyKa: string | null;
     specialtyEn: string | null;
   }
 
@@ -26,22 +32,26 @@
 {#if doctors.length > 0}
   <section class="similar">
     <div class="head">
-      <h2>Similar doctors</h2>
+      <h2>{m.similar_heading()}</h2>
       {#if doctors.length > 5}
         <div class="nav">
-          <button type="button" aria-label="Previous" onclick={() => page(-1)}>‹</button>
-          <button type="button" aria-label="Next" onclick={() => page(1)}>›</button>
+          <button type="button" aria-label={m.similar_prev()} onclick={() => page(-1)}>‹</button>
+          <button type="button" aria-label={m.similar_next()} onclick={() => page(1)}>›</button>
         </div>
       {/if}
     </div>
     <div class="rail" bind:this={rail}>
       {#each doctors as d (d.slug)}
-        <a class="mini" href="/doctors/{d.slug}">
+        <a class="mini" href={href(`/doctors/${d.slug}`)}>
           <div class="avatar {bg(d.slug)}">
             {#if d.photoUrl}<img src={d.photoUrl} alt="" />{:else}<span>{initial(d)}</span>{/if}
           </div>
-          <div class="name">{d.fullNameEn}</div>
-          <div class="spec">{d.primarySpecialty?.nameEn ?? d.specialtyEn ?? ""}</div>
+          <div class="name">{localizedField(d.fullNameKa, d.fullNameEn, getLocale())}</div>
+          <div class="spec">
+            {d.primarySpecialty
+              ? localizedField(d.primarySpecialty.nameKa, d.primarySpecialty.nameEn, getLocale())
+              : localizedField(d.specialtyKa, d.specialtyEn, getLocale())}
+          </div>
         </a>
       {/each}
     </div>

@@ -1,32 +1,35 @@
 <script lang="ts">
   import DoctorCard from "$lib/components/DoctorCard.svelte";
   import Pagination from "$lib/components/Pagination.svelte";
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
 
   let { data } = $props();
 </script>
 
-<svelte:head><title>{data.detail.nameEn} — Find-a-Doc</title></svelte:head>
+<svelte:head><title>{`${localizedField(data.detail.nameKa, data.detail.nameEn, getLocale())}${m.meta_suffix()}`}</title></svelte:head>
 
 <nav class="crumbs">
-  <a href="/specialties">Specialties</a>
+  <a href={href("/specialties")}>{m.specialties_heading()}</a>
   <span>·</span>
-  <strong>{data.detail.nameEn}</strong>
+  <strong>{localizedField(data.detail.nameKa, data.detail.nameEn, getLocale())}</strong>
 </nav>
 
 <section class="hero">
-  <h1>{data.detail.nameEn}</h1>
-  {#if data.detail.descriptionEn}
-    <p>{data.detail.descriptionEn}</p>
+  <h1>{localizedField(data.detail.nameKa, data.detail.nameEn, getLocale())}</h1>
+  {#if localizedField(data.detail.descriptionKa, data.detail.descriptionEn, getLocale())}
+    <p>{localizedField(data.detail.descriptionKa, data.detail.descriptionEn, getLocale())}</p>
   {/if}
   <div class="stats">
-    <div class="stat"><b>{data.detail.doctorCount}</b><span>{data.detail.doctorCount === 1 ? "doctor" : "doctors"}</span></div>
-    <div class="stat"><b>{data.detail.acceptingCount}</b><span>accepting new patients</span></div>
-    <div class="stat"><b>{data.detail.treatsChildrenCount}</b><span>treat children</span></div>
+    <div class="stat"><b>{data.detail.doctorCount}</b><span>{data.detail.doctorCount === 1 ? m.noun_doctor() : m.noun_doctors()}</span></div>
+    <div class="stat"><b>{data.detail.acceptingCount}</b><span>{m.stat_accepting_new()}</span></div>
+    <div class="stat"><b>{data.detail.treatsChildrenCount}</b><span>{m.stat_treat_children()}</span></div>
   </div>
 </section>
 
 {#if data.list.items.length === 0}
-  <section class="empty"><h2>No doctors yet</h2></section>
+  <section class="empty"><h2>{m.empty_no_doctors_yet()}</h2></section>
 {:else}
   <section class="grid">
     {#each data.list.items as doctor (doctor.slug)}

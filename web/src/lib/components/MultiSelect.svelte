@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tick } from "svelte";
+  import * as m from "$lib/paraglide/messages";
 
   interface Option { value: string; label: string; count?: number }
 
@@ -22,7 +23,7 @@
     label,
     multiple = true,
     searchable = true,
-    searchPlaceholder = "Search...",
+    searchPlaceholder = m.multiselect_search(),
     compact = false,
     onChange,
   }: Props = $props();
@@ -109,7 +110,7 @@
             </button>
           </li>
         {:else}
-          <li class="ms-empty">No matches</li>
+          <li class="ms-empty">{m.search_no_matches()}</li>
         {/each}
       </ul>
     </div>

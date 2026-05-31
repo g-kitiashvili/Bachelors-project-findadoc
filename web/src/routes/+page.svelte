@@ -1,5 +1,7 @@
 <script lang="ts">
   import SearchBar from "$lib/components/SearchBar.svelte";
+  import * as m from "$lib/paraglide/messages";
+  import { href } from "$lib/i18n";
 
   let { data } = $props();
 
@@ -19,30 +21,27 @@
 </script>
 
 <svelte:head>
-  <title>Find-a-Doc — bilingual medical directory for Georgia</title>
+  <title>{m.meta_home()}</title>
 </svelte:head>
 
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-text">
-      <span class="hero-eyebrow">Georgia's open medical directory</span>
+      <span class="hero-eyebrow">{m.home_eyebrow()}</span>
       <h1 class="hero-title">
-        Find a doctor<br />
-        <span class="hero-title-accent">you can trust.</span>
+        {m.home_hero_line1()}<br />
+        <span class="hero-title-accent">{m.home_hero_accent()}</span>
       </h1>
-      <p class="hero-sub">
-        Search {total > 0 ? `${total} ` : ""}Georgian doctors across
-        specialties, clinics, and conditions.
-      </p>
+      <p class="hero-sub">{m.home_hero_sub({ count: total })}</p>
 
       <SearchBar autofocus={false} />
 
       <div class="chips">
-        <span class="chips-label">Try</span>
-        <a class="chip" href="/doctors?q=Cardiologist">Cardiologist</a>
-        <a class="chip" href="/doctors?q=Gastroenterologist">Gastroenterologist</a>
-        <a class="chip" href="/doctors?q=Pediatrician">Pediatrician</a>
-        <a class="chip" href="/doctors?q=Neurologist">Neurologist</a>
+        <span class="chips-label">{m.home_try()}</span>
+        <a class="chip" href={href('/doctors') + '?q=Cardiologist'}>{m.home_chip_cardiology()}</a>
+        <a class="chip" href={href('/doctors') + '?q=Gastroenterologist'}>{m.home_chip_gastro()}</a>
+        <a class="chip" href={href('/doctors') + '?q=Pediatrician'}>{m.home_chip_pediatrics()}</a>
+        <a class="chip" href={href('/doctors') + '?q=Neurologist'}>{m.home_chip_neurology()}</a>
       </div>
     </div>
 
@@ -52,7 +51,7 @@
       <div class="hero-photo hero-photo-3">{initial(slot3)}</div>
       <div class="hero-badge">
         <div class="hero-badge-num">{total}</div>
-        <div class="hero-badge-text">doctor<br />profiles</div>
+        <div class="hero-badge-text">{m.home_badge_profiles()}</div>
       </div>
     </div>
   </div>
@@ -62,15 +61,15 @@
   <div class="stats-inner">
     <div>
       <div class="stat-num">{total}</div>
-      <div class="stat-label">Doctors indexed</div>
+      <div class="stat-label">{m.home_stat_doctors()}</div>
     </div>
     <div>
       <div class="stat-num">{specialtyCount}</div>
-      <div class="stat-label">Specialties</div>
+      <div class="stat-label">{m.home_stat_specialties()}</div>
     </div>
     <div>
       <div class="stat-num">{conditionCount}</div>
-      <div class="stat-label">Conditions</div>
+      <div class="stat-label">{m.home_stat_conditions()}</div>
     </div>
   </div>
 </section>

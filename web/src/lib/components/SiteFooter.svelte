@@ -1,26 +1,27 @@
+<script lang="ts">
+  import * as m from "$lib/paraglide/messages";
+  import { href } from "$lib/i18n";
+</script>
+
 <footer class="footer">
   <div class="footer-inner">
     <div>
       <div class="footer-brand">findadoc<span class="footer-brand-dot">.</span></div>
-      <p class="footer-desc">
-        An open, bilingual medical directory for Georgia. A bachelor's thesis project
-        building on the NYU Langone Find-a-Doctor reference, localized for the
-        Georgian market.
-      </p>
+      <p class="footer-desc">{m.footer_tagline()}</p>
     </div>
     <div class="footer-col">
-      <h4>Browse</h4>
+      <h4>{m.footer_browse()}</h4>
       <ul>
-        <li><a href="/doctors">All doctors</a></li>
-        <li><a href="/specialties">By specialty</a></li>
-        <li><a href="/conditions">By condition</a></li>
-        <li><a href="/clinics">By clinic</a></li>
+        <li><a href={href('/doctors')}>{m.footer_all_doctors()}</a></li>
+        <li><a href={href('/specialties')}>{m.footer_by_specialty()}</a></li>
+        <li><a href={href('/conditions')}>{m.footer_by_condition()}</a></li>
+        <li><a href={href('/clinics')}>{m.footer_by_clinic()}</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 findadoc · Free University of Tbilisi</span>
-    <span>Data scraped from public sources · Updated daily</span>
+    <span>{m.footer_copyright()}</span>
+    <span>{m.footer_data_note()}</span>
   </div>
 </footer>
 

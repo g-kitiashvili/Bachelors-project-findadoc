@@ -1,20 +1,23 @@
 <script lang="ts">
   import DoctorCard from "$lib/components/DoctorCard.svelte";
   import Pagination from "$lib/components/Pagination.svelte";
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
 
   let { data } = $props();
 </script>
 
-<svelte:head><title>{data.detail.nameEn} — Find-a-Doc</title></svelte:head>
+<svelte:head><title>{`${localizedField(data.detail.nameKa, data.detail.nameEn, getLocale())}${m.meta_suffix()}`}</title></svelte:head>
 
 <nav class="crumbs">
-  <a href="/clinics">Clinics</a>
+  <a href={href('/clinics')}>{m.clinics_heading()}</a>
   <span>·</span>
-  <strong>{data.detail.nameEn}</strong>
+  <strong>{localizedField(data.detail.nameKa, data.detail.nameEn, getLocale())}</strong>
 </nav>
 
 <section class="hero">
-  <h1>{data.detail.nameEn}</h1>
+  <h1>{localizedField(data.detail.nameKa, data.detail.nameEn, getLocale())}</h1>
   <div class="details">
     {#if data.detail.addressEn ?? data.detail.address}
       <span class="detail">{data.detail.addressEn ?? data.detail.address}</span>
@@ -26,35 +29,35 @@
       <a class="detail link" href={data.detail.website} target="_blank" rel="noopener noreferrer">{data.detail.website}</a>
     {/if}
     {#if data.detail.lat != null && data.detail.lng != null}
-      <a class="detail link" href={`/doctors/map?center=${data.detail.lat},${data.detail.lng}&focus=${data.detail.slug}`}>View on map →</a>
+      <a class="detail link" href={`${href("/doctors/map")}?center=${data.detail.lat},${data.detail.lng}&focus=${data.detail.slug}`}>{m.clinic_view_on_map()}</a>
     {/if}
   </div>
   <div class="stats">
-    <div class="stat"><b>{data.detail.doctorCount}</b><span>{data.detail.doctorCount === 1 ? "doctor" : "doctors"}</span></div>
+    <div class="stat"><b>{data.detail.doctorCount}</b><span>{data.detail.doctorCount === 1 ? m.noun_doctor() : m.noun_doctors()}</span></div>
   </div>
 </section>
 
 {#if data.detail.brand}
   <section class="branches-wrap">
-    <h2>Part of {data.detail.brand.nameEn}</h2>
+    <h2>{m.clinic_part_of({ brand: localizedField(data.detail.brand.nameKa, data.detail.brand.nameEn, getLocale()) })}</h2>
     {#if data.detail.branches.length > 0}
       <ul class="branches">
         {#each data.detail.branches as b (b.slug)}
           <li>
-            <a class="name" href={`/clinics/${b.slug}`}>{b.nameEn}</a>
+            <a class="name" href={href(`/clinics/${b.slug}`)}>{localizedField(b.nameKa, b.nameEn, getLocale())}</a>
             {#if b.address}<span class="addr">{b.address}</span>{/if}
-            {#if b.located}<a class="maplink" href={`/doctors/map?focus=${b.slug}`}>map →</a>{/if}
+            {#if b.located}<a class="maplink" href={`${href("/doctors/map")}?focus=${b.slug}`}>{m.clinic_map_short()}</a>{/if}
           </li>
         {/each}
       </ul>
     {:else}
-      <p class="only">The only {data.detail.brand.nameEn} location on record.</p>
+      <p class="only">{m.clinic_only_location({ brand: localizedField(data.detail.brand.nameKa, data.detail.brand.nameEn, getLocale()) })}</p>
     {/if}
   </section>
 {/if}
 
 {#if data.list.items.length === 0}
-  <section class="empty"><h2>No doctors yet</h2></section>
+  <section class="empty"><h2>{m.empty_no_doctors_yet()}</h2></section>
 {:else}
   <section class="grid">
     {#each data.list.items as doctor (doctor.slug)}

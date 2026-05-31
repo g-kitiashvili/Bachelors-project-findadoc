@@ -4,6 +4,9 @@
   import { page } from "$app/stores";
   import FilterBar from "$lib/components/FilterBar.svelte";
   import SearchBar from "$lib/components/SearchBar.svelte";
+  import * as m from "$lib/paraglide/messages";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
   import "leaflet/dist/leaflet.css";
   import "leaflet.markercluster/dist/MarkerCluster.css";
   import "leaflet.markercluster/dist/MarkerCluster.Default.css";
@@ -56,23 +59,24 @@
     let focusMarker: any = null;
 
     for (const p of data.pins) {
-      const m = L.marker([p.lat, p.lng], { icon });
-      m.bindTooltip(p.nameEn, { direction: "top" });
-      const docs = `${p.doctorCount} ${p.doctorCount === 1 ? "doctor" : "doctors"}`;
-      m.bindPopup(
-        `<strong>${escapeHtml(p.nameEn)}</strong><br>${docs}<br>` +
-        `<a href="/clinics/${encodeURIComponent(p.slug)}">View clinic &rarr;</a>`,
+      const marker = L.marker([p.lat, p.lng], { icon });
+      const pinName = localizedField(p.nameKa, p.nameEn, getLocale());
+      marker.bindTooltip(pinName, { direction: "top" });
+      const docs = `${p.doctorCount} ${p.doctorCount === 1 ? m.noun_doctor() : m.noun_doctors()}`;
+      marker.bindPopup(
+        `<strong>${escapeHtml(pinName)}</strong><br>${docs}<br>` +
+        `<a href="${escapeHtml(href(`/clinics/${encodeURIComponent(p.slug)}`))}">${m.map_view_clinic()}</a>`,
       );
-      clusterLayer.addLayer(m);
+      clusterLayer.addLayer(marker);
       bounds.push([p.lat, p.lng]);
-      if (data.focus && p.slug === data.focus) focusMarker = m;
+      if (data.focus && p.slug === data.focus) focusMarker = marker;
     }
     map.addLayer(clusterLayer);
 
     if (data.isMyLocation && data.centerPoint) {
       const meIcon = L.divIcon({ className: "me-icon", html: "<span></span>", iconSize: [22, 22] });
       meLayer = L.layerGroup([
-        L.marker([data.centerPoint.lat, data.centerPoint.lng], { icon: meIcon, zIndexOffset: 1000 }).bindTooltip("You are here", { direction: "top" }),
+        L.marker([data.centerPoint.lat, data.centerPoint.lng], { icon: meIcon, zIndexOffset: 1000 }).bindTooltip(m.map_you_are_here(), { direction: "top" }),
         L.circle([data.centerPoint.lat, data.centerPoint.lng], {
           radius: (data.radiusKm ?? 10) * 1000, color: "#2563eb", weight: 1, fillColor: "#2563eb", fillOpacity: 0.06,
         }),
@@ -106,14 +110,14 @@
   });
 </script>
 
-<svelte:head><title>Clinic map — Find-a-Doc</title></svelte:head>
+<svelte:head><title>{m.meta_map()}</title></svelte:head>
 
 <div class="map-head">
   <div class="bar">
-    <h1>Clinics on the map</h1>
+    <h1>{m.map_heading()}</h1>
     <div class="view-toggle">
-      <a class="seg" href={`/doctors${data.query}`}>☰ List</a>
-      <span class="seg active" aria-current="page">📍 Map</span>
+      <a class="seg" href={`${href('/doctors')}${data.query}`}>{m.doctors_view_list()}</a>
+      <span class="seg active" aria-current="page">{m.doctors_view_map()}</span>
     </div>
   </div>
 
@@ -132,14 +136,14 @@
         selectedClinics={data.selectedClinics}
       />
       <button type="button" class="locate" onclick={useMyLocation} disabled={locating}>
-        {locating ? "Locating…" : "📍 Near me"}
+        {locating ? m.map_locating() : m.map_near_me()}
       </button>
     </div>
   </div>
 
   <p class="note">
-    <span class="count">{data.pins.length} {data.pins.length === 1 ? "clinic" : "clinics"} mapped{data.isMyLocation ? " within 10 km" : ""}</span>
-    <span class="hint">Clinics without a published address aren’t shown · hover a pin for its name</span>
+    <span class="count">{data.isMyLocation ? m.map_count_near({ count: data.pins.length }) : m.map_count_all({ count: data.pins.length })}</span>
+    <span class="hint">{m.map_note()}</span>
   </p>
 </div>
 

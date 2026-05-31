@@ -1,9 +1,11 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import * as m from "$lib/paraglide/messages";
+  import { href } from "$lib/i18n";
 
   let {
     initialValue = "",
-    placeholder = "Search by name, specialty, condition…",
+    placeholder = m.search_placeholder(),
     autofocus = false,
     mapMode = false,
   }: { initialValue?: string; placeholder?: string; autofocus?: boolean; mapMode?: boolean } = $props();
@@ -12,8 +14,10 @@
   interface EntitySuggestion { slug: string; nameEn: string; nameKa: string; doctorCount: number }
 
   // On the map page, a pick filters the map (stays on /doctors/map) instead of navigating away.
-  const specialtyHref = (slug: string) => (mapMode ? `/doctors/map?specialty=${slug}` : `/doctors?specialty=${slug}`);
-  const conditionHref = (slug: string) => (mapMode ? `/doctors/map?condition=${slug}` : `/conditions/${slug}`);
+  const specialtyHref = (slug: string) =>
+    mapMode ? href("/doctors/map") + `?specialty=${slug}` : href("/doctors") + `?specialty=${slug}`;
+  const conditionHref = (slug: string) =>
+    mapMode ? href("/doctors/map") + `?condition=${slug}` : href(`/conditions/${slug}`);
 
   let value = $state(initialValue);
   let results = $state<{ doctors: DoctorSuggestion[]; specialties: EntitySuggestion[]; conditions: EntitySuggestion[] }>(
@@ -27,7 +31,7 @@
   let controller: AbortController | undefined;
 
   const flat = $derived([
-    ...results.doctors.map((d) => `/doctors/${d.slug}`),
+    ...results.doctors.map((d) => href(`/doctors/${d.slug}`)),
     ...results.specialties.map((s) => specialtyHref(s.slug)),
     ...results.conditions.map((c) => conditionHref(c.slug)),
   ]);
@@ -38,7 +42,7 @@
   );
 
   function countLabel(n: number) {
-    return `${n} ${n === 1 ? "doctor" : "doctors"}`;
+    return `${n} ${n === 1 ? m.noun_doctor() : m.noun_doctors()}`;
   }
 
   function onInput() {
@@ -84,15 +88,15 @@
     }
     const q = value.trim();
     open = false;
-    if (!q) { goto("/doctors"); return; }
+    if (!q) { goto(href("/doctors")); return; }
     try {
       const res = await fetch(`/api/search/resolve?q=${encodeURIComponent(q)}`);
       const r = res.ok ? await res.json() : { type: "query", slug: null, label: q };
       if (r.type === "specialty") goto(specialtyHref(r.slug));
       else if (r.type === "condition") goto(conditionHref(r.slug));
-      else goto(mapMode ? `/doctors/map?q=${encodeURIComponent(q)}` : `/doctors?q=${encodeURIComponent(q)}`);
+      else goto(mapMode ? href("/doctors/map") + `?q=${encodeURIComponent(q)}` : href("/doctors") + `?q=${encodeURIComponent(q)}`);
     } catch {
-      goto(`/doctors?q=${encodeURIComponent(q)}`);
+      goto(href("/doctors") + `?q=${encodeURIComponent(q)}`);
     }
   }
 
@@ -141,16 +145,16 @@
       aria-expanded={open}
       aria-controls="search-suggestions"
       aria-autocomplete="list"
-      aria-label="Search doctors"
+      aria-label={m.search_aria()}
     />
-    <button type="submit" class="search-btn">Search</button>
+    <button type="submit" class="search-btn">{m.search_button()}</button>
   </form>
 
   {#if open && value.trim().length >= 2}
     <div class="suggestions" id="search-suggestions" role="listbox">
       {#if hasResults}
         {#if results.doctors.length > 0}
-          <div class="group-header">Doctors</div>
+          <div class="group-header">{m.search_group_doctors()}</div>
           {#each results.doctors as d, i (d.slug)}
             <button
               type="button"
@@ -159,14 +163,14 @@
               role="option"
               aria-selected={highlighted === i}
               onmouseenter={() => (highlighted = i)}
-              onclick={() => select(`/doctors/${d.slug}`)}>
+              onclick={() => select(href(`/doctors/${d.slug}`))}>
               <span class="label">{d.fullNameEn}</span>
               {#if d.primarySpecialtyEn}<span class="sub">{d.primarySpecialtyEn}</span>{/if}
             </button>
           {/each}
         {/if}
         {#if results.specialties.length > 0}
-          <div class="group-header">Specialties</div>
+          <div class="group-header">{m.search_group_specialties()}</div>
           {#each results.specialties as s, j (s.slug)}
             <button
               type="button"
@@ -182,7 +186,7 @@
           {/each}
         {/if}
         {#if results.conditions.length > 0}
-          <div class="group-header">Conditions</div>
+          <div class="group-header">{m.search_group_conditions()}</div>
           {#each results.conditions as c, k (c.slug)}
             <button
               type="button"
@@ -198,7 +202,7 @@
           {/each}
         {/if}
       {:else}
-        <div class="no-matches">No matches</div>
+        <div class="no-matches">{m.search_no_matches()}</div>
       {/if}
     </div>
   {/if}
