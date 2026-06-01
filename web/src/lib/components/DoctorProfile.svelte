@@ -24,7 +24,7 @@
     specialtyKa: string | null;
     specialtyEn: string | null;
     specialties: SpecialtyRef[];
-    clinics: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null; addressEn: string | null }>;
+    clinics: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null; addressEn: string | null; phone: string | null }>;
   }
 
   let { doctor }: { doctor: Doctor } = $props();
@@ -82,9 +82,6 @@
           {doctor.isAcceptingNewPatients ? m.common_yes() : m.common_no()}
         </span>
       </div>
-      <button class="cta-btn" type="button" disabled aria-disabled="true">
-        {m.nav_request_callback()}
-      </button>
     </div>
   </aside>
 
@@ -113,6 +110,7 @@
           <a class="profile-clinic-pill" href={href(`/clinics/${c.slug}`)}>
             {localizedField(c.nameKa, c.nameEn, getLocale())}{#if c.addressEn ?? c.address} · <span class="clinic-addr">{c.addressEn ?? c.address}</span>{/if}
           </a>
+          {#if c.phone}<a class="clinic-phone" href={`tel:${c.phone}`}>📞 {c.phone}</a>{/if}
         {/each}
       </div>
     {/if}
@@ -217,20 +215,6 @@
   .meta-val.accent { color: var(--accent); }
   .meta-val.success { color: var(--success); font-weight: 600; }
 
-  .cta-btn {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 0.95rem 1.4rem;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
-    transition: background 0.15s;
-  }
-  .cta-btn:not(:disabled):hover { background: var(--accent-deep); }
-  .cta-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-
   /* right column: body */
   .body { padding-top: 0.5rem; }
   .eyebrow {
@@ -275,6 +259,15 @@
   }
   .profile-clinic-pill:hover { background: var(--bg-soft); border-color: var(--ink-muted); color: var(--ink); }
   .clinic-addr { color: var(--ink-faint); font-size: 0.8rem; }
+  .clinic-phone {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: var(--accent-soft); border: 1px solid transparent;
+    border-radius: 100px; padding: 0.4rem 0.9rem;
+    font-size: 0.86rem; color: var(--accent-deep); font-weight: 600;
+    text-decoration: none; white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+  }
+  .clinic-phone:hover { background: var(--accent); color: white; }
 
   .quick-meta {
     display: flex;

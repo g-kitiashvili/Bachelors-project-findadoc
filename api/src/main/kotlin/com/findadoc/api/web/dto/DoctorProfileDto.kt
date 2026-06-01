@@ -45,5 +45,5 @@ fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
         .map { it.clinic }
         .filter { it.status == "ACTIVE" }
         .sortedBy { it.nameEn }
-        .map { ClinicRefDto(slug = it.slug, nameKa = it.nameKa, nameEn = it.nameEn, address = it.address, addressEn = it.addressEn) },
+        .map { ClinicRefDto(slug = it.slug, nameKa = it.nameKa, nameEn = it.nameEn, address = it.address, addressEn = it.addressEn, phone = it.phone) },
 )

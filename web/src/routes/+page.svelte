@@ -43,6 +43,8 @@
         <a class="chip" href={href('/doctors') + '?q=Pediatrician'}>{m.home_chip_pediatrics()}</a>
         <a class="chip" href={href('/doctors') + '?q=Neurologist'}>{m.home_chip_neurology()}</a>
       </div>
+
+      <a class="triage-cta" href={href('/triage')}>{m.home_triage_cta()}</a>
     </div>
 
     <div class="hero-collage" aria-hidden="true">
@@ -157,6 +159,22 @@
     border-color: var(--accent);
     color: var(--accent);
     background: var(--accent-soft);
+  }
+  .triage-cta {
+    display: inline-block;
+    margin-top: 1.25rem;
+    padding: 0.7rem 1.2rem;
+    border: 1px solid var(--accent);
+    border-radius: 100px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+  .triage-cta:hover {
+    background: var(--accent);
+    color: white;
   }
   /* hero collage on the right */
   .hero-collage {

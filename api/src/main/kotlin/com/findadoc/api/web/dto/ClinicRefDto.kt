@@ -6,4 +6,5 @@ data class ClinicRefDto(
     val nameEn: String,
     val address: String?,
     val addressEn: String?,
+    val phone: String? = null,
 )

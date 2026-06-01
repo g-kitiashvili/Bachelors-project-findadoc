@@ -1,0 +1,117 @@
+# Curated triage question-graph. Routes (never diagnoses): every result points at an
+# existing specialty or condition slug (validated by TriageGraphSlugsTest). KA text is draft.
+start: q_area
+nodes:
+  q_area:
+    question: { ka: "რა გაწუხებთ?", en: "What's bothering you?" }
+    options:
+      - label: { ka: "გული / მკერდი", en: "Heart / chest" }
+        next: s_heart
+      - label: { ka: "კანი, თმა, ფრჩხილები", en: "Skin, hair, nails" }
+        result: { type: specialty, slug: dermatology }
+      - label: { ka: "ძვლები, სახსრები, ტრავმა", en: "Bones, joints, injury" }
+        next: s_msk
+      - label: { ka: "კუჭი, მონელება", en: "Stomach, digestion" }
+        result: { type: specialty, slug: gastroenterology }
+      - label: { ka: "სუნთქვა, ხველა", en: "Breathing, cough" }
+        next: s_breathing
+      - label: { ka: "ფსიქიკური ჯანმრთელობა, განწყობა", en: "Mental health, mood" }
+        next: s_mental
+      - label: { ka: "თვალები, მხედველობა", en: "Eyes, vision" }
+        result: { type: specialty, slug: ophthalmology }
+      - label: { ka: "კბილები, ღრძილები", en: "Teeth, gums" }
+        result: { type: specialty, slug: dentistry }
+      - label: { ka: "ყური, ცხვირი, ყელი", en: "Ear, nose, throat" }
+        result: { type: specialty, slug: ent }
+      - label: { ka: "ჰორმონები, დიაბეტი, ფარისებრი ჯირკვალი", en: "Hormones, diabetes, thyroid" }
+        result: { type: specialty, slug: endocrinology }
+      - label: { ka: "თავის ტკივილი, ნერვები, თავბრუსხვევა", en: "Headaches, nerves, dizziness" }
+        next: s_head
+      - label: { ka: "ქალის ჯანმრთელობა, ორსულობა", en: "Women's health, pregnancy" }
+        next: s_womens
+      - label: { ka: "შარდვა, მამაკაცის ჯანმრთელობა", en: "Urinary, men's health" }
+        result: { type: specialty, slug: urology }
+      - label: { ka: "ალერგია", en: "Allergies" }
+        result: { type: specialty, slug: allergology }
+      - label: { ka: "ბავშვი", en: "A child" }
+        result: { type: specialty, slug: pediatrics }
+  s_heart:
+    question: { ka: "რომელი გაწუხებთ?", en: "Which of these are you feeling?" }
+    symptoms:
+      - label: { ka: "მაღალი წნევა", en: "High blood pressure" }
+        weights: { "condition:hypertension": 3, "specialty:cardiology": 1 }
+      - label: { ka: "არარეგულარული ან სწრაფი გულისცემა", en: "Irregular or fast heartbeat" }
+        weights: { "condition:arrhythmia": 2, "condition:atrial-fibrillation": 2 }
+      - label: { ka: "გულმკერდის ტკივილი ან სიმძიმე", en: "Chest pain or tightness" }
+        weights: { "condition:coronary-artery-disease": 3, "specialty:cardiology": 1 }
+      - label: { ka: "ქოშინი დატვირთვისას", en: "Shortness of breath on exertion" }
+        weights: { "condition:heart-failure": 3, "specialty:pulmonology": 1 }
+      - label: { ka: "მაღალი ქოლესტერინი", en: "High cholesterol" }
+        weights: { "condition:high-cholesterol": 3 }
+      - label: { ka: "ფეხების შეშუპება ან ვარიკოზი", en: "Leg swelling or varicose veins" }
+        weights: { "condition:varicose-veins": 3, "specialty:angiology": 1 }
+  s_msk:
+    question: { ka: "რომელი გაწუხებთ?", en: "Which of these are you feeling?" }
+    symptoms:
+      - label: { ka: "ახალი ტრავმა ან მოტეხილობა", en: "Recent injury or fracture" }
+        weights: { "condition:bone-fracture": 3, "specialty:traumatology": 1 }
+      - label: { ka: "სახსრების ტკივილი ან შეშუპება", en: "Joint pain or swelling" }
+        weights: { "condition:osteoarthritis": 2, "condition:rheumatoid-arthritis": 2 }
+      - label: { ka: "ხანგრძლივი, გავრცელებული ტკივილი", en: "Long-standing, widespread pain" }
+        weights: { "condition:fibromyalgia": 2, "condition:chronic-pain": 1 }
+      - label: { ka: "ზურგის ან კისრის ტკივილი", en: "Back or neck pain" }
+        weights: { "condition:low-back-pain": 3, "condition:herniated-disc": 1 }
+      - label: { ka: "სპორტული ტრავმა", en: "Sports injury" }
+        weights: { "condition:sports-injury": 3, "specialty:sports-medicine": 1 }
+  s_breathing:
+    question: { ka: "რომელი გაწუხებთ?", en: "Which of these are you feeling?" }
+    symptoms:
+      - label: { ka: "ასთმა ან სუნთქვისას სტვენა", en: "Asthma or wheezing" }
+        weights: { "condition:asthma": 3, "specialty:pulmonology": 1 }
+      - label: { ka: "ხანგრძლივი ხველა", en: "Persistent cough" }
+        weights: { "condition:chronic-cough": 2, "condition:bronchitis": 1 }
+      - label: { ka: "ქოშინი", en: "Shortness of breath" }
+        weights: { "condition:copd": 2, "specialty:pulmonology": 1 }
+      - label: { ka: "ფილტვების ინფექცია ან პნევმონია", en: "Chest infection or pneumonia" }
+        weights: { "condition:pneumonia": 3 }
+      - label: { ka: "ძილის აპნოე ან ხვრინვა", en: "Sleep apnea or heavy snoring" }
+        weights: { "condition:sleep-apnea": 3 }
+  s_mental:
+    question: { ka: "რომელი გაწუხებთ?", en: "Which of these are you feeling?" }
+    symptoms:
+      - label: { ka: "შფოთვა ან პანიკა", en: "Anxiety or panic" }
+        weights: { "condition:anxiety-disorder": 2, "condition:panic-disorder": 2 }
+      - label: { ka: "დათრგუნული ან დაბალი განწყობა", en: "Low or depressed mood" }
+        weights: { "condition:depression": 3, "specialty:psychiatry": 1 }
+      - label: { ka: "ძილის პრობლემები", en: "Sleep problems" }
+        weights: { "condition:insomnia": 3 }
+      - label: { ka: "მინდა ფსიქოლოგს დაველაპარაკო", en: "I want to talk to a counselor" }
+        weights: { "specialty:psychology": 3 }
+      - label: { ka: "დამოკიდებულება ან ნივთიერების მოხმარება", en: "Addiction or substance use" }
+        weights: { "condition:addiction": 3, "specialty:narcology": 1 }
+  s_womens:
+    question: { ka: "რომელი გაწუხებთ?", en: "Which of these are you feeling?" }
+    symptoms:
+      - label: { ka: "ორსულობა ან პრენატალური მეთვალყურეობა", en: "Pregnancy or prenatal care" }
+        weights: { "condition:pregnancy-care": 3, "specialty:obstetrics": 1 }
+      - label: { ka: "მენსტრუალური ან ჰორმონალური ცვლილებები", en: "Menstrual or hormonal changes" }
+        weights: { "condition:menstrual-disorders": 2, "condition:pcos": 1 }
+      - label: { ka: "მენჯის ტკივილი", en: "Pelvic pain" }
+        weights: { "condition:pelvic-inflammatory-disease": 2, "condition:endometriosis": 2 }
+      - label: { ka: "მენოპაუზის სიმპტომები", en: "Menopause symptoms" }
+        weights: { "condition:menopause": 3 }
+      - label: { ka: "მიომა ან სხვა გინეკოლოგიური", en: "Fibroids or other gynecological" }
+        weights: { "condition:uterine-fibroids": 2, "specialty:gynecology": 1 }
+  s_head:
+    question: { ka: "რომელი გაწუხებთ?", en: "Which of these are you feeling?" }
+    symptoms:
+      - label: { ka: "თავის ტკივილი", en: "Headaches" }
+        weights: { "condition:tension-headache": 2, "condition:migraine": 2 }
+      - label: { ka: "თავბრუსხვევა ან წონასწორობის დარღვევა", en: "Dizziness or balance trouble" }
+        weights: { "condition:vertigo": 3, "specialty:ent": 1 }
+      - label: { ka: "დაბუჟება ან ჩხვლეტა", en: "Numbness or tingling" }
+        weights: { "condition:peripheral-neuropathy": 3, "specialty:neurology": 1 }
+      - label: { ka: "მეხსიერების ან კონცენტრაციის პრობლემა", en: "Memory or concentration trouble" }
+        weights: { "condition:dementia": 2, "specialty:neurology": 1 }
+      - label: { ka: "კრუნჩხვები", en: "Seizures" }
+        weights: { "condition:epilepsy": 3 }
