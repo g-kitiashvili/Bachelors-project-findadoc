@@ -12,6 +12,7 @@ data class DoctorSuggestionDto(
     val fullNameEn: String,
     val fullNameKa: String,
     val primarySpecialtyEn: String?,
+    val primarySpecialtyKa: String?,
 )
 
 data class SpecialtySuggestionDto(
@@ -39,4 +40,5 @@ fun DoctorListItemDto.toSuggestionDto() = DoctorSuggestionDto(
     fullNameEn = fullNameEn,
     fullNameKa = fullNameKa,
     primarySpecialtyEn = primarySpecialty?.nameEn,
+    primarySpecialtyKa = primarySpecialty?.nameKa,
 )

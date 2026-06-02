@@ -58,3 +58,8 @@
   name_ka: ოქსფორდი
   sort_order: 120
   match_ka: [ოქსფორდ]
+- slug: vivamedi
+  name_en: Vivamedi
+  name_ka: ვივამედი
+  sort_order: 130
+  match_ka: [ვივამედი, სამედიცინო ცენტრი ვივამედი]

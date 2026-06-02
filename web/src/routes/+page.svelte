@@ -45,6 +45,7 @@
       </div>
 
       <a class="triage-cta" href={href('/triage')}>{m.home_triage_cta()}</a>
+      <a class="triage-cta" href={href('/body')}>{m.home_body_cta()}</a>
     </div>
 
     <div class="hero-collage" aria-hidden="true">

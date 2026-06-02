@@ -1,7 +1,8 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import * as m from "$lib/paraglide/messages";
-  import { href } from "$lib/i18n";
+  import { href, localizedField } from "$lib/i18n";
+  import { getLocale } from "$lib/paraglide/runtime";
 
   let {
     initialValue = "",
@@ -10,7 +11,7 @@
     mapMode = false,
   }: { initialValue?: string; placeholder?: string; autofocus?: boolean; mapMode?: boolean } = $props();
 
-  interface DoctorSuggestion { slug: string; fullNameEn: string; fullNameKa: string; primarySpecialtyEn: string | null }
+  interface DoctorSuggestion { slug: string; fullNameEn: string; fullNameKa: string; primarySpecialtyEn: string | null; primarySpecialtyKa: string | null }
   interface EntitySuggestion { slug: string; nameEn: string; nameKa: string; doctorCount: number }
 
   // On the map page, a pick filters the map (stays on /doctors/map) instead of navigating away.
@@ -164,8 +165,8 @@
               aria-selected={highlighted === i}
               onmouseenter={() => (highlighted = i)}
               onclick={() => select(href(`/doctors/${d.slug}`))}>
-              <span class="label">{d.fullNameEn}</span>
-              {#if d.primarySpecialtyEn}<span class="sub">{d.primarySpecialtyEn}</span>{/if}
+              <span class="label">{localizedField(d.fullNameKa, d.fullNameEn, getLocale())}</span>
+              {#if d.primarySpecialtyEn || d.primarySpecialtyKa}<span class="sub">{localizedField(d.primarySpecialtyKa, d.primarySpecialtyEn, getLocale())}</span>{/if}
             </button>
           {/each}
         {/if}
@@ -180,7 +181,7 @@
               aria-selected={highlighted === results.doctors.length + j}
               onmouseenter={() => (highlighted = results.doctors.length + j)}
               onclick={() => select(specialtyHref(s.slug))}>
-              <span class="label">{s.nameEn}</span>
+              <span class="label">{localizedField(s.nameKa, s.nameEn, getLocale())}</span>
               <span class="sub">{countLabel(s.doctorCount)}</span>
             </button>
           {/each}
@@ -196,7 +197,7 @@
               aria-selected={highlighted === results.doctors.length + results.specialties.length + k}
               onmouseenter={() => (highlighted = results.doctors.length + results.specialties.length + k)}
               onclick={() => select(conditionHref(c.slug))}>
-              <span class="label">{c.nameEn}</span>
+              <span class="label">{localizedField(c.nameKa, c.nameEn, getLocale())}</span>
               <span class="sub">{countLabel(c.doctorCount)}</span>
             </button>
           {/each}

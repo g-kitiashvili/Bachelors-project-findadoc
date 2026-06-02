@@ -29,7 +29,7 @@ nodes:
         next: s_head
       - label: { ka: "ქალის ჯანმრთელობა, ორსულობა", en: "Women's health, pregnancy" }
         next: s_womens
-      - label: { ka: "შარდვა, მამაკაცის ჯანმრთელობა", en: "Urinary, men's health" }
+      - label: { ka: "შარდოვანი, მამაკაცის ჯანმრთელობა", en: "Urinary, men's health" }
         result: { type: specialty, slug: urology }
       - label: { ka: "ალერგია", en: "Allergies" }
         result: { type: specialty, slug: allergology }

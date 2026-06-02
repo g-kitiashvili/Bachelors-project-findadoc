@@ -17,6 +17,7 @@ data class DoctorProfileDto(
     val specialtyEn: String?,
     val specialties: List<SpecialtyRefWithFlagDto>,
     val clinics: List<ClinicRefDto>,
+    val lastSourceUrl: String?,
 )
 
 fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
@@ -46,4 +47,5 @@ fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
         .filter { it.status == "ACTIVE" }
         .sortedBy { it.nameEn }
         .map { ClinicRefDto(slug = it.slug, nameKa = it.nameKa, nameEn = it.nameEn, address = it.address, addressEn = it.addressEn, phone = it.phone) },
+    lastSourceUrl = lastSourceUrl,
 )

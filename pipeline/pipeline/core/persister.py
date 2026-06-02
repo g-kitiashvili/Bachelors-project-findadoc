@@ -28,6 +28,7 @@ SOURCE_CITY = {
     "newhospitals": "tbilisi",
     "aversi": "tbilisi",
     "vivomedical": "tbilisi",
+    "vivamedi": "tbilisi",
 }
 
 _UPSERT_DOCTOR_SQL = """

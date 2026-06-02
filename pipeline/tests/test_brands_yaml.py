@@ -9,7 +9,7 @@ _BRANDS = Path(__file__).resolve().parent.parent / "pipeline" / "data" / "brands
 
 def test_registry_has_unique_slugs_and_required_fields():
     rows = load_brands(_BRANDS)
-    assert len(rows) == 12
+    assert len(rows) == 13
     slugs = [r["slug"] for r in rows]
     assert len(slugs) == len(set(slugs))
     for r in rows:

@@ -3,7 +3,7 @@
   import { href } from "$lib/i18n";
   import LanguageSwitcher from "./LanguageSwitcher.svelte";
 
-  let { active = "doctors" }: { active?: "doctors" | "map" | "specialties" | "conditions" | "clinics" | "about" } = $props();
+  let { active = "doctors" }: { active?: "doctors" | "map" | "specialties" | "conditions" | "clinics" | "symptoms" | "about" } = $props();
 </script>
 
 <nav class="nav">
@@ -15,6 +15,7 @@
       <a href={href('/specialties')} class:active={active === "specialties"}>{m.nav_specialties()}</a>
       <a href={href('/conditions')} class:active={active === "conditions"}>{m.nav_conditions()}</a>
       <a href={href('/clinics')} class:active={active === "clinics"}>{m.nav_clinics()}</a>
+      <a href={href('/symptoms')} class:active={active === "symptoms"}>{m.nav_symptoms()}</a>
     </div>
     <div class="nav-right">
       <LanguageSwitcher />

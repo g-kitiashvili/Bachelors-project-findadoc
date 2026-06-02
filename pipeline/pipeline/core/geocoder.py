@@ -53,35 +53,79 @@ class Geocoder:
 
 # Source addresses use abbreviations, initials and #/№/N markers that Nominatim fails
 # on ("ი. ჭავჭავაძის გამზ. #33" -> no match, but "ჭავჭავაძის გამზირი 33" resolves).
+_PARENTHETICAL = re.compile(r"\([^)]*\)")
+_LEADING_ADDRESS_WORD = re.compile(r"^\s*მისამართ\S*[:\s]+")
 _LEADING_INITIAL = re.compile(r"^\s*[ა-ჰ]\.\s*")
 _ABBREV_RULES = (
     (re.compile(r"\bგამზ\."), "გამზირი"),
+    (re.compile(r"\bგზატკ\."), "გზატკეცილი"),
     (re.compile(r"\bქ\.(?=\s|$)"), "ქუჩა"),
+    (re.compile(r"\bქ\.(?=N?\d)"), "ქუჩა "),  # "ლუბლიანას ქ.N18" -> "ლუბლიანას ქუჩა 18"
     (re.compile(r"\bჩიხ\."), "ჩიხი"),
     (re.compile(r"\bგამზირ\.(?=\s|$)"), "გამზირი"),
+)
+_GLUED_NUM = re.compile(r"(?<=[ა-ჰ])(?=\d)")  # "გამზირი29" -> "გამზირი 29"
+
+# Street-type words and trailing unit/plot/floor/price noise. Nominatim resolves a bare
+# "<street> <number>, <city>" but fails when the query also carries a leading district
+# ("დიღომი, ...") or a trailing plot/floor/price ("..., ნაკვეთი 14/470", "... კონსულტაცია 70 ლ").
+_STREET_TYPES = ("ქუჩა", "ქ.", "გამზირი", "გამზ", "ხეივანი", "ჩიხ", "გზატკ", "შესახვევი")
+_UNIT_NOISE = re.compile(
+    r"\s*(ნაკვეთ|სართულ|მე-?\d+\s*სართ|ბინა|კორპუს|შენობა|პოდიეზდ|კონსულტაცი|ფასი)\S*.*$"
 )
 _NUM_MARKER = re.compile(r"[#№N]\s*(?=\d)")
 
 
 def clean_address(address: str) -> str:
-    """Normalize a Georgian street address into a geocodable form: drop a leading
-    person-initial, expand street-type abbreviations, and strip the #/№/N marker."""
-    a = _LEADING_INITIAL.sub("", address.strip())
+    """Normalize a Georgian street address into a geocodable form: strip parentheticals
+    and a leading "address:" word/person-initial, expand street-type abbreviations, drop
+    the #/№/N marker, and unglue a street name run into its number."""
+    a = _PARENTHETICAL.sub(" ", address)
+    a = _LEADING_ADDRESS_WORD.sub("", a.strip())
+    a = _LEADING_INITIAL.sub("", a.strip())
     for pat, repl in _ABBREV_RULES:
         a = pat.sub(repl, a)
     a = _NUM_MARKER.sub("", a)
+    a = _GLUED_NUM.sub(" ", a)
     return " ".join(a.split())
+
+
+def street_core(address: str) -> str:
+    """Isolate the geocodable "<street> <number>" core from a messy address.
+
+    Picks the comma-segment that names a street (else the first with a digit), drops a
+    leading district and trailing plot/floor noise, and cleans it. "დიღომი, ლუბლიანას ქ. 5"
+    -> "ლუბლიანას ქუჩა 5"; "აღმაშენებლის ხეივანი N234, ნაკვეთი 14/470" -> "აღმაშენებლის ხეივანი 234"."""
+    segments = [s.strip() for s in address.split(",") if s.strip()]
+    if not segments:
+        return clean_address(address)
+    chosen = next((s for s in segments if any(t in s for t in _STREET_TYPES)), None)
+    if chosen is None:
+        chosen = next((s for s in segments if re.search(r"\d", s)), segments[0])
+    return clean_address(_UNIT_NOISE.sub("", chosen))
+
+
+def _names_a_city(name: str, blob: str) -> bool:
+    """True if `name` appears in `blob` at a word start (not mid-word).
+
+    Word-start (not bare substring) matching keeps Georgian genitive forms working —
+    the city name is a prefix of the inflected word, so trailing letters are fine
+    ("ფოთის" still matches "ფოთი") — while rejecting mid-word collisions where a short
+    city name is buried inside an unrelated word ("Gori" inside "Didgori", "Ingoroqva")."""
+    if not name:
+        return False
+    return re.search(rf"(?<!\w){re.escape(name)}", blob) is not None
 
 
 def detect_city(blob: str, cities: list[tuple[str, str]]) -> tuple[str, str]:
     """Return the (name_ka, name_en) of the first known city found in `blob`, else Tbilisi.
 
     `cities` must be sorted longest-first so a specific name wins over a shorter one that
-    is a substring of it. Substring (not token) matching is intentional so Georgian
-    genitive forms still match (e.g. "თელავის" contains "თელავი")."""
+    is a prefix of it. Matching is word-start anchored (see `_names_a_city`) so genitive
+    forms still match but mid-word substrings (e.g. "Gori" in "Didgori") do not."""
     low = blob.lower()
     for name_ka, name_en in cities:
-        if (name_ka and name_ka.lower() in low) or (name_en and name_en.lower() in low):
+        if _names_a_city((name_ka or "").lower(), low) or _names_a_city((name_en or "").lower(), low):
             return name_ka, name_en
     return _DEFAULT_CITY
 
@@ -102,10 +146,12 @@ class GeocodeClinicsPass:
         """Geocode clinics. By default only fills clinics with no location yet; pass
         overwrite=True to re-geocode every active clinic (used to correct bad placements)."""
         with psycopg.connect(self._dsn, autocommit=True) as conn, conn.cursor() as cur:
-            # Known Georgian city/region names (>=5 chars to avoid short-substring false
-            # matches), longest first so the most specific name wins.
+            # Known Georgian city/region names (>=4 chars to avoid short-substring false
+            # matches), longest first so the most specific name wins. The 4-char floor is
+            # deliberate: the shortest real city names are ფოთი (Poti) and გორი (Gori), so
+            # a >=5 floor silently drops them and their branches mis-geocode to Tbilisi.
             cur.execute(
-                "SELECT name_ka, name_en FROM location WHERE char_length(name_ka) >= 5 "
+                "SELECT name_ka, name_en FROM location WHERE char_length(name_ka) >= 4 "
                 "ORDER BY char_length(name_ka) DESC",
             )
             cities = [(r[0], r[1]) for r in cur.fetchall()]
@@ -121,15 +167,23 @@ class GeocodeClinicsPass:
                 city_ka, city_en = detect_city(blob, cities)
                 coords = None
                 if address:
-                    coords = self._geocoder.geocode(f"{clean_address(address)}, {city_ka}")
-                    if coords is None:
-                        coords = self._geocoder.geocode(f"{address}, {city_ka}")
+                    # ordered KA candidates: cleaned full, raw, then the street-only core
+                    # (strips leading district / trailing plot+floor that Nominatim chokes on)
+                    seen_q: set[str] = set()
+                    for q in (clean_address(address), address, street_core(address)):
+                        if not q or q in seen_q:
+                            continue
+                        seen_q.add(q)
+                        coords = self._geocoder.geocode(f"{q}, {city_ka}")
+                        if coords is not None:
+                            break
                 if coords is None and address_en:
                     coords = self._geocoder.geocode(f"{address_en}, {city_en}")
-                # Last resort: the city centroid, so a clinic lands in the right city
-                # (approximate spot) rather than at a stale, wrong-town coordinate.
-                if coords is None:
-                    coords = self._geocoder.geocode(city_ka)
+                # No precise street-level match -> leave location NULL. We deliberately do
+                # NOT fall back to the city centroid: that collapsed every unresolved
+                # Tbilisi clinic onto one point (Freedom Square), littering the map with
+                # false pins. A clinic with no precise coordinate is simply absent from the
+                # map; it stays findable via its city/region filter, which uses location_id.
                 if coords is None:
                     failed += 1
                     continue

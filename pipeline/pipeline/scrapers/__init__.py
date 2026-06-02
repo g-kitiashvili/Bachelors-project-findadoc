@@ -9,3 +9,4 @@ from . import cmc  # noqa: F401
 from . import joann  # noqa: F401
 from . import caraps  # noqa: F401
 from . import vipmed  # noqa: F401
+from . import vivamedi  # noqa: F401

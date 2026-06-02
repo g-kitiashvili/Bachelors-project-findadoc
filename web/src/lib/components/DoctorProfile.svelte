@@ -25,9 +25,34 @@
     specialtyEn: string | null;
     specialties: SpecialtyRef[];
     clinics: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null; addressEn: string | null; phone: string | null }>;
+    lastSourceUrl: string | null;
   }
 
   let { doctor }: { doctor: Doctor } = $props();
+
+  const SOURCE_NAMES: Record<string, string> = {
+    "aversi.ge": "Aversi",
+    "tsamali.ge": "Tsamali",
+    "cmc.ge": "CMC",
+    "caraps.ge": "Caraps",
+    "evex.ge": "Evex",
+    "vivomedical.ge": "Vivo Medical",
+    "vivamedi.ge": "Vivamedi",
+    "newhospitals.ge": "New Hospitals",
+  };
+  function sourceLabel(url: string): string {
+    try {
+      const host = new URL(url).hostname.replace(/^www\./, "");
+      if (SOURCE_NAMES[host]) return SOURCE_NAMES[host];
+      const label = host.split(".").slice(-2, -1)[0] ?? host;
+      return label.charAt(0).toUpperCase() + label.slice(1);
+    } catch {
+      return url;
+    }
+  }
+  const source = $derived(
+    doctor.lastSourceUrl ? { url: doctor.lastSourceUrl, name: sourceLabel(doctor.lastSourceUrl) } : null,
+  );
 
   const name = $derived(localizedField(doctor.fullNameKa, doctor.fullNameEn, getLocale()));
   const specialty = $derived(localizedField(doctor.specialtyKa, doctor.specialtyEn, getLocale()));
@@ -52,7 +77,7 @@
     const parts: string[] = [];
     if (doctor.treatsAdults) parts.push(m.profile_adults());
     if (doctor.treatsChildren) parts.push(m.profile_children());
-    return parts.length ? parts.join(" · ") : "—";
+    return parts.length ? parts.join(" · ") : "-";
   });
 </script>
 
@@ -136,6 +161,12 @@
         <p class="empty">{m.profile_no_bio()}</p>
       {/if}
     </div>
+
+    {#if source}
+      <p class="source-line">
+        {m.profile_source()}: <a href={source.url} target="_blank" rel="noopener noreferrer">{source.name}</a>
+      </p>
+    {/if}
   </div>
 </section>
 
@@ -313,6 +344,10 @@
   }
   .bio p { margin: 0 0 1.1rem; white-space: pre-line; }
   .bio .empty { color: var(--ink-faint); font-style: italic; }
+
+  .source-line { margin: 1.8rem 0 0; font-size: 0.8rem; color: var(--ink-faint); }
+  .source-line a { color: var(--ink-muted); text-decoration: underline; }
+  .source-line a:hover { color: var(--accent); }
 
   @media (max-width: 1000px) {
     .profile {

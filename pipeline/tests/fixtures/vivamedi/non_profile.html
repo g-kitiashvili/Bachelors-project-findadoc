@@ -1,0 +1,724 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+<link href="http://vivamedi.ge/icon.ico" rel="shortcut icon" type="image/x-icon"  />
+<link href="http://vivamedi.ge/icon.ico" rel="icon" type="image/x-icon"  />
+
+
+
+<title>ცენტრის შესახებ</title>
+<base href="http://vivamedi.ge/" />
+
+
+
+
+<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
+
+
+   <link href="system/application/views/default/stylesheet/stylesheet_ge.css" rel="stylesheet" type="text/css" />
+   
+
+
+<!--select-->	        
+		<script src="js/jquery.js"></script>
+		<script src="js/fancySelect.js"></script>
+		<script>
+			$(document).ready(function() {			
+				$('#basic-usage-demo').fancySelect();
+				$('#filter-select').fancySelect();
+				$('#contact-select').fancySelect();
+					$('#filter-select-two').fancySelect();
+				$('#filter-select-sex').fancySelect();
+				$('#filter-select-doctor').fancySelect()
+
+				
+				
+			});
+			
+		</script>
+
+
+
+    <script type="text/javascript" src="js/clock.js"></script>	
+                      <script>
+    $(function() {
+        $('#clock').DisplayClock({  
+    		  CurTime: "June 11, 2026 00:35:29",
+			  
+    	   });
+		   
+		 $('#clock1').DisplayClock1({  
+    		  CurTime: "June 11, 2026 01:35:29",
+			  
+    	   });
+		  $('#clock2').DisplayClock2({  
+    		  CurTime: "June 10, 2026 16:35:29",
+			    
+    	   });
+
+		
+    	});
+   </script>
+
+<script type="text/javascript">
+        $(document).ready(function() {
+            $(".dropdown img.flag").addClass("flagvisibility");
+
+            $(".dropdown dt a").click(function() {
+                $(".dropdown dd ul").toggle();
+            });
+                        
+            $(".dropdown dd ul li a.cl").click(function() {
+                var text = $(this).html();
+                $(".dropdown dt a span").html(text);
+                $(".dropdown dd ul").hide();
+             
+			  if ($(this).attr('rel')){
+		
+			  	$('input[name=\'language_code\']').attr('value', $(this).attr('rel')); 
+				$('#language_form').submit();
+			  }
+            });
+                        
+           
+
+            $(document).bind('click', function(e) {
+                var $clicked = $(e.target);
+                if (! $clicked.parents().hasClass("dropdown"))
+                    $(".dropdown dd ul").hide();
+            });
+
+
+            $("#flagSwitcher").click(function() {
+                $(".dropdown img.flag").toggleClass("flagvisibility");
+            });
+        });
+    </script>
+<script type="text/javascript" src="js/tinydropdown.js"></script>
+
+<style>
+.paragraph ul {
+margin:10px;
+}
+.paragraph ul li{
+	list-style:circle;
+	margin-left:15px;
+	padding:2px;
+}
+</style>
+</head>
+<body>
+<div id="contentWrapper"><!--id="contentWrapper"-->
+    	<div id="topWrapperin"><!--id="topWrapper"-->
+        	<div id="topMenu"><!--id="topMenu"-->
+            	<div class="topMenu"><!--class="topMenu"-->
+                	<div class="language"><!--class="lenguage"-->
+                       <form action="http://vivamedi.ge/home" method="post" enctype="multipart/form-data" id="language_form">
+             <dl id="sample" class="dropdown"> 
+            		 
+                                          <dt><a href="javascript:void(0);" rel="0" ><span><img  src="image/flags/ge.png" alt="ქართული" />ქართული</span></a></dt>
+				
+                                                
+                                             
+                                             
+                        
+                        <dd>
+            <ul>               <!--class="flag"-->
+                              <li><a href="javascript:void(0);" class="cl" rel="ge"><img  src="image/flags/ge.png" alt="ქართული" />ქართული<span class="value">ge</span></a></li>
+                                  <li><a href="javascript:void(0);" class="cl" rel="en"><img  src="image/flags/gb.png" alt="English" />English<span class="value">en</span></a></li>
+                                  <li><a href="javascript:void(0);" class="cl" rel="ru"><img  src="image/flags/ru.png" alt="Русский" />Русский<span class="value">ru</span></a></li>
+                   
+                             
+            </ul>
+        </dd>  
+                        
+   
+                       
+                     
+
+						
+				    </dl>		
+                      <input type="hidden" name="language_code" value="" />
+            <input type="hidden" name="redirect" value="http://vivamedi.ge/About-Us" />
+              </form>
+                    	
+                    </div><!--End of class="lenguage"-->
+                         <ul class="times">
+                    	<li>თბილისი <span id="clock">00:35</span></li>
+                        <li>ბაქო<span id="clock1">01:35</span></li>
+                        <li>ნიუ-იორკი<span id="clock2">16:35</span></li>
+                    </ul>
+                    <ul class="smallMenu">
+                    	<li><a href="">მთავარი</a></li>
+                       <!-- <li><a href="#">საიტის რუკა</a></li>-->
+                        <li><a href="contact">კონტაქტი</a></li>
+                    </ul>
+                </div><!--End of class="topMenu"-->
+            </div><!--End of id="topMenu"-->
+            <div id="bottomHead">
+            <div id="header"><!--id="header"-->
+            	<h1><a href="">Medical Center Lancet</a></h1>
+                <ul class="socialHeader">
+                	<li><a href="https://www.facebook.com/" class="fb" target="_blank">facebook</a></li>
+                    <li><a href="#" class="twt">twitter</a></li>
+                    <li><a href="https://www.youtube.com/" class="yt" target="_blank">youtube</a></li>
+                </ul>
+                <div class="phoneNum"><!--class="phoneNum"-->
+               +995 32 2 101 100
+                </div><!--End of class="phoneNum"-->
+            </div><!--End of id="header"-->
+            <div id="mainMenu"><!--id="mainMenu"-->
+            	<ul id="menu" class="menu">                	
+                    <li id="about" ><a href="javascript:void(0);">ჩვენს შესახებ</a>
+                    <ul>
+                			<li ><a href="About-Us" id="sub_about" >ცენტრის შესახებ</a></li>
+                        	<li><a href="news" id="sub_news" >სიახლეები</a></li>
+                       		<li><a href="administration" id="sub_admin">ადმინისტრაცია</a></li>
+                            <li><a href="Mission-center" id="mission-centr">ცენტრის მიზანი</a></li>
+                        	<li><a href="vacancies" id="sub_vac">ვაკანსიები</a></li>      
+            			</ul>
+                    </li>
+                    <li id="struqtura"><a href="javascript:void(0);">სტრუქტურა</a>
+                     <ul>
+                       <li><a href="http://vivamedi.ge/index.php?run=information/information&information_id=17"  >ჰოსპიტალი</a></li>
+                         <li><a href="http://vivamedi.ge/index.php?run=information/information&information_id=18"  ></a></li>
+                         <li><a href="http://vivamedi.ge/index.php?run=information/information&information_id=19"  ></a></li>
+                         <li><a href="http://vivamedi.ge/index.php?run=information/information&information_id=20"  >კაფეტერია</a></li>
+                         <li><a href="http://vivamedi.ge/index.php?run=information/information&information_id=21"  >ვერტმფრენის მოედანი</a></li>
+                         <li><a href="http://vivamedi.ge/index.php?run=information/information&information_id=22"  >პარკინგი</a></li>
+                         <li><a href="http://vivamedi.ge/index.php?run=information/information&information_id=24"  >სამრეცხაო</a></li>
+                    </ul>
+                    </li>
+                    <li id="directions"><a href="javascript:void(0);">მიმართულებები</a>
+                      <ul>
+         
+                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=21"  >ნეიროქირურგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=25"  >ინტერვენციული კარდიოლოგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=41"  >კარდიოლოგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=24"  >თორაკო აბდომინალური ქირურგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=40"  >ოტორინოლარინგოლოგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=17"  >ოფთალმოლოგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=19"  >გინეკოლოგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=31"  >ტრავმატოლოგია - ორთოპედია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=32"  >ქიმიოთერაპია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=27"  >ანგიოქირურგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=43"  >პოლიპროფილური დეპარტამენტი</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=29"  >უროლოგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=42"  >ფარისებრი ჯირკვლის მკურნალობის ცენტრი</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=30"  >ქირურგია (ენდოსკოპია)</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=38"  >ყბა-სახის ქირურგია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=37"  >ამბულატორია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=36"  >ლაბორატორია</a></li>
+                                                                                                          <li ><a href="http://vivamedi.ge/directions?direction_id=39"  >რადიოლოგია</a></li>
+                                                                              
+            			</ul>
+                    </li>
+                    <!--  <li id="diseases" ><a href="diseases" >დაავადებები</a></li>!-->
+                    <li id="equipments"><a href="equipments">აღჭურვილობა</a></li>
+                    <li id="doctors"><a href="doctors">ექიმები</a></li>
+                    <li id="help"><a href="javascript:void(0);">სასარგებლო ინფორმაცია</a>
+                     <ul>
+                                                            <li  ><a href="http://vivamedi.ge/help?help_id=2"    >პაციენტის უფლებები</a></li>
+                                                                                <li  ><a href="http://vivamedi.ge/help?help_id=4"    >ინფორმაცია მნახველთათვის</a></li>
+                                                                                <li  ><a href="http://vivamedi.ge/help?help_id=6"    >პალატები</a></li>
+                                                            </ul>
+                    </li>
+                    <li id="hotel"><a href="javascript:void(0);" >ბროშურა</a>
+                    <ul>
+                                        </ul>
+                    </li>
+                </ul>
+            </div><!--End of id="mainMenu"-->
+             <script type="text/javascript">
+var dropdown=new TINY.dropdown.init("dropdown", {id:'menu', active:'menuhover'});
+</script>
+            <div id="row"><!--id="row"-->
+            	<ul>
+                                                
+                <li ><a href="http://vivamedi.ge/">მთავარი</a></li>
+                                                
+                <li class="currentPage"><a href="http://vivamedi.ge/About-Us">ცენტრის შესახებ</a></li>
+                                 	
+                </ul>
+            </div><!--End of id="row"-->
+            </div>
+        </div><!--End of id="topWrapper"-->
+        
+<script type="text/javascript">
+function getURLVar(urlVarName) {
+	var urlHalves = String(document.location).toLowerCase().split('?');
+	var urlVarValue = '';	
+	if (urlHalves[1]) {
+		var urlVars = urlHalves[1].split('&');
+		for (var i = 0; i <= (urlVars.length); i++) {
+			if (urlVars[i]) {
+				var urlVarPair = urlVars[i].split('=');
+				if (urlVarPair[0] && urlVarPair[0] == urlVarName.toLowerCase()) {
+					urlVarValue = urlVarPair[1];
+				}
+			}
+		}
+	}
+
+	return urlVarValue;
+
+} 
+
+$(document).ready(function() {	
+	var run = "information/information";
+	var id= "1";
+
+		part = run.split('/');	
+		if (!run){
+			$('#home').addClass('currect');
+		}
+
+        if (part[1]=='home'){
+			$('#home').addClass('currect');
+		}
+		if (id==1){
+			$('#about').addClass('currect');
+			$('#sub_about').addClass('curSub');
+			
+		
+		}
+		if (id==11){
+			$('#about').addClass('currect');
+			$('#mission-centr').addClass('curSub');
+			
+		
+		}
+		
+		
+		if ((id==17) || (id==18) || (id==19) || (id==20) || (id==21) || (id==22) || (id==24) ){
+			$('#struqtura').addClass('currect');		
+		}
+		
+		if (part[1]=='news_all'){
+			$('#about').addClass('currect');
+			$('#sub_news').addClass('curSub');
+		}	
+		
+		if (part[1]=='news'){
+			$('#about').addClass('currect');
+		
+		}			
+		if (part[1]=='administrationall'){
+			$('#about').addClass('currect');	
+			$('#sub_admin').addClass('curSub');		
+		}		
+		
+		
+			
+		if (part[1]=='administration'){
+			$('#about').addClass('currect');	
+			$('#sub_admin').addClass('curSub');			
+		}	
+		
+		if (part[1]=='vacancies'){
+			$('#about').addClass('currect');	
+			$('#sub_vac').addClass('curSub');			
+		}	
+		if (part[1]=='vacancy'){
+			$('#about').addClass('currect');	
+			$('#sub_vac').addClass('curSub');			
+		}	
+		if (part[1]=='equipments'){
+			$('#equipments').addClass('currect');
+			
+		}	
+		
+		if (part[1]=='equipment'){
+			$('#equipments').addClass('currect');
+			
+		}	
+		if (part[1]=='hotel'){
+			$('#hotel').addClass('currect');
+			
+		}
+		if (part[1]=='help'){
+			$('#help').addClass('currect');
+			
+		}
+		
+		if (part[1]=='rooms'){
+			$('#hotel').addClass('currect');
+			
+		}
+		if (part[1]=='room'){
+			$('#hotel').addClass('currect');
+			
+		}
+				
+		if (part[1]=='diseases'){
+			$('#diseases').addClass('currect');
+			
+		}	
+		
+		if (part[1]=='disease'){
+			$('#diseases').addClass('currect');
+			
+		}	
+				
+		if (part[1]=='doctors'){
+			$('#doctors').addClass('currect');
+			
+		}
+		if (part[1]=='doctor'){
+			$('#doctors').addClass('currect');
+			
+		}
+		if (part[1]=='directions'){
+			$('#directions').addClass('currect');
+			
+		}
+		
+		
+		if (part[1]=='contact'){
+		   $('#contact').addClass('currect');
+			
+		}
+		
+		
+});
+
+</script>
+ 
+
+ <div id="bottomWrapperIn"><!--id="bottomWrapper"-->
+        	
+            <div id="secendPart"><!--id="secendPart"-->
+        		<div class="leftContent"><!--class="leftContent"-->
+            	
+                	<div class="allNews"><!--class="allNews"-->
+                		<h2><a >ცენტრის შესახებ</a></h2>
+                    	<div class="fullInfo"><!--class="fullInfo"-->
+                        	<div class="paragraph"><!--class="paragraph"-->
+                                <p class="MsoNormal" style="margin-left:.25in">
+	<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">მედიცინის</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ყველა</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">დარგი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">და</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">მიმართულება</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ერთ</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">მრავალპროფილურ</span> <span style="font-family:
+&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სამედიცინო</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ცენტრში</span>, <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">რომელიც</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ორიენტირებულია</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">პაციენტის</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ჯანმრთელ</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">მომავალზე</span>. &quot;<span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ვივამედი</span>&quot; <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ეს</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">არის</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">კლინიკა</span>, <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ნებისმიერი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სოციალური</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ფენისთვის</span>, <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ვისაც</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ჩვენი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">გუნდის</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">გვერდში</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">დგომა</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ესაჭიროება</span>.<o:p></o:p></p>
+<p class="MsoNormal">
+	<o:p>&nbsp;</o:p></p>
+<p class="MsoNormal" style="margin-left:.25in">
+	<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">რეგიონალურ</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">სამედიცინო</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ცენტრში</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">სრულდება</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ოპერაციები</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">შემდეგი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">მიმართულებებით</span>: <o:p></o:p></p>
+<ul>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ნეიროქირურგია</span></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ყბა</span>-<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">სახის</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ქირურგია</span><o:p></o:p></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ანგიოქირურგია</span></li>
+	<li>
+		<span lang="GEO/KAT" style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen;mso-ansi-language:
+&quot;GEO\/KAT&quot;">ზოგადი</span><span lang="GEO/KAT"> </span><span style="font-family:
+&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ქირურგია</span><o:p></o:p></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ორთოპედია</span> - <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ტრავმატოლოგია<br />
+		</span><o:p></o:p></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ყელ</span>-<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ყურ</span>-<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ცხვირი</span><o:p></o:p></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ოფთალმოლოგია</span><o:p></o:p></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">უროლოგია</span><o:p></o:p></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">გინეკოლოგია</span><o:p></o:p></li>
+	<li>
+		<span lang="GEO/KAT" style="font-family:&quot;Sylfaen&quot;,serif;mso-ansi-language:&quot;GEO\/KAT&quot;">მამოლოგია</span></li>
+	<li>
+		<span style="font-family: Sylfaen, serif;">ინტერვენციული</span>&nbsp;<span lang="GEO/KAT" style="font-family: Sylfaen, serif;">კარდიოლოგია</span></li>
+</ul>
+<p class="MsoNormal">
+	<o:p>&nbsp;</o:p></p>
+<p class="MsoNormal" style="margin-left:.25in">
+	<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ასევე</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ჰოსპიტალი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">მოიცავს</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">შემდეგ</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">სერვისებს</span>:<o:p></o:p></p>
+<p class="MsoNormal">
+	<o:p>&nbsp;</o:p></p>
+<ul>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ამბულატორია</span><o:p></o:p></li>
+	<li>
+		<span lang="GEO/KAT" style="font-family:&quot;Sylfaen&quot;,serif;mso-ansi-language:&quot;GEO\/KAT&quot;">კარდიოლოგია</span><o:p></o:p></li>
+	<li>
+		<span lang="GEO/KAT" style="font-family:&quot;Sylfaen&quot;,serif;mso-ansi-language:&quot;GEO\/KAT&quot;">თერაპია</span></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ემერჯენსი</span><o:p></o:p></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">კრიტიკული</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">მედიცინ</span><span lang="GEO/KAT" style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen;mso-ansi-language:
+&quot;GEO\/KAT&quot;">ა</span></li>
+	<li>
+		<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ლაბორატორია</span><o:p></o:p></li>
+	<li>
+		<span lang="GEO/KAT" style="font-family:&quot;Sylfaen&quot;,serif;mso-ansi-language:&quot;GEO\/KAT&quot;">რადიოლოგია</span><span lang="GEO/KAT"> </span><o:p></o:p></li>
+</ul>
+<p class="MsoNormal">
+	<o:p>&nbsp;</o:p></p>
+<p class="MsoNormal" style="margin-left:.25in">
+	<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">კლინიკის</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ინფრასტრუქტურა</span> <span style="font-family:
+&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ყველაზე</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">მკაცრ</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ევროპულ</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სტანდარტებს</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">აკმაყოფილებს</span>, <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">უსაფრთხოების</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">თანამედროვე</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სისტემა</span>, <span lang="GEO/KAT" style="font-family:&quot;Sylfaen&quot;,serif;mso-ansi-language:&quot;GEO\/KAT&quot;">კაფეტერია და </span><span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ბევრი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სხვა</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სერვისი</span>, <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">რომელიც</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">პაციენტისთვის</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სრულყოფილი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">და</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ხარისხიანი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სერვისის</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">მიწოდებისთვისაა</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">გათვლილი</span>. <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">კლინიკაში</span><span style="mso-spacerun:yes">&nbsp; </span><span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">მოქმედებს</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">რეზიდენტურაც</span>.<o:p></o:p></p>
+<p class="MsoNormal">
+	<o:p>&nbsp;</o:p></p>
+<p class="MsoNormal" style="margin-left:.25in">
+	<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">ვივამედი</span>&ldquo; <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">კავკასიის</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">რეგიონში</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">უდიდესი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">მრავალპროფილური</span> <span style="font-family:
+&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სამედიცინო</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ცენტრია</span>, <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">უახლესი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">მაღალტექნოლოგიური</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">სამედიცინო</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">აპარატურით</span>, <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">კეთილგანწყობილი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">და</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">პაციენტზე</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ორიენტირებული</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">გუნდით</span>.<o:p></o:p></p>
+<p class="MsoNormal">
+	<o:p>&nbsp;</o:p></p>
+<p class="MsoNormal" style="margin-left:.25in">
+	<span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">სრული</span> <span style="font-family:&quot;Sylfaen&quot;,serif;
+mso-bidi-font-family:Sylfaen">პასუხისმგებლობით</span> - <span style="font-family:
+&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">თქვენი</span> <span style="font-family:&quot;Sylfaen&quot;,serif;mso-bidi-font-family:Sylfaen">ჯანმრთელობისთვის</span>!<o:p></o:p></p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>
+<p>
+	&nbsp;</p>                            </div><!--End of class="paragraph"-->
+                           
+                        </div><!--End of class="fullInfo"-->
+                	</div><!--End of class="allNews"-->
+            	</div><!--End of class="leftContent"-->
+            	<div class="rightContent"><!--class="rightContent"-->            	
+                	<div class="rightMenu"><!--class="rightMenu"-->                		
+                    	<ul>
+                          
+                    		<li><a href="About-Us"  class="currectRight"  >ცენტრის შესახებ</a></li>
+                        	<li><a href="news">სიახლეები</a></li>
+                       		<li><a href="administration">ადმინისტრაცია</a></li>
+                            <li><a href="Mission-center" >ცენტრის მიზანი</a></li>
+                        	<li><a href="vacancies">ვაკანსიები</a></li>      
+                                               	
+                    	</ul>
+                	</div><!--End of class="rightMenu"-->
+            	</div><!--End of class="rightContent"-->
+            	<div style="clear:both;"></div>
+        	</div><!--End of id="secendPart"-->
+           
+        </div><!--End of id="bottomWrapper"-->
+    </div><!--End of id="contentWrapper"-->
+
+
+
+
+
+
+
+
+
+
+
+
+   <div id="footerWrapper"><!--id="footerWrapper"-->
+    	<div id="topFooter"><!--id="topFooter"-->
+        	<div class="service"><!--class="service"-->
+            	<a href="http://vivamedi.ge/index.php?run=information/information&information_id=18" class="hotel " ></a>
+            </div><!--End of class="service"-->
+            <div class="service" ><!--class="service"-->
+            	<a href="http://vivamedi.ge/index.php?run=information/information&information_id=19" class="pharmacy " ></a>
+            </div><!--End of class="service"-->
+            <div class="service"><!--class="service"-->
+            	<a href="http://vivamedi.ge/index.php?run=information/information&information_id=21" class="helicopters ">ვერტმფრენის მოედანი</a>
+            </div><!--End of class="service"-->            
+            <div class="service"><!--class="service"-->
+            	<a href="http://vivamedi.ge/index.php?run=information/information&information_id=22" class="parking ">პარკინგი</a>
+            </div><!--End of class="service"-->
+            <div class="service"><!--class="service"-->
+            	<a href="http://vivamedi.ge/index.php?run=information/information&information_id=20" class="caffe ">კაფეტერია</a>
+            </div><!--End of class="service"-->
+        </div><!--End of id="topFooter"-->
+        <div id="bottomFooterwrapper"><!--id="bottomFooterwrapper"-->
+        	<div id="bottomFooter"><!--id="bottomFooter"-->
+            	<div class="leftFooter">&#169; სამედიცინო ცენტრი "ვივამედი". ყველა უფლება დაცულია.</div>
+                <ul class="socialFooter">
+                	<li><a href="https://www.facebook.com/" class="fb" target="_blank">facebook</a></li>
+                    <li><a href="#" class="twt">twitter</a></li>
+                    <li><a href="https://www.youtube.com/" class="yt" target="_blank">youtube</a></li>
+                </ul>
+            </div><!--End of id="bottomFooter"-->
+        </div><!--End of id="bottomFooterwrapper"-->
+    </div><!--End of id="footerWrapper"-->
+<!--    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+-->		<script type="text/javascript" src="js/jquery.ba-cond.min.js"></script>
+		<script type="text/javascript" src="js/jquery.slitslider.js"></script>
+		<script type="text/javascript">	
+			$(function() {
+			
+				var Page = (function() {
+
+					var $nav = $( '#nav-dots > span' ),
+						slitslider = $( '#slider' ).slitslider( {
+							onBeforeChange : function( slide, pos ) {
+
+								$nav.removeClass( 'nav-dot-current' );
+								$nav.eq( pos ).addClass( 'nav-dot-current' );
+
+							}
+						} ),
+
+						init = function() {
+
+							initEvents();
+							
+						},
+						initEvents = function() {
+
+							$nav.each( function( i ) {
+							
+								$( this ).on( 'click', function( event ) {
+									
+									var $dot = $( this );
+									
+									if( !slitslider.isActive() ) {
+
+										$nav.removeClass( 'nav-dot-current' );
+										$dot.addClass( 'nav-dot-current' );
+									
+									}
+									
+									slitslider.jump( i + 1 );
+									return false;
+								
+								} );
+								
+							} );
+
+						};
+
+						return { init : init };
+
+				})();
+
+				Page.init();
+
+				/**
+				 * Notes: 
+				 * 
+				 * example how to add items:
+				 */
+
+				/*
+				
+				var $items  = $('<div class="sl-slide sl-slide-color-2" data-orientation="horizontal" data-slice1-rotation="-5" data-slice2-rotation="10" data-slice1-scale="2" data-slice2-scale="1"><div class="sl-slide-inner bg-1"><div class="sl-deco" data-icon="t"></div><h2>some text</h2><blockquote><p>bla bla</p><cite>Margi Clarke</cite></blockquote></div></div>');
+				
+				// call the plugin's add method
+				ss.add($items);
+
+				*/
+			
+			});
+		</script>
+        
+        <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51469306-1', 'mclancet.com');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
