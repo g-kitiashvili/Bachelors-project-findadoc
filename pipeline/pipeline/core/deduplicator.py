@@ -60,10 +60,22 @@ _AGGREGATOR_HOSTS = frozenset({"tsamali.ge", "vipmed.ge"})
 
 _QUOTE_CHARS = str.maketrans("", "", "“”\"'„«»")
 
+# Generic facility words carry no identity: a clinic relisted as "Vivamedi" by one
+# source and "Medical Center Vivamedi" by another is one clinic. Stripped from the
+# dedup key only (not the stored name) so the two key the same and merge.
+_CLINIC_QUALIFIERS = frozenset({
+    "medical", "center", "centre", "clinic", "hospital", "polyclinic",
+    "სამედიცინო", "ცენტრი", "კლინიკა", "ჰოსპიტალი", "საავადმყოფო", "პოლიკლინიკა",
+})
+
 
 def _clinic_key(name: str | None) -> str:
-    """Dedup key for a clinic name: drop quote marks, then lowercase + collapse space."""
-    return normalize_alias((name or "").translate(_QUOTE_CHARS))
+    """Dedup key for a clinic name: drop quote marks, lowercase + collapse space, then
+    drop generic facility qualifiers. Falls back to the full key if a name is nothing but
+    qualifiers, so bare "Medical Center" rows do not all collapse into one."""
+    key = normalize_alias((name or "").translate(_QUOTE_CHARS))
+    core = " ".join(t for t in key.split() if t not in _CLINIC_QUALIFIERS)
+    return core or key
 
 
 class Deduplicator:

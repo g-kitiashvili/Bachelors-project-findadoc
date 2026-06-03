@@ -239,8 +239,14 @@ class DoctorRepositoryImpl(
 
     private fun orderBy(filter: DoctorFilter, sort: String?): List<SortField<*>> = buildList {
         val q = filter.q?.takeIf { it.isNotEmpty() }
-        if (q != null && (sort == "relevancy" || sort == null)) {
+        // prominence drives the default browse order and breaks ties in relevance search,
+        // but yields to an explicit alphabetical choice (atoz/ztoa).
+        val byProminence = sort == null || sort == "relevancy"
+        if (q != null && byProminence) {
             add((if (filter.nameOnly) nameRelevance(q) else relevance(q)).desc())
+        }
+        if (byProminence) {
+            add(DSL.field("d.prominence").desc())
         }
         val familyName = DSL.field("d.family_name_en")
         add(if (sort == "ztoa") familyName.desc() else familyName.asc())

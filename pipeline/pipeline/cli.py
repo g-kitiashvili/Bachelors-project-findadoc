@@ -28,6 +28,7 @@ from pipeline.core.location_matcher import LocationMatcher
 from pipeline.core.location_seeder import LocationSeeder
 from pipeline.core.non_providers import NonProviderList
 from pipeline.core.persister import Persister
+from pipeline.core.prominence import ProminencePass
 from pipeline.core.remapper import RemapRegression, Remapper
 from pipeline.core.runner import Runner
 from pipeline.core.scheduler import run_blocking_scheduler
@@ -70,6 +71,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("normalize-clinics", help="Normalize existing clinic rows (names, junk, address_en).")
     sub.add_parser("geocode-clinics", help="Geocode clinic addresses to coordinates via Nominatim.")
     sub.add_parser("link-brands", help="Link clinics to curated brands by name (run after dedup).")
+    sub.add_parser("prominence", help="Recompute doctor prominence scores (run after dedup).")
     return parser
 
 
@@ -147,6 +149,10 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "link-brands":
         BrandLinkingPass(dsn=settings.database_url, yaml_path=_BRANDS_YAML_PATH).run()
+        return 0
+
+    if args.cmd == "prominence":
+        ProminencePass(settings.database_url).run()
         return 0
 
     runner = _make_runner(settings)
