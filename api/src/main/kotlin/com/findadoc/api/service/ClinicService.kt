@@ -1,5 +1,6 @@
 package com.findadoc.api.service
 
+import com.findadoc.api.exception.ClinicNotFoundException
 import com.findadoc.api.repository.ClinicRepository
 import com.findadoc.api.web.dto.ClinicDetailDto
 import com.findadoc.api.web.dto.ClinicListItemDto

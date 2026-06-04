@@ -1,9 +1,9 @@
 package com.findadoc.api.web
 
-import com.findadoc.api.service.ClinicNotFoundException
-import com.findadoc.api.service.DoctorNotFoundException
-import com.findadoc.api.service.MedicalConditionNotFoundException
-import com.findadoc.api.service.SpecialtyNotFoundException
+import com.findadoc.api.exception.ClinicNotFoundException
+import com.findadoc.api.exception.DoctorNotFoundException
+import com.findadoc.api.exception.MedicalConditionNotFoundException
+import com.findadoc.api.exception.SpecialtyNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.web.bind.annotation.ControllerAdvice

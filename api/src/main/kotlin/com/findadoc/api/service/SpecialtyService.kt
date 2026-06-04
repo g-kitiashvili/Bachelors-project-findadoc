@@ -1,5 +1,6 @@
 package com.findadoc.api.service
 
+import com.findadoc.api.exception.SpecialtyNotFoundException
 import com.findadoc.api.repository.SpecialtyRepository
 import com.findadoc.api.web.dto.SpecialtyDetailDto
 import com.findadoc.api.web.dto.SpecialtyListItemDto

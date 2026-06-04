@@ -1,5 +1,6 @@
 package com.findadoc.api.service
 
+import com.findadoc.api.exception.MedicalConditionNotFoundException
 import com.findadoc.api.repository.MedicalConditionRepository
 import com.findadoc.api.web.dto.MedicalConditionDetailDto
 import com.findadoc.api.web.dto.MedicalConditionListItemDto
