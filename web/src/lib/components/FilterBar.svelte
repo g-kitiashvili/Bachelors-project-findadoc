@@ -82,7 +82,7 @@
 
   function clearTreats(kind: "children" | "adults") {
     const url = new URL($page.url);
-    url.searchParams.delete(kind === "children" ? "treats_children" : "treats_adults");
+    url.searchParams.delete(kind === "children" ? "treatsChildren" : "treatsAdults");
     url.searchParams.delete("page");
     goto(url.pathname + url.search);
   }
@@ -93,8 +93,8 @@
     url.searchParams.delete("region");
     url.searchParams.delete("city");
     url.searchParams.delete("clinic");
-    url.searchParams.delete("treats_children");
-    url.searchParams.delete("treats_adults");
+    url.searchParams.delete("treatsChildren");
+    url.searchParams.delete("treatsAdults");
     url.searchParams.delete("page");
     goto(url.pathname + url.search);
   }

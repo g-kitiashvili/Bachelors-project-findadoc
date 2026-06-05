@@ -1,12 +1,14 @@
 package com.findadoc.api.web
 
-import com.findadoc.api.service.DoctorNotFoundException
+import com.findadoc.api.exception.DoctorNotFoundException
 import com.findadoc.api.service.DoctorService
 import com.findadoc.api.web.dto.DoctorListItemDto
 import com.findadoc.api.web.dto.DoctorProfileDto
 import com.findadoc.api.web.dto.MapPinDto
 import com.findadoc.api.web.dto.PageResponseDto
 import com.findadoc.api.web.dto.toProfileDto
+import com.findadoc.api.web.request.DoctorListParams
+import com.findadoc.api.web.request.MapPinsParams
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
@@ -25,64 +27,23 @@ class DoctorController(
 ) {
     @Operation(summary = "List doctors")
     @GetMapping
-    fun getAll(
-        @RequestParam(defaultValue = "1") page: Int,
-        @RequestParam(defaultValue = "5") pageSize: Int,
-        @RequestParam(required = false) q: String?,
-        @RequestParam(required = false) specialty: String?,
-        @RequestParam(required = false) region: String?,
-        @RequestParam(required = false) city: String?,
-        @RequestParam(required = false) sort: String?,
-        @RequestParam(required = false) clinic: String?,
-        @RequestParam(required = false) condition: String?,
-        @RequestParam(name = "treats_children", required = false) treatsChildren: Boolean?,
-        @RequestParam(name = "treats_adults", required = false) treatsAdults: Boolean?,
-    ): PageResponseDto<DoctorListItemDto> {
-        val safePage = maxOf(page, 1)
-        val safePageSize = pageSize.coerceIn(1, 50)
-        val trimmedQ = q?.trim()?.take(100)?.takeIf { it.isNotEmpty() }
-        val slugs = specialty?.split(',')
-            ?.map { it.trim() }
-            ?.filter { it.isNotEmpty() }
-            ?: emptyList()
-        val regionSlug = region?.trim()?.takeIf { it.isNotEmpty() }
-        val citySlug = city?.trim()?.takeIf { it.isNotEmpty() }
-        val sortMode = sort?.trim()?.lowercase()?.takeIf { it == "relevancy" || it == "atoz" || it == "ztoa" }
-        val clinicSlugs = clinic?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-        val conditionSlugs = condition?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-        return doctorService.list(
-            safePage, safePageSize, trimmedQ, slugs, regionSlug, citySlug, sortMode, clinicSlugs, conditionSlugs,
-            treatsChildren == true, treatsAdults == true,
+    fun getAll(params: DoctorListParams): PageResponseDto<DoctorListItemDto> =
+        doctorService.list(
+            params.safePage(), params.safePageSize(), params.query(), params.specialtySlugs(),
+            params.regionSlug(), params.citySlug(), params.sortMode(), params.clinicSlugs(),
+            params.conditionSlugs(), params.treatsChildren, params.treatsAdults,
         )
-    }
 
     @Operation(summary = "Clinic map pins, optionally within a radius of a center point")
     @GetMapping("/map-pins")
-    fun mapPins(
-        @RequestParam(required = false) center: String?,
-        @RequestParam(name = "radius_km", required = false) radiusKm: Double?,
-        @RequestParam(required = false) q: String?,
-        @RequestParam(required = false) specialty: String?,
-        @RequestParam(required = false) region: String?,
-        @RequestParam(required = false) city: String?,
-        @RequestParam(required = false) clinic: String?,
-        @RequestParam(required = false) condition: String?,
-    ): Map<String, List<MapPinDto>> {
-        val parts = center?.split(',')?.map { it.trim() }
-        val lat = parts?.getOrNull(0)?.toDoubleOrNull()
-        val lng = parts?.getOrNull(1)?.toDoubleOrNull()
-        val trimmedQ = q?.trim()?.take(100)?.takeIf { it.isNotEmpty() }
-        val slugs = specialty?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-        val regionSlug = region?.trim()?.takeIf { it.isNotEmpty() }
-        val citySlug = city?.trim()?.takeIf { it.isNotEmpty() }
-        val clinicSlugs = clinic?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-        val conditionSlugs = condition?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-        return mapOf(
+    fun mapPins(params: MapPinsParams): Map<String, List<MapPinDto>> =
+        mapOf(
             "pins" to doctorService.mapPins(
-                lat, lng, radiusKm, trimmedQ, slugs, regionSlug, citySlug, clinicSlugs, conditionSlugs,
+                params.lat(), params.lng(), params.radiusKm, params.query(), params.specialtySlugs(),
+                params.regionSlug(), params.citySlug(), params.clinicSlugs(), params.conditionSlugs(),
+                params.treatsChildren, params.treatsAdults,
             ),
         )
-    }
 
     @Operation(summary = "Doctors similar to the given one (same specialty, ranked by shared specialties and proximity)")
     @GetMapping("/{slug}/similar")

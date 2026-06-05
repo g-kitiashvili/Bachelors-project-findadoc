@@ -1,5 +1,6 @@
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
+import { appendList } from "$lib/listParams";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:8080";
 
@@ -7,12 +8,11 @@ export const GET: RequestHandler = async ({ url, fetch }) => {
   const params = new URLSearchParams();
   const region = (url.searchParams.get("region") ?? "").trim();
   const city = (url.searchParams.get("city") ?? "").trim();
-  const clinic = (url.searchParams.get("clinic") ?? "").trim();
   if (region) params.set("region", region);
   if (city) params.set("city", city);
-  if (clinic) params.set("clinic", clinic);
-  if (url.searchParams.get("treats_children") === "true") params.set("treats_children", "true");
-  if (url.searchParams.get("treats_adults") === "true") params.set("treats_adults", "true");
+  appendList(params, "clinic", url.searchParams.get("clinic"));
+  if (url.searchParams.get("treatsChildren") === "true") params.set("treatsChildren", "true");
+  if (url.searchParams.get("treatsAdults") === "true") params.set("treatsAdults", "true");
   const query = params.toString();
   try {
     const res = await fetch(`${API_BASE}/api/v1/specialties${query ? `?${query}` : ""}`);

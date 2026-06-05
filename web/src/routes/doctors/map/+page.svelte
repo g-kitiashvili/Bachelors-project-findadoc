@@ -35,7 +35,7 @@
       (pos) => {
         const url = new URL($page.url);
         url.searchParams.set("center", `${pos.coords.latitude},${pos.coords.longitude}`);
-        url.searchParams.set("radius_km", "10");
+        url.searchParams.set("radiusKm", "10");
         url.searchParams.set("me", "1");
         url.searchParams.delete("focus");
         goto(url.pathname + url.search);
@@ -90,17 +90,20 @@
     }
   }
 
-  onMount(async () => {
-    leaflet = (await import("leaflet")).default;
-    await import("leaflet.markercluster");
-    map = leaflet.map(mapEl).setView([41.7151, 44.8271], 12); // Tbilisi
-    leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
-    // Container size isn't final at init under flex/grid layout; recompute so tiles fill it.
-    setTimeout(() => map?.invalidateSize(), 0);
-    renderPins();
+  onMount(() => {
+    // onMount must return its cleanup synchronously, so the async map setup runs in an IIFE.
+    (async () => {
+      leaflet = (await import("leaflet")).default;
+      await import("leaflet.markercluster");
+      map = leaflet.map(mapEl).setView([41.7151, 44.8271], 12); // Tbilisi
+      leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+      // Container size isn't final at init under flex/grid layout; recompute so tiles fill it.
+      setTimeout(() => map?.invalidateSize(), 0);
+      renderPins();
+    })();
     return () => { map?.remove(); map = null; };
   });
 
@@ -134,6 +137,8 @@
         selectedCity={data.selectedCity}
         clinics={data.clinics}
         selectedClinics={data.selectedClinics}
+        selectedTreatsChildren={data.selectedTreatsChildren}
+        selectedTreatsAdults={data.selectedTreatsAdults}
       />
       <button type="button" class="locate" onclick={useMyLocation} disabled={locating}>
         {locating ? m.map_locating() : m.map_near_me()}

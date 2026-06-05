@@ -78,8 +78,8 @@
     if (regionDraft) params.set("region", regionDraft);
     if (cityDraft) params.set("city", cityDraft);
     if (clinicDraft.length > 0) params.set("clinic", clinicDraft.join(","));
-    if (treatsChildrenDraft) params.set("treats_children", "true");
-    if (treatsAdultsDraft) params.set("treats_adults", "true");
+    if (treatsChildrenDraft) params.set("treatsChildren", "true");
+    if (treatsAdultsDraft) params.set("treatsAdults", "true");
     let cancelled = false;
     fetch(`/api/specialties?${params.toString()}`)
       .then((r) => (r.ok ? r.json() : { items: [] }))
@@ -118,8 +118,8 @@
     const params = new URLSearchParams();
     if (draft.length > 0) params.set("specialty", draft.join(","));
     if (clinicDraft.length > 0) params.set("clinic", clinicDraft.join(","));
-    if (treatsChildrenDraft) params.set("treats_children", "true");
-    if (treatsAdultsDraft) params.set("treats_adults", "true");
+    if (treatsChildrenDraft) params.set("treatsChildren", "true");
+    if (treatsAdultsDraft) params.set("treatsAdults", "true");
     let cancelled = false;
     fetch(`/api/locations?${params.toString()}`)
       .then((r) => (r.ok ? r.json() : { items: [] }))
@@ -157,8 +157,8 @@
     if (regionDraft) params.set("region", regionDraft);
     if (cityDraft) params.set("city", cityDraft);
     if (draft.length > 0) params.set("specialty", draft.join(","));
-    if (treatsChildrenDraft) params.set("treats_children", "true");
-    if (treatsAdultsDraft) params.set("treats_adults", "true");
+    if (treatsChildrenDraft) params.set("treatsChildren", "true");
+    if (treatsAdultsDraft) params.set("treatsAdults", "true");
     let cancelled = false;
     fetch(`/api/clinics?${params.toString()}`)
       .then((r) => (r.ok ? r.json() : { items: [] }))
@@ -195,10 +195,10 @@
     else url.searchParams.delete("city");
     if (clinicDraft.length > 0) url.searchParams.set("clinic", clinicDraft.join(","));
     else url.searchParams.delete("clinic");
-    if (treatsChildrenDraft) url.searchParams.set("treats_children", "true");
-    else url.searchParams.delete("treats_children");
-    if (treatsAdultsDraft) url.searchParams.set("treats_adults", "true");
-    else url.searchParams.delete("treats_adults");
+    if (treatsChildrenDraft) url.searchParams.set("treatsChildren", "true");
+    else url.searchParams.delete("treatsChildren");
+    if (treatsAdultsDraft) url.searchParams.set("treatsAdults", "true");
+    else url.searchParams.delete("treatsAdults");
     url.searchParams.delete("page");
     goto(url.pathname + url.search);
     onClose();

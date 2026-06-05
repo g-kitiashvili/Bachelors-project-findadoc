@@ -1,4 +1,5 @@
 import type { PageServerLoad } from "./$types";
+import { appendList } from "$lib/listParams";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:8080";
 
@@ -48,18 +49,18 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const city = (url.searchParams.get("city") ?? "").trim();
   const sort = (url.searchParams.get("sort") ?? "").trim();
   const clinic = (url.searchParams.get("clinic") ?? "").trim();
-  const treatsChildren = url.searchParams.get("treats_children") === "true";
-  const treatsAdults = url.searchParams.get("treats_adults") === "true";
+  const treatsChildren = url.searchParams.get("treatsChildren") === "true";
+  const treatsAdults = url.searchParams.get("treatsAdults") === "true";
 
   const params = new URLSearchParams({ page: String(page), pageSize: "12" });
   if (q) params.set("q", q);
-  if (specialty) params.set("specialty", specialty);
+  appendList(params, "specialty", specialty);
   if (region) params.set("region", region);
   if (city) params.set("city", city);
   if (sort) params.set("sort", sort);
-  if (clinic) params.set("clinic", clinic);
-  if (treatsChildren) params.set("treats_children", "true");
-  if (treatsAdults) params.set("treats_adults", "true");
+  appendList(params, "clinic", clinic);
+  if (treatsChildren) params.set("treatsChildren", "true");
+  if (treatsAdults) params.set("treatsAdults", "true");
 
   const res = await fetch(`${API_BASE}/api/v1/doctors?${params.toString()}`);
   const data = res.ok
@@ -67,14 +68,14 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
     : { items: [], page, pageSize: 12, total: 0 };
 
   const selectedSlugs = specialty ? specialty.split(",").filter(Boolean) : [];
-  const selectedSort = q ? sort || "relevancy" : sort === "ztoa" ? "ztoa" : "atoz";
+  const selectedSort = sort || (q ? "relevancy" : "top");
 
   const specParams = new URLSearchParams();
   if (region) specParams.set("region", region);
   if (city) specParams.set("city", city);
-  if (clinic) specParams.set("clinic", clinic);
-  if (treatsChildren) specParams.set("treats_children", "true");
-  if (treatsAdults) specParams.set("treats_adults", "true");
+  appendList(specParams, "clinic", clinic);
+  if (treatsChildren) specParams.set("treatsChildren", "true");
+  if (treatsAdults) specParams.set("treatsAdults", "true");
   const specQuery = specParams.toString();
   const specRes = await fetch(
     `${API_BASE}/api/v1/specialties${specQuery ? `?${specQuery}` : ""}`,
@@ -86,10 +87,10 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   ).filter((s) => s.doctorCount > 0);
 
   const locParams = new URLSearchParams();
-  if (specialty) locParams.set("specialty", specialty);
-  if (clinic) locParams.set("clinic", clinic);
-  if (treatsChildren) locParams.set("treats_children", "true");
-  if (treatsAdults) locParams.set("treats_adults", "true");
+  appendList(locParams, "specialty", specialty);
+  appendList(locParams, "clinic", clinic);
+  if (treatsChildren) locParams.set("treatsChildren", "true");
+  if (treatsAdults) locParams.set("treatsAdults", "true");
   const locRes = await fetch(`${API_BASE}/api/v1/locations${locParams.toString() ? `?${locParams}` : ""}`);
   const regions = locRes.ok
     ? ((await locRes.json()) as { items: LocationRegion[] }).items
@@ -98,9 +99,9 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const clinicParams = new URLSearchParams();
   if (region) clinicParams.set("region", region);
   if (city) clinicParams.set("city", city);
-  if (specialty) clinicParams.set("specialty", specialty);
-  if (treatsChildren) clinicParams.set("treats_children", "true");
-  if (treatsAdults) clinicParams.set("treats_adults", "true");
+  appendList(clinicParams, "specialty", specialty);
+  if (treatsChildren) clinicParams.set("treatsChildren", "true");
+  if (treatsAdults) clinicParams.set("treatsAdults", "true");
   const clinicsRes = await fetch(`${API_BASE}/api/v1/clinics${clinicParams.toString() ? `?${clinicParams}` : ""}`);
   const clinics = clinicsRes.ok
     ? ((await clinicsRes.json()) as { items: ClinicRef[] }).items

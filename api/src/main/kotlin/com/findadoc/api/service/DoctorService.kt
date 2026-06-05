@@ -1,5 +1,6 @@
 package com.findadoc.api.service
 
+import com.findadoc.api.exception.DoctorNotFoundException
 import com.findadoc.api.repository.DoctorRepository
 import com.findadoc.api.repository.jooq.DoctorFilter
 import com.findadoc.api.web.dto.DoctorListItemDto
@@ -57,6 +58,8 @@ class DoctorService(
         city: String?,
         clinicSlugs: List<String> = emptyList(),
         conditionSlugs: List<String> = emptyList(),
+        treatsChildren: Boolean = false,
+        treatsAdults: Boolean = false,
     ): List<MapPinDto> {
         val filter = DoctorFilter(
             q = q?.lowercase(),
@@ -65,6 +68,8 @@ class DoctorService(
             city = city,
             clinicSlugs = clinicSlugs,
             conditionSlugs = conditionSlugs,
+            treatsChildren = treatsChildren,
+            treatsAdults = treatsAdults,
         )
         return doctorRepository.mapPins(filter, centerLat, centerLng, radiusKm)
     }

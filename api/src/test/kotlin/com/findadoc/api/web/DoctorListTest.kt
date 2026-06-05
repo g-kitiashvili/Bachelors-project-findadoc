@@ -266,7 +266,7 @@ class DoctorListTest @Autowired constructor(
     @Test
     @Sql("/sql/doctors-test-fixture.sql")
     fun `getAll with multiple specialty slugs returns union`() {
-        mockMvc.get("/api/v1/doctors") { param("specialty", "cardiology,pediatrics") }
+        mockMvc.get("/api/v1/doctors") { param("specialty", "cardiology", "pediatrics") }
             .andExpect {
                 status { isOk() }
                 jsonPath("$.total") { value(3) }

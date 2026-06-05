@@ -1,5 +1,6 @@
 import type { PageServerLoad } from "./$types";
 import type { SpecialtyRef, ClinicRef, LocationRegion } from "../+page.server";
+import { appendList } from "$lib/listParams";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:8080";
 
@@ -12,16 +13,23 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const city = (url.searchParams.get("city") ?? "").trim();
   const clinic = (url.searchParams.get("clinic") ?? "").trim();
   const condition = (url.searchParams.get("condition") ?? "").trim();
+  const treatsChildren = url.searchParams.get("treatsChildren") === "true";
+  const treatsAdults = url.searchParams.get("treatsAdults") === "true";
 
   // Pins for the active filter set (same filters as the doctor list).
   const pinParams = new URLSearchParams();
-  for (const [k, v] of [["q", q], ["specialty", specialty], ["region", region], ["city", city], ["clinic", clinic], ["condition", condition]]) {
+  for (const [k, v] of [["q", q], ["region", region], ["city", city]]) {
     if (v) pinParams.set(k, v);
   }
+  appendList(pinParams, "specialty", specialty);
+  appendList(pinParams, "clinic", clinic);
+  appendList(pinParams, "condition", condition);
+  if (treatsChildren) pinParams.set("treatsChildren", "true");
+  if (treatsAdults) pinParams.set("treatsAdults", "true");
   const center = url.searchParams.get("center");
-  const radiusKm = url.searchParams.get("radius_km");
+  const radiusKm = url.searchParams.get("radiusKm");
   if (center) pinParams.set("center", center);
-  if (radiusKm) pinParams.set("radius_km", radiusKm);
+  if (radiusKm) pinParams.set("radiusKm", radiusKm);
   const pinQs = pinParams.toString();
   const pinsRes = await fetch(`${API_BASE}/api/v1/doctors/map-pins${pinQs ? `?${pinQs}` : ""}`);
   const pins: Pin[] = pinsRes.ok ? ((await pinsRes.json()) as { pins: Pin[] }).pins : [];
@@ -30,21 +38,27 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const specParams = new URLSearchParams();
   if (region) specParams.set("region", region);
   if (city) specParams.set("city", city);
-  if (clinic) specParams.set("clinic", clinic);
+  appendList(specParams, "clinic", clinic);
+  if (treatsChildren) specParams.set("treatsChildren", "true");
+  if (treatsAdults) specParams.set("treatsAdults", "true");
   const specRes = await fetch(`${API_BASE}/api/v1/specialties${specParams.toString() ? `?${specParams}` : ""}`);
   const specialties = (specRes.ok ? ((await specRes.json()) as { items: Array<SpecialtyRef & { doctorCount: number; parentSlug?: string | null }> }).items : [])
     .filter((s) => s.doctorCount > 0);
 
   const locParams = new URLSearchParams();
-  if (specialty) locParams.set("specialty", specialty);
-  if (clinic) locParams.set("clinic", clinic);
+  appendList(locParams, "specialty", specialty);
+  appendList(locParams, "clinic", clinic);
+  if (treatsChildren) locParams.set("treatsChildren", "true");
+  if (treatsAdults) locParams.set("treatsAdults", "true");
   const locRes = await fetch(`${API_BASE}/api/v1/locations${locParams.toString() ? `?${locParams}` : ""}`);
   const regions = locRes.ok ? ((await locRes.json()) as { items: LocationRegion[] }).items : [];
 
   const clinicParams = new URLSearchParams({ located: "true" }); // the map only filters by clinics it can place
   if (region) clinicParams.set("region", region);
   if (city) clinicParams.set("city", city);
-  if (specialty) clinicParams.set("specialty", specialty);
+  appendList(clinicParams, "specialty", specialty);
+  if (treatsChildren) clinicParams.set("treatsChildren", "true");
+  if (treatsAdults) clinicParams.set("treatsAdults", "true");
   const clinicsRes = await fetch(`${API_BASE}/api/v1/clinics?${clinicParams}`);
   const clinics = clinicsRes.ok ? ((await clinicsRes.json()) as { items: ClinicRef[] }).items : [];
 
@@ -67,5 +81,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
     selectedRegion: region,
     selectedCity: city,
     selectedClinics: clinic ? clinic.split(",").filter(Boolean) : [],
+    selectedTreatsChildren: treatsChildren,
+    selectedTreatsAdults: treatsAdults,
   };
 };

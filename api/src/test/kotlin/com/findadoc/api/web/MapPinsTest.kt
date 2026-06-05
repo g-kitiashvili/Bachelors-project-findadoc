@@ -47,7 +47,7 @@ class MapPinsTest @Autowired constructor(
     fun `map-pins radius filter keeps only clinics within range`() {
         mockMvc.get("/api/v1/doctors/map-pins") {
             param("center", "41.700,44.800")
-            param("radius_km", "10")
+            param("radiusKm", "10")
         }.andExpect {
             status { isOk() }
             jsonPath("$.pins.length()") { value(1) }

@@ -2,11 +2,11 @@ package com.findadoc.api.web
 
 import com.findadoc.api.service.LocationService
 import com.findadoc.api.web.dto.LocationRegionDto
+import com.findadoc.api.web.request.LocationListParams
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -17,17 +17,9 @@ class LocationController(
 ) {
     @Operation(summary = "List regions with nested cities and active-doctor counts, optionally scoped to specialties")
     @GetMapping
-    fun getAll(
-        @RequestParam(required = false) specialty: String?,
-        @RequestParam(required = false) clinic: String?,
-        @RequestParam(name = "treats_children", required = false) treatsChildren: Boolean?,
-        @RequestParam(name = "treats_adults", required = false) treatsAdults: Boolean?,
-    ): Map<String, List<LocationRegionDto>> {
-        val slugs = specialty?.split(',')
-            ?.map { it.trim() }
-            ?.filter { it.isNotEmpty() }
-            ?: emptyList()
-        val clinicSlugs = clinic?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-        return mapOf("items" to locationService.listAll(slugs, clinicSlugs, treatsChildren == true, treatsAdults == true))
-    }
+    fun getAll(params: LocationListParams): Map<String, List<LocationRegionDto>> =
+        mapOf("items" to locationService.listAll(
+            params.specialtySlugs(), params.clinicSlugs(),
+            params.treatsChildren, params.treatsAdults,
+        ))
 }
