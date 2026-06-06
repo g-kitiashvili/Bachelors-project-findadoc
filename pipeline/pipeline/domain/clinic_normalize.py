@@ -11,6 +11,10 @@ from __future__ import annotations
 import re
 
 
+# Aggregator sites relist clinics that official sites own; the official record wins
+# as the dedup canonical, and these hosts' role-phrase "clinics" can be deactivated.
+AGGREGATOR_HOSTS = frozenset({"tsamali.ge", "vipmed.ge"})
+
 _BRAND_SEP = " – "
 
 # Aggregators (vipmed) list each doctor's "Place of Work/Position", so role and

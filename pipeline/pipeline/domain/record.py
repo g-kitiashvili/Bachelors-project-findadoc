@@ -14,6 +14,7 @@ class ClinicRef(BaseModel):
     name_ka: str = Field(..., min_length=1)
     name_en: str | None = None
     address: str | None = None
+    address_en: str | None = None
     phone: str | None = None
     website: HttpUrl | None = None
 

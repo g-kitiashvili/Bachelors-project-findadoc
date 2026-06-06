@@ -14,4 +14,6 @@ class Settings(BaseSettings):
     pipeline_scheduler_cron: str = "0 3 * * *"
     pipeline_timezone: str = "Asia/Tbilisi"
     pipeline_log_level: str = "INFO"
-    pipeline_playwright_headless: bool = True
+    # Sources scraped concurrently in `run --all`. 0 = one thread per source (all at
+    # once, the default - each source hits a different site); 1 = sequential; N = cap at N.
+    pipeline_scrape_workers: int = 0

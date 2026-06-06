@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 
-from pipeline.core.record import DoctorRecord
+from pipeline.domain.record import DoctorRecord
 
 
 _KARTULI_TO_LATIN: dict[str, str] = {
@@ -239,11 +239,20 @@ def normalize(record: DoctorRecord) -> DoctorRecord:
     Slug stays lowercase. Returns a new frozen record. Idempotent.
     """
     updates: dict[str, str] = {}
+    # Collapse internal whitespace runs ("Zaza  Katsitadze" -> "Zaza Katsitadze");
+    # str_strip_whitespace only trims the ends, not double spaces inside the name.
+    name_ka = " ".join(record.full_name_ka.split())
+    if name_ka != record.full_name_ka:
+        updates["full_name_ka"] = name_ka
     if record.full_name_en is None:
-        latin = kartuli_to_latin(record.full_name_ka).strip()
+        latin = kartuli_to_latin(name_ka).strip()
         updates["full_name_en"] = " ".join(w.capitalize() for w in latin.split())
+    else:
+        name_en = " ".join(record.full_name_en.split())
+        if name_en != record.full_name_en:
+            updates["full_name_en"] = name_en
     if record.slug_base is None:
-        updates["slug_base"] = slugify(record.full_name_ka)
+        updates["slug_base"] = slugify(name_ka)
     if not updates:
         return record
     return record.model_copy(update=updates)

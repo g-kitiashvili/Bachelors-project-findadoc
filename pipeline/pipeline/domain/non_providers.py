@@ -8,7 +8,7 @@ from pathlib import Path
 
 import yaml
 
-from pipeline.core.taxonomy import normalize_alias
+from pipeline.domain.taxonomy import normalize_alias
 
 
 @dataclass(frozen=True)

@@ -9,7 +9,7 @@ import structlog
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-from pipeline.core.runner import Runner
+from pipeline.runner import Runner
 
 
 log = structlog.get_logger("pipeline.scheduler")
