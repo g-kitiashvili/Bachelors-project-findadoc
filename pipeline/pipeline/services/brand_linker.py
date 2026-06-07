@@ -11,10 +11,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-import psycopg
 import structlog
 
-from pipeline.core.taxonomy import load_brands, normalize_alias
+from pipeline.services.pass_base import Pass
+from pipeline.domain.taxonomy import load_brands, normalize_alias
 
 log = structlog.get_logger("pipeline.brand_linker")
 
@@ -33,14 +33,14 @@ class BrandLinkStats:
     linked: int
 
 
-class BrandLinkingPass:
+class BrandLinkingPass(Pass):
     def __init__(self, *, dsn: str, yaml_path: Path | str) -> None:
-        self._dsn = dsn
+        super().__init__(dsn)
         self._yaml_path = Path(yaml_path)
 
     def run(self) -> BrandLinkStats:
         brands = load_brands(self._yaml_path)
-        with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+        with self._db.cursor() as cur:
             brand_id: dict[str, int] = {}
             for b in brands:
                 cur.execute(_UPSERT_BRAND, {
@@ -60,7 +60,6 @@ class BrandLinkingPass:
                 if ids:
                     cur.execute("UPDATE clinic SET brand_id = %s WHERE id = ANY(%s)", (brand_id[b["slug"]], ids))
                     linked += len(ids)
-            conn.commit()
         stats = BrandLinkStats(len(brands), linked)
         log.info("brand_link_complete", **stats.__dict__)
         return stats

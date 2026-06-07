@@ -10,10 +10,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import psycopg
 import structlog
 
-from pipeline.core.taxonomy import detect_lang, load_search_keywords, load_specialties
+from pipeline.domain.taxonomy import detect_lang, load_search_keywords, load_specialties
+from pipeline.services.seeder_base import Seeder
 
 
 _UPSERT_SQL = """
@@ -32,10 +32,9 @@ RETURNING id
 log = structlog.get_logger("pipeline.specialty_seeder")
 
 
-class SpecialtySeeder:
+class SpecialtySeeder(Seeder):
     def __init__(self, *, dsn: str, yaml_path: Path | str, keywords_path: Path | str | None = None) -> None:
-        self._dsn = dsn
-        self._yaml_path = Path(yaml_path)
+        super().__init__(dsn=dsn, yaml_path=yaml_path)
         self._keywords_path = Path(keywords_path) if keywords_path is not None else None
 
     def seed(self) -> int:
@@ -52,7 +51,7 @@ class SpecialtySeeder:
                     aliases_by_slug.setdefault(slug, []).append((lang, term.strip()))
 
         id_by_slug: dict[str, int] = {}
-        with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+        with self._db.cursor() as cur:
             for row in rows:
                 cur.execute(_UPSERT_SQL, {
                     "slug": row["slug"],
@@ -88,6 +87,5 @@ class SpecialtySeeder:
             for kw in keywords:
                 if kw["specialty"] not in known:
                     log.warning("search_keyword_unmapped", specialty=kw["specialty"], term=kw.get("term_en"))
-            conn.commit()
         log.info("specialty_seed_complete", count=len(rows))
         return len(rows)

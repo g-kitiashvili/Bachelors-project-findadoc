@@ -14,8 +14,9 @@ from collections import defaultdict
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
-import psycopg
 import structlog
+
+from pipeline.services.pass_base import Pass
 
 log = structlog.get_logger("pipeline.prominence")
 
@@ -65,12 +66,9 @@ class ProminenceStats:
     scored: int
 
 
-class ProminencePass:
-    def __init__(self, dsn: str) -> None:
-        self._dsn = dsn
-
+class ProminencePass(Pass):
     def run(self) -> ProminenceStats:
-        with psycopg.connect(self._dsn, autocommit=True) as conn, conn.cursor() as cur:
+        with self._db.cursor(autocommit=True) as cur:
             # hosts of every row merged into a canonical doctor, grouped by canonical id
             cur.execute(
                 "SELECT merged_into_id, last_source_url FROM doctor WHERE merged_into_id IS NOT NULL"

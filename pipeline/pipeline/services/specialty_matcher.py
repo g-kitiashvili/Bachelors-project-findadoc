@@ -7,17 +7,15 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-import psycopg
 import structlog
 
-from pipeline.core.taxonomy import normalize_alias
+from pipeline.domain.taxonomy import normalize_alias
+from pipeline.services.matcher_base import DEFAULT_THRESHOLD, TrigramMatcher
 
 log = structlog.get_logger("pipeline.specialty_matcher")
 
 
 _DELIMITER_RE = re.compile(r",|;|/|–|—|-| და | and ", flags=re.UNICODE)
-
-DEFAULT_THRESHOLD = 0.45
 
 _PEDIATRIC_MARKERS = ("პედიატ", "ბავშვთა", "ნეონ", "pediatr", "paediatr", "neonat", "child")
 
@@ -85,7 +83,7 @@ class MatchResult:
     score: float
 
 
-class SpecialtyMatcher:
+class SpecialtyMatcher(TrigramMatcher):
     def __init__(
         self,
         *,
@@ -93,8 +91,7 @@ class SpecialtyMatcher:
         threshold: float = DEFAULT_THRESHOLD,
         aliases: dict[str, str] | None = None,
     ) -> None:
-        self._dsn = dsn
-        self._threshold = threshold
+        super().__init__(dsn=dsn, threshold=threshold)
         self._aliases = aliases or {}
         self._slug_to_id: dict[str, int] | None = None  # lazily loaded
 
@@ -105,7 +102,7 @@ class SpecialtyMatcher:
         if slug is None:
             return None
         if self._slug_to_id is None:
-            with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+            with self._db.cursor() as cur:
                 cur.execute("SELECT slug, id FROM specialty")
                 self._slug_to_id = {s: i for s, i in cur.fetchall()}
         specialty_id = self._slug_to_id.get(slug)
@@ -130,7 +127,7 @@ class SpecialtyMatcher:
             hit = self._resolve_alias(token)
             if hit is not None:
                 return hit
-        with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+        with self._db.cursor() as cur:
             cur.execute(
                 """
                 SELECT s.id, s.slug,

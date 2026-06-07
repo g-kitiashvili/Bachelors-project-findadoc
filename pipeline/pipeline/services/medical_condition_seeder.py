@@ -4,12 +4,10 @@ slug list. Run after seed-specialties (needs specialty ids)."""
 
 from __future__ import annotations
 
-from pathlib import Path
-
-import psycopg
 import structlog
 
-from pipeline.core.taxonomy import load_conditions
+from pipeline.domain.taxonomy import load_conditions
+from pipeline.services.seeder_base import Seeder
 
 log = structlog.get_logger("pipeline.medical_condition_seeder")
 
@@ -24,14 +22,10 @@ RETURNING id
 """
 
 
-class MedicalConditionSeeder:
-    def __init__(self, *, dsn: str, yaml_path: Path | str) -> None:
-        self._dsn = dsn
-        self._yaml_path = Path(yaml_path)
-
+class MedicalConditionSeeder(Seeder):
     def seed(self) -> int:
         rows = load_conditions(self._yaml_path)
-        with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+        with self._db.cursor() as cur:
             cur.execute("SELECT slug, id FROM specialty")
             spec_id = {s: i for s, i in cur.fetchall()}
             for row in rows:
@@ -68,6 +62,5 @@ class MedicalConditionSeeder:
                             "INSERT INTO condition_synonym (condition_id, term, lang) VALUES (%s, %s, %s)",
                             (cond_id, term, lang),
                         )
-            conn.commit()
         log.info("condition_seed_complete", count=len(rows))
         return len(rows)

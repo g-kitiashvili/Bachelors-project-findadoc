@@ -9,11 +9,10 @@ every scrape job and as a standalone CLI command.
 
 from __future__ import annotations
 
-from pathlib import Path
-
-import psycopg
 import structlog
-import yaml
+
+from pipeline.domain.taxonomy import load_yaml_list
+from pipeline.services.seeder_base import Seeder
 
 
 _UPSERT_REGION_SQL = """
@@ -44,15 +43,9 @@ ON CONFLICT (slug) DO UPDATE SET
 log = structlog.get_logger("pipeline.location_seeder")
 
 
-class LocationSeeder:
-    def __init__(self, *, dsn: str, yaml_path: Path | str) -> None:
-        self._dsn = dsn
-        self._yaml_path = Path(yaml_path)
-
+class LocationSeeder(Seeder):
     def seed(self) -> int:
-        regions = yaml.safe_load(self._yaml_path.read_text(encoding="utf-8")) or []
-        if not isinstance(regions, list):
-            raise ValueError(f"{self._yaml_path} must contain a YAML list at the top level")
+        regions = load_yaml_list(self._yaml_path)
 
         region_params = [
             {
@@ -75,7 +68,7 @@ class LocationSeeder:
             for c in r.get("cities", [])
         ]
 
-        with psycopg.connect(self._dsn, autocommit=True) as conn, conn.cursor() as cur:
+        with self._db.cursor(autocommit=True) as cur:
             cur.executemany(_UPSERT_REGION_SQL, region_params)
             if city_params:
                 cur.executemany(_UPSERT_CITY_SQL, city_params)

@@ -11,15 +11,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
-import psycopg
 import structlog
 
-from pipeline.core.clinic_normalize import brand_prefixed, is_role_phrase, strip_sublabel
-from pipeline.core.translit import address_to_en
+from pipeline.domain.clinic_normalize import AGGREGATOR_HOSTS, brand_prefixed, is_role_phrase, strip_sublabel
+from pipeline.services.pass_base import Pass
+from pipeline.domain.translit import address_to_en
 
 log = structlog.get_logger("pipeline.clinic_pass")
 
-_AGGREGATOR_HOSTS = frozenset({"tsamali.ge", "vipmed.ge"})
 _BRAND_KA = "ავერსი"
 _BRAND_EN = "Aversi"
 
@@ -32,12 +31,9 @@ class ClinicPassStats:
     addressed: int
 
 
-class ClinicNormalizePass:
-    def __init__(self, dsn: str) -> None:
-        self._dsn = dsn
-
+class ClinicPass(Pass):
     def run(self) -> ClinicPassStats:
-        with psycopg.connect(self._dsn, autocommit=True) as conn, conn.cursor() as cur:
+        with self._db.cursor(autocommit=True) as cur:
             cur.execute(
                 "SELECT id, name_ka, name_en, address, address_en, last_source_url "
                 "FROM clinic WHERE status='ACTIVE'"
@@ -46,7 +42,7 @@ class ClinicNormalizePass:
             deactivated = renamed = addressed = 0
             for cid, name_ka, name_en, address, address_en, url in rows:
                 host = urlsplit(url or "").netloc
-                if host in _AGGREGATOR_HOSTS and is_role_phrase(name_en, name_ka):
+                if host in AGGREGATOR_HOSTS and is_role_phrase(name_en, name_ka):
                     cur.execute("UPDATE clinic SET status='INACTIVE' WHERE id=%s", (cid,))
                     deactivated += 1
                     continue
@@ -54,7 +50,9 @@ class ClinicNormalizePass:
                 if "aversiclinic.ge" in host or host == "aversi.ge":
                     new_ka = brand_prefixed(strip_sublabel(name_ka), _BRAND_KA)
                     new_en = brand_prefixed(strip_sublabel(name_en), _BRAND_EN) if name_en else name_en
-                new_address_en = address_to_en(address)
+                # Romanize the Georgian address when present; otherwise keep a source-supplied
+                # English address (romanizing a missing address would wipe it).
+                new_address_en = address_to_en(address) or address_en
                 if (new_ka, new_en, new_address_en) != (name_ka, name_en, address_en):
                     cur.execute(
                         "UPDATE clinic SET name_ka=%s, name_en=%s, address_en=%s WHERE id=%s",

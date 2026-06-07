@@ -16,12 +16,13 @@ import psycopg
 import structlog
 from psycopg.errors import UniqueViolation
 
-from pipeline.core.location_matcher import LocationMatcher
-from pipeline.core.non_providers import NonProviderList
-from pipeline.core.record import ClinicRef, DoctorRecord
-from pipeline.core.specialty_matcher import SpecialtyMatcher, infer_age_groups
-from pipeline.core.specialty_writer import maybe_deactivate, write_doctor_specialties
-from pipeline.core.translit import address_to_en, clinic_name_to_en, next_slug_candidate, slugify
+from pipeline.infra.db import Database
+from pipeline.services.location_matcher import LocationMatcher
+from pipeline.domain.non_providers import NonProviderList
+from pipeline.domain.record import ClinicRef, DoctorRecord
+from pipeline.services.specialty_matcher import SpecialtyMatcher, infer_age_groups
+from pipeline.services.specialty_writer import maybe_deactivate, write_doctor_specialties
+from pipeline.domain.translit import address_to_en, clinic_name_to_en, next_slug_candidate, slugify
 
 
 SOURCE_CITY = {
@@ -93,7 +94,7 @@ class Persister:
         location_matcher: LocationMatcher | None = None,
         non_providers: NonProviderList | None = None,
     ) -> None:
-        self._dsn = dsn
+        self._db = Database(dsn)
         self._matcher = specialty_matcher
         self._location_matcher = location_matcher
         self._non_providers = non_providers
@@ -127,7 +128,7 @@ class Persister:
                 "source_url": str(record.source_url),
             }
             try:
-                with psycopg.connect(self._dsn, autocommit=True) as conn, conn.cursor() as cur:
+                with self._db.cursor(autocommit=True) as cur:
                     cur.execute(_UPSERT_DOCTOR_SQL, params)
                     doctor_id, inserted = cur.fetchone()
                     mapped = self._write_specialties(cur, doctor_id, record)
@@ -154,7 +155,7 @@ class Persister:
             return None
         if slug in self._location_cache:
             return self._location_cache[slug]
-        with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+        with self._db.cursor() as cur:
             cur.execute("SELECT id FROM location WHERE slug = %s", (slug,))
             row = cur.fetchone()
         location_id = row[0] if row else None
@@ -172,7 +173,8 @@ class Persister:
                 "name_ka": clinic.name_ka,
                 "name_en": name_en,
                 "address": clinic.address,
-                "address_en": address_to_en(clinic.address),
+                # A source-supplied English address wins; otherwise romanize the Georgian one.
+                "address_en": clinic.address_en or address_to_en(clinic.address),
                 "phone": clinic.phone,
                 "website": str(clinic.website) if clinic.website else None,
                 "source_url": str(clinic.source_url),

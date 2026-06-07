@@ -6,8 +6,8 @@ from __future__ import annotations
 import psycopg
 import structlog
 
-from pipeline.core.non_providers import NonProviderList
-from pipeline.core.specialty_matcher import SpecialtyMatcher, tokenize
+from pipeline.domain.non_providers import NonProviderList
+from pipeline.services.specialty_matcher import SpecialtyMatcher, tokenize
 
 log = structlog.get_logger("pipeline.specialty_writer")
 

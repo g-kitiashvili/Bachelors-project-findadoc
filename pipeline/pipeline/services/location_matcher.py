@@ -6,19 +6,16 @@ strings like "თბილისი, საბურთალო" still resolve 
 
 from __future__ import annotations
 
-import psycopg
 import structlog
 
+from pipeline.services.matcher_base import DEFAULT_THRESHOLD, TrigramMatcher
 
 log = structlog.get_logger("pipeline.location_matcher")
 
-DEFAULT_THRESHOLD = 0.45
 
-
-class LocationMatcher:
+class LocationMatcher(TrigramMatcher):
     def __init__(self, *, dsn: str, threshold: float = DEFAULT_THRESHOLD) -> None:
-        self._dsn = dsn
-        self._threshold = threshold
+        super().__init__(dsn=dsn, threshold=threshold)
         self._cache: dict[str, int | None] = {}
 
     def match_city(self, city: str | None) -> int | None:
@@ -28,7 +25,7 @@ class LocationMatcher:
         if key in self._cache:
             return self._cache[key]
 
-        with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+        with self._db.cursor() as cur:
             cur.execute(
                 """
                 SELECT id FROM location

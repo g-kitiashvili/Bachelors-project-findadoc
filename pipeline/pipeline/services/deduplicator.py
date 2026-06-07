@@ -7,7 +7,9 @@ from urllib.parse import urlsplit
 import psycopg
 import structlog
 
-from pipeline.core.taxonomy import normalize_alias
+from pipeline.domain.clinic_normalize import AGGREGATOR_HOSTS
+from pipeline.services.pass_base import Pass
+from pipeline.domain.taxonomy import normalize_alias
 
 log = structlog.get_logger("pipeline.deduplicator")
 
@@ -16,10 +18,8 @@ log = structlog.get_logger("pipeline.deduplicator")
 class DedupStats:
     doctors_total: int
     doctors_merged: int
-    doctors_flagged: int
     clinics_total: int
     clinics_merged: int
-    clinics_flagged: int
 
 
 class DedupRegression(RuntimeError):
@@ -54,10 +54,6 @@ def _source(url: str | None) -> str:
     return urlsplit(url or "").netloc
 
 
-# Aggregators relist clinics that official sites own; the official record is the
-# authoritative one and wins as the merge canonical.
-_AGGREGATOR_HOSTS = frozenset({"tsamali.ge", "vipmed.ge"})
-
 _QUOTE_CHARS = str.maketrans("", "", "“”\"'„«»")
 
 # Generic facility words carry no identity: a clinic relisted as "Vivamedi" by one
@@ -78,22 +74,23 @@ def _clinic_key(name: str | None) -> str:
     return core or key
 
 
-class Deduplicator:
+class Deduplicator(Pass):
     def __init__(self, dsn: str, *, max_merge_fraction: float = 0.8) -> None:
-        self._dsn = dsn
+        super().__init__(dsn)
         self._max = max_merge_fraction
 
     def run(self) -> DedupStats:
-        with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+        # Non-autocommit: a DedupRegression raised mid-run rolls the whole pass back;
+        # a clean exit commits. Both are handled by the connection context manager.
+        with self._db.cursor() as cur:
             self._reset(cur)
-            d_total, d_merged, d_flagged = self._dedupe_doctors(cur)
+            d_total, d_merged = self._dedupe_doctors(cur)
             if d_total and d_merged / d_total > self._max:
                 raise DedupRegression("doctor", d_merged, d_total, self._max)
-            c_total, c_merged, c_flagged = self._dedupe_clinics(cur)
+            c_total, c_merged = self._dedupe_clinics(cur)
             if c_total and c_merged / c_total > self._max:
                 raise DedupRegression("clinic", c_merged, c_total, self._max)
-            conn.commit()
-        stats = DedupStats(d_total, d_merged, d_flagged, c_total, c_merged, c_flagged)
+        stats = DedupStats(d_total, d_merged, c_total, c_merged)
         log.info("dedup_complete", **stats.__dict__)
         return stats
 
@@ -103,7 +100,7 @@ class Deduplicator:
         cur.execute("UPDATE doctor SET status='ACTIVE', merged_into_id=NULL WHERE status='MERGED'")
         cur.execute("UPDATE clinic SET status='ACTIVE', merged_into_id=NULL WHERE status='MERGED'")
 
-    def _dedupe_doctors(self, cur: psycopg.Cursor) -> tuple[int, int, int]:
+    def _dedupe_doctors(self, cur: psycopg.Cursor) -> tuple[int, int]:
         cur.execute(
             "SELECT id, full_name_en, full_name_ka, last_source_url, photo_url, "
             "(bio_en IS NOT NULL OR bio_ka IS NOT NULL), location_id "
@@ -145,7 +142,7 @@ class Deduplicator:
                 for other in ids[1:]:
                     name_dsu.union(ids[0], other)
 
-        merged = flagged = 0
+        merged = 0
         for ids in name_dsu.groups().values():
             if len(ids) < 2:
                 continue
@@ -160,7 +157,7 @@ class Deduplicator:
                 if len(sub) < 2:
                     continue
                 merged += self._merge_doctor_cluster(cur, sub, meta)
-        return total, merged, flagged
+        return total, merged
 
     def _merge_doctor_cluster(self, cur: psycopg.Cursor, ids: list[int], meta: dict) -> int:
         canonical = max(ids, key=lambda i: (
@@ -193,7 +190,7 @@ class Deduplicator:
             merged += 1
         return merged
 
-    def _dedupe_clinics(self, cur: psycopg.Cursor) -> tuple[int, int, int]:
+    def _dedupe_clinics(self, cur: psycopg.Cursor) -> tuple[int, int]:
         cur.execute(
             "SELECT id, name_en, name_ka, last_source_url, phone, website, address "
             "FROM clinic WHERE status='ACTIVE'"
@@ -205,7 +202,7 @@ class Deduplicator:
             src = _source(url)
             meta[cid] = {
                 "en": _clinic_key(nen), "ka": _clinic_key(nka),
-                "src": src, "official": src not in _AGGREGATOR_HOSTS,
+                "src": src, "official": src not in AGGREGATOR_HOSTS,
                 "complete": bool(address) + bool(phone) + bool(website),
             }
         name_dsu = _DSU()
@@ -220,14 +217,14 @@ class Deduplicator:
                 for other in ids[1:]:
                     name_dsu.union(ids[0], other)
 
-        merged = flagged = 0
+        merged = 0
         for ids in name_dsu.groups().values():
             if len(ids) < 2:
                 continue
             # Same clinic name (modulo quotes/case) is one clinic, whether relisted
             # across sources or duplicated within one; the official copy is canonical.
             merged += self._merge_clinic_cluster(cur, ids, meta)
-        return total, merged, flagged
+        return total, merged
 
     def _merge_clinic_cluster(self, cur: psycopg.Cursor, ids: list[int], meta: dict) -> int:
         canonical = max(ids, key=lambda i: (meta[i]["official"], meta[i]["complete"], -i))

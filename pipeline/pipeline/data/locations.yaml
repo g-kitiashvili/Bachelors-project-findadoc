@@ -1,5 +1,7 @@
 # Region/city taxonomy for Find-a-Doc. Seeded into the `location` table by LocationSeeder.
 # Top-level entries are regions (parent_id NULL). Nested `cities` become child rows.
+# Cities are the municipality seats; the list is the country's full set so geocode
+# city-detection resolves a clinic named for any town instead of defaulting to Tbilisi.
 # Tbilisi is a self-governing city = its own region, so it has no child cities.
 
 - slug: tbilisi
@@ -20,6 +22,22 @@
       name_ka: ქობულეთი
       name_en: Kobuleti
       sort_order: 20
+    - slug: khelvachauri
+      name_ka: ხელვაჩაური
+      name_en: Khelvachauri
+      sort_order: 30
+    - slug: keda
+      name_ka: ქედა
+      name_en: Keda
+      sort_order: 40
+    - slug: shuakhevi
+      name_ka: შუახევი
+      name_en: Shuakhevi
+      sort_order: 50
+    - slug: khulo
+      name_ka: ხულო
+      name_en: Khulo
+      sort_order: 60
 
 - slug: imereti
   name_ka: იმერეთი
@@ -34,6 +52,46 @@
       name_ka: ზესტაფონი
       name_en: Zestaponi
       sort_order: 20
+    - slug: samtredia
+      name_ka: სამტრედია
+      name_en: Samtredia
+      sort_order: 30
+    - slug: chiatura
+      name_ka: ჭიათურა
+      name_en: Chiatura
+      sort_order: 40
+    - slug: tkibuli
+      name_ka: ტყიბული
+      name_en: Tkibuli
+      sort_order: 50
+    - slug: tskaltubo
+      name_ka: წყალტუბო
+      name_en: Tskaltubo
+      sort_order: 60
+    - slug: terjola
+      name_ka: თერჯოლა
+      name_en: Terjola
+      sort_order: 70
+    - slug: sachkhere
+      name_ka: საჩხერე
+      name_en: Sachkhere
+      sort_order: 80
+    - slug: kharagauli
+      name_ka: ხარაგაული
+      name_en: Kharagauli
+      sort_order: 90
+    - slug: vani
+      name_ka: ვანი
+      name_en: Vani
+      sort_order: 100
+    - slug: baghdati
+      name_ka: ბაღდათი
+      name_en: Baghdati
+      sort_order: 110
+    - slug: khoni
+      name_ka: ხონი
+      name_en: Khoni
+      sort_order: 120
 
 - slug: kakheti
   name_ka: კახეთი
@@ -48,6 +106,30 @@
       name_ka: გურჯაანი
       name_en: Gurjaani
       sort_order: 20
+    - slug: sagarejo
+      name_ka: საგარეჯო
+      name_en: Sagarejo
+      sort_order: 30
+    - slug: akhmeta
+      name_ka: ახმეტა
+      name_en: Akhmeta
+      sort_order: 40
+    - slug: kvareli
+      name_ka: ყვარელი
+      name_en: Kvareli
+      sort_order: 50
+    - slug: lagodekhi
+      name_ka: ლაგოდეხი
+      name_en: Lagodekhi
+      sort_order: 60
+    - slug: dedoplistsqaro
+      name_ka: დედოფლისწყარო
+      name_en: Dedoplistsqaro
+      sort_order: 70
+    - slug: sighnaghi
+      name_ka: სიღნაღი
+      name_en: Sighnaghi
+      sort_order: 80
 
 - slug: kvemo-kartli
   name_ka: ქვემო ქართლი
@@ -62,6 +144,26 @@
       name_ka: მარნეული
       name_en: Marneuli
       sort_order: 20
+    - slug: bolnisi
+      name_ka: ბოლნისი
+      name_en: Bolnisi
+      sort_order: 30
+    - slug: gardabani
+      name_ka: გარდაბანი
+      name_en: Gardabani
+      sort_order: 40
+    - slug: dmanisi
+      name_ka: დმანისი
+      name_en: Dmanisi
+      sort_order: 50
+    - slug: tsalka
+      name_ka: წალკა
+      name_en: Tsalka
+      sort_order: 60
+    - slug: tetritskaro
+      name_ka: თეთრიწყარო
+      name_en: Tetritskaro
+      sort_order: 70
 
 - slug: shida-kartli
   name_ka: შიდა ქართლი
@@ -72,6 +174,18 @@
       name_ka: გორი
       name_en: Gori
       sort_order: 10
+    - slug: kaspi
+      name_ka: კასპი
+      name_en: Kaspi
+      sort_order: 20
+    - slug: kareli
+      name_ka: ქარელი
+      name_en: Kareli
+      sort_order: 30
+    - slug: khashuri
+      name_ka: ხაშური
+      name_en: Khashuri
+      sort_order: 40
 
 - slug: samegrelo-zemo-svaneti
   name_ka: სამეგრელო-ზემო სვანეთი
@@ -86,6 +200,34 @@
       name_ka: ფოთი
       name_en: Poti
       sort_order: 20
+    - slug: senaki
+      name_ka: სენაკი
+      name_en: Senaki
+      sort_order: 30
+    - slug: martvili
+      name_ka: მარტვილი
+      name_en: Martvili
+      sort_order: 40
+    - slug: khobi
+      name_ka: ხობი
+      name_en: Khobi
+      sort_order: 50
+    - slug: tsalenjikha
+      name_ka: წალენჯიხა
+      name_en: Tsalenjikha
+      sort_order: 60
+    - slug: chkhorotsqu
+      name_ka: ჩხოროწყუ
+      name_en: Chkhorotsqu
+      sort_order: 70
+    - slug: abasha
+      name_ka: აბაშა
+      name_en: Abasha
+      sort_order: 80
+    - slug: mestia
+      name_ka: მესტია
+      name_en: Mestia
+      sort_order: 90
 
 - slug: guria
   name_ka: გურია
@@ -96,6 +238,14 @@
       name_ka: ოზურგეთი
       name_en: Ozurgeti
       sort_order: 10
+    - slug: lanchkhuti
+      name_ka: ლანჩხუთი
+      name_en: Lanchkhuti
+      sort_order: 20
+    - slug: chokhatauri
+      name_ka: ჩოხატაური
+      name_en: Chokhatauri
+      sort_order: 30
 
 - slug: samtskhe-javakheti
   name_ka: სამცხე-ჯავახეთი
@@ -106,6 +256,26 @@
       name_ka: ახალციხე
       name_en: Akhaltsikhe
       sort_order: 10
+    - slug: borjomi
+      name_ka: ბორჯომი
+      name_en: Borjomi
+      sort_order: 20
+    - slug: akhalkalaki
+      name_ka: ახალქალაქი
+      name_en: Akhalkalaki
+      sort_order: 30
+    - slug: aspindza
+      name_ka: ასპინძა
+      name_en: Aspindza
+      sort_order: 40
+    - slug: adigeni
+      name_ka: ადიგენი
+      name_en: Adigeni
+      sort_order: 50
+    - slug: ninotsminda
+      name_ka: ნინოწმინდა
+      name_en: Ninotsminda
+      sort_order: 60
 
 - slug: mtskheta-mtianeti
   name_ka: მცხეთა-მთიანეთი
@@ -116,6 +286,18 @@
       name_ka: მცხეთა
       name_en: Mtskheta
       sort_order: 10
+    - slug: dusheti
+      name_ka: დუშეთი
+      name_en: Dusheti
+      sort_order: 20
+    - slug: tianeti
+      name_ka: თიანეთი
+      name_en: Tianeti
+      sort_order: 30
+    - slug: kazbegi
+      name_ka: ყაზბეგი
+      name_en: Kazbegi
+      sort_order: 40
 
 - slug: racha-lechkhumi-kvemo-svaneti
   name_ka: რაჭა-ლეჩხუმი და ქვემო სვანეთი
@@ -126,6 +308,18 @@
       name_ka: ამბროლაური
       name_en: Ambrolauri
       sort_order: 10
+    - slug: oni
+      name_ka: ონი
+      name_en: Oni
+      sort_order: 20
+    - slug: tsageri
+      name_ka: ცაგერი
+      name_en: Tsageri
+      sort_order: 30
+    - slug: lentekhi
+      name_ka: ლენტეხი
+      name_en: Lentekhi
+      sort_order: 40
 
 - slug: abkhazia
   name_ka: აფხაზეთი

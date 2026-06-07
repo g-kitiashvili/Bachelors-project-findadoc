@@ -1079,7 +1079,7 @@
   sort_order: 315
   specialties: [urology, gynecology]
   synonyms_en: [bladder leakage, loss of bladder control]
-  synonyms_ka: [შარდის დაუკავებლობა, შარდის გაუვალობა]
+  synonyms_ka: [შარდის დაუკავებლობა, უნებლიე შარდვა]
 
 - slug: chronic-kidney-disease
   name_ka: თირკმლის ქრონიკული დაავადება
@@ -1906,7 +1906,7 @@
   sort_order: 640
   specialties: [plastic-surgery, surgery, traumatology]
   synonyms_en: [burns, scald]
-  synonyms_ka: [დამწვარი, ნადაგი]
+  synonyms_ka: [დამწვარი, დამწვრობა]
 
 - slug: brain-tumor
   name_ka: თავის ტვინის სიმსივნე
@@ -2194,7 +2194,7 @@
   sort_order: 676
   specialties: [genetics, pediatrics, neurology]
   synonyms_en: [trisomy 21]
-  synonyms_ka: [დაუნის დაავადება]
+  synonyms_ka: [დაუნის სინდრომი]
 
 - slug: pressure-ulcer
   name_ka: წოლითი წყლული

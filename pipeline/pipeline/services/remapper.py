@@ -8,9 +8,10 @@ from dataclasses import dataclass
 import psycopg
 import structlog
 
-from pipeline.core.non_providers import NonProviderList
-from pipeline.core.specialty_matcher import SpecialtyMatcher
-from pipeline.core.specialty_writer import maybe_deactivate, write_doctor_specialties
+from pipeline.infra.db import Database
+from pipeline.domain.non_providers import NonProviderList
+from pipeline.services.specialty_matcher import SpecialtyMatcher
+from pipeline.services.specialty_writer import maybe_deactivate, write_doctor_specialties
 
 log = structlog.get_logger("pipeline.remapper")
 
@@ -48,12 +49,12 @@ class Remapper:
         matcher: SpecialtyMatcher,
         non_providers: NonProviderList | None = None,
     ) -> None:
-        self._dsn = dsn
+        self._db = Database(dsn)
         self._matcher = matcher
         self._non_providers = non_providers
 
     def remap_all(self) -> RemapStats:
-        with psycopg.connect(self._dsn) as conn, conn.cursor() as cur:
+        with self._db.cursor() as cur:
             mapped_before = _count_mapped(cur)
             cur.execute("SELECT id, specialty_ka, specialty_en FROM doctor")
             rows = cur.fetchall()
@@ -71,6 +72,5 @@ class Remapper:
             if mapped_after < mapped_before:
                 log.error("remap_regression", **stats.__dict__)
                 raise RemapRegression(stats)
-            conn.commit()
         log.info("remap_complete", **stats.__dict__)
         return stats

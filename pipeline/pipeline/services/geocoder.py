@@ -18,10 +18,11 @@ import re
 from dataclasses import dataclass
 from urllib.parse import urlencode
 
-import psycopg
 import structlog
 
-from pipeline.core.fetcher import FetchError, HttpxFetcher
+from pipeline.domain.translit import address_to_en
+from pipeline.infra.fetcher import FetchError, Fetcher, HttpxFetcher
+from pipeline.services.pass_base import Pass
 
 log = structlog.get_logger("pipeline.geocoder")
 
@@ -30,7 +31,7 @@ _DEFAULT_CITY = ("თბილისი", "Tbilisi")
 
 
 class Geocoder:
-    def __init__(self, fetcher=None) -> None:
+    def __init__(self, fetcher: Fetcher | None = None) -> None:
         self.fetcher = fetcher or HttpxFetcher(rate_per_sec=1.0)
 
     def geocode(self, query: str) -> tuple[float, float] | None:
@@ -74,6 +75,10 @@ _UNIT_NOISE = re.compile(
     r"\s*(ნაკვეთ|სართულ|მე-?\d+\s*სართ|ბინა|კორპუს|შენობა|პოდიეზდ|კონსულტაცი|ფასი)\S*.*$"
 )
 _NUM_MARKER = re.compile(r"[#№N]\s*(?=\d)")
+# Addresses join a branch label or a second branch onto the street with a pipe/bullet/semicolon;
+# split on those (and commas) so the geocodable street segment can be picked out on its own.
+_SEGMENT_SPLIT = re.compile(r"[,;|•●]")
+_LEADING_POSTAL = re.compile(r"^\s*\d{4}\s+(?=\D)")  # "0144 წინანდლის ..." -> drop the postal code
 
 
 def clean_address(address: str) -> str:
@@ -96,36 +101,127 @@ def street_core(address: str) -> str:
     Picks the comma-segment that names a street (else the first with a digit), drops a
     leading district and trailing plot/floor noise, and cleans it. "დიღომი, ლუბლიანას ქ. 5"
     -> "ლუბლიანას ქუჩა 5"; "აღმაშენებლის ხეივანი N234, ნაკვეთი 14/470" -> "აღმაშენებლის ხეივანი 234"."""
-    segments = [s.strip() for s in address.split(",") if s.strip()]
+    segments = [s.strip() for s in _SEGMENT_SPLIT.split(address) if s.strip()]
     if not segments:
         return clean_address(address)
     chosen = next((s for s in segments if any(t in s for t in _STREET_TYPES)), None)
     if chosen is None:
         chosen = next((s for s in segments if re.search(r"\d", s)), segments[0])
+    chosen = _LEADING_POSTAL.sub("", chosen)
     return clean_address(_UNIT_NOISE.sub("", chosen))
 
 
-def _names_a_city(name: str, blob: str) -> bool:
-    """True if `name` appears in `blob` at a word start (not mid-word).
+# A handful of high-traffic medical streets are written colloquially in the source with a
+# vowel dropped from the genitive, but OSM keeps the full form, so the bare Georgian query
+# misses (e.g. "წინანდლის" vs OSM's "წინანდალის"; "გუდამაყრის" vs "გუდამაყარის"). Restore it.
+_SPELLING_FIXES = (("წინანდლის", "წინანდალის"), ("გუდამაყრის", "გუდამაყარის"))
 
-    Word-start (not bare substring) matching keeps Georgian genitive forms working —
-    the city name is a prefix of the inflected word, so trailing letters are fine
-    ("ფოთის" still matches "ფოთი") — while rejecting mid-word collisions where a short
-    city name is buried inside an unrelated word ("Gori" inside "Didgori", "Ingoroqva")."""
-    if not name:
+
+def fix_street_spelling(address: str) -> str:
+    for wrong, right in _SPELLING_FIXES:
+        address = address.replace(wrong, right)
+    return address
+
+
+_STREET_TYPE_RE = re.compile(r"ქუჩა|გამზირი|ხეივანი|ჩიხი|გზატკეცილი|შესახვევი")
+_GEORGIAN_WORD = re.compile(r"^[ა-ჰ]+$")
+
+
+def drop_leading_given_name(street: str) -> str:
+    """Drop a leading given-name word from a person-named street ("შოთა რუსთაველის ქუჩა 68"
+    -> "რუსთაველის ქუჩა 68"): OSM indexes such streets by the surname alone. Only fires when a
+    surname word and a street-type word still follow, so a bare "<surname> ქუჩა <no>" is kept."""
+    parts = street.split()
+    if (
+        len(parts) >= 3
+        and _GEORGIAN_WORD.match(parts[0])
+        and _GEORGIAN_WORD.match(parts[1])
+        and not _STREET_TYPE_RE.fullmatch(parts[1])
+        and _STREET_TYPE_RE.search(street)
+    ):
+        return " ".join(parts[1:])
+    return street
+
+
+def geocode_queries(
+    address: str | None,
+    address_en: str | None,
+    city_ka: str,
+    city_en: str,
+) -> list[str]:
+    """Ordered, de-duplicated "<place>, <city>" queries for one clinic, best match first.
+
+    Georgian candidates run first (most precise when OSM carries the Georgian name); a
+    source-supplied English address and then romanized variants follow, because Nominatim
+    matches Latin street names more loosely and resolves addresses whose Georgian spelling
+    just misses (the clinic's own street, only off by a vowel or a missing street-type word)."""
+    out: list[str] = []
+    seen: set[str] = set()
+
+    def add(place: str | None, city: str) -> None:
+        place = (place or "").strip()
+        if not place:
+            return
+        query = f"{place}, {city}"
+        if query not in seen:
+            seen.add(query)
+            out.append(query)
+
+    core = street_core(address) if address else ""
+    bare = drop_leading_given_name(core) if core else ""
+    if address:
+        for place in (clean_address(address), address, core, bare):
+            add(fix_street_spelling(place), city_ka)
+    if address_en:
+        # The raw form first, then a cleaned core (drops a leading "<city>," and the №/N marker
+        # that Nominatim chokes on, e.g. "Batumi, Selim Khimshiashvili St. N 20").
+        add(address_en, city_en)
+        add(street_core(address_en), city_en)
+    if address:
+        for place in (core, bare, clean_address(address)):
+            add(address_to_en(place), city_en)
+    return out
+
+
+_VOWELS = "აეიოუ"
+
+
+def _declined_forms(name: str) -> set[str]:
+    """The Georgian surface forms a city name takes in addresses: nominative, genitive,
+    and the "in <city>" locative. A vowel-final name drops the vowel before the genitive
+    -ის (ახმეტა -> ახმეტის) and the locative -ში (ბათუმი -> ბათუმში), which a plain prefix
+    match can't follow; spelling them out lets each whole form be matched at a word boundary."""
+    stem = name[:-1] if name[-1:] in _VOWELS else name
+    return {name, stem + "ის", stem + "ში", name + "ში", name + "ს"}
+
+
+def _names_city_ka(name_ka: str, blob: str) -> bool:
+    # Match each declined form as a whole word; the trailing boundary stops a short stem from
+    # matching inside an unrelated word ("გორ" of Gori inside "გორგასლის").
+    if not name_ka:
         return False
-    return re.search(rf"(?<!\w){re.escape(name)}", blob) is not None
+    return any(
+        re.search(rf"(?<!\w){re.escape(form)}(?!\w)", blob) is not None
+        for form in _declined_forms(name_ka)
+    )
+
+
+def _names_city_en(name_en: str, blob: str) -> bool:
+    # English place names don't decline; a word-start match is enough and avoids the mid-word
+    # collisions the declension matcher already guards against ("Gori" inside "Didgori").
+    return re.search(rf"(?<!\w){re.escape(name_en)}", blob) is not None
 
 
 def detect_city(blob: str, cities: list[tuple[str, str]]) -> tuple[str, str]:
     """Return the (name_ka, name_en) of the first known city found in `blob`, else Tbilisi.
 
     `cities` must be sorted longest-first so a specific name wins over a shorter one that
-    is a prefix of it. Matching is word-start anchored (see `_names_a_city`) so genitive
-    forms still match but mid-word substrings (e.g. "Gori" in "Didgori") do not."""
+    is a prefix of it. Georgian names match their declined forms and English names match
+    at a word start, so genitive/locative forms still resolve but mid-word substrings
+    (e.g. "Gori" in "Didgori") do not."""
     low = blob.lower()
     for name_ka, name_en in cities:
-        if _names_a_city((name_ka or "").lower(), low) or _names_a_city((name_en or "").lower(), low):
+        if _names_city_ka(name_ka, blob) or _names_city_en((name_en or "").lower(), low):
             return name_ka, name_en
     return _DEFAULT_CITY
 
@@ -137,15 +233,15 @@ class GeocodeStats:
     failed: int
 
 
-class GeocodeClinicsPass:
+class GeocodeClinicsPass(Pass):
     def __init__(self, dsn: str, *, geocoder: Geocoder | None = None) -> None:
-        self._dsn = dsn
+        super().__init__(dsn)
         self._geocoder = geocoder or Geocoder()
 
     def run(self, limit: int | None = None, *, overwrite: bool = False) -> GeocodeStats:
         """Geocode clinics. By default only fills clinics with no location yet; pass
         overwrite=True to re-geocode every active clinic (used to correct bad placements)."""
-        with psycopg.connect(self._dsn, autocommit=True) as conn, conn.cursor() as cur:
+        with self._db.cursor(autocommit=True) as cur:
             # Known Georgian city/region names (>=4 chars to avoid short-substring false
             # matches), longest first so the most specific name wins. The 4-char floor is
             # deliberate: the shortest real city names are ფოთი (Poti) and გორი (Gori), so
@@ -166,19 +262,10 @@ class GeocodeClinicsPass:
                 blob = " ".join(t for t in (name_ka, name_en, address, address_en) if t)
                 city_ka, city_en = detect_city(blob, cities)
                 coords = None
-                if address:
-                    # ordered KA candidates: cleaned full, raw, then the street-only core
-                    # (strips leading district / trailing plot+floor that Nominatim chokes on)
-                    seen_q: set[str] = set()
-                    for q in (clean_address(address), address, street_core(address)):
-                        if not q or q in seen_q:
-                            continue
-                        seen_q.add(q)
-                        coords = self._geocoder.geocode(f"{q}, {city_ka}")
-                        if coords is not None:
-                            break
-                if coords is None and address_en:
-                    coords = self._geocoder.geocode(f"{address_en}, {city_en}")
+                for query in geocode_queries(address, address_en, city_ka, city_en):
+                    coords = self._geocoder.geocode(query)
+                    if coords is not None:
+                        break
                 # No precise street-level match -> leave location NULL. We deliberately do
                 # NOT fall back to the city centroid: that collapsed every unresolved
                 # Tbilisi clinic onto one point (Freedom Square), littering the map with

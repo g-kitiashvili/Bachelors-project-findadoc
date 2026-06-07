@@ -219,7 +219,7 @@
 - slug: radiology
   name_ka: რადიოლოგია
   name_en: Radiology
-  aliases: [რენტგენოლოგი, რენტგენის ტექნიკოსი]
+  aliases: [რენტგენოლოგი, რენტგენოლოგიური, რენტგენი, რენტგენის ტექნიკოსი]
   sort_order: 290
 
 - slug: pathology
