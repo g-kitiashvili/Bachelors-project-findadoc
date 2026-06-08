@@ -10,7 +10,6 @@ def test_default_settings_pick_up_database_url(monkeypatch):
     assert s.pipeline_scheduler_cron == "0 3 * * *"
     assert s.pipeline_timezone == "Asia/Tbilisi"
     assert s.pipeline_log_level == "INFO"
-    assert s.pipeline_playwright_headless is True
 
 
 def test_settings_missing_database_url_raises(monkeypatch):
@@ -22,7 +21,5 @@ def test_settings_missing_database_url_raises(monkeypatch):
 def test_settings_overrides_via_env(monkeypatch):
     monkeypatch.setenv("DATABASE_URL", "postgresql://u:p@h:5432/d")
     monkeypatch.setenv("PIPELINE_RATE_PER_SEC", "0.25")
-    monkeypatch.setenv("PIPELINE_PLAYWRIGHT_HEADLESS", "false")
     s = Settings()
     assert s.pipeline_rate_per_sec == 0.25
-    assert s.pipeline_playwright_headless is False

@@ -3,7 +3,7 @@ from __future__ import annotations
 import psycopg
 import pytest
 
-from pipeline.core.geocoder import GeocodeClinicsPass, Geocoder
+from pipeline.services.geocoder import GeocodeClinicsPass, Geocoder
 
 
 class _FakeFetcher:

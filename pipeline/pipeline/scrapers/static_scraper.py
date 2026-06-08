@@ -14,15 +14,15 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
-from pipeline.core.fetcher import HttpxFetcher
-from pipeline.core.record import DoctorRecord
+from pipeline.infra.fetcher import Fetcher, HttpxFetcher
+from pipeline.domain.record import DoctorRecord
 
 
 class StaticHtmlScraper(ABC):
     name: str
     profile_link_selector: str
 
-    def __init__(self, fetcher=None, *, rate_per_sec: float = 1.0) -> None:
+    def __init__(self, fetcher: Fetcher | None = None, *, rate_per_sec: float = 1.0) -> None:
         self.fetcher = fetcher or HttpxFetcher(rate_per_sec=rate_per_sec)
 
     @abstractmethod

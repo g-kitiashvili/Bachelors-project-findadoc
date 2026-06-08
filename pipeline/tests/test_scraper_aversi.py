@@ -10,7 +10,7 @@ from urllib.parse import parse_qs, urlsplit, urlunsplit
 
 import pytest
 
-from pipeline.core.fetcher import FetchError
+from pipeline.infra.fetcher import FetchError
 from pipeline.scrapers.aversi import AversiScraper
 
 

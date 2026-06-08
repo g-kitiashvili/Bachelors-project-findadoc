@@ -1,6 +1,6 @@
 import pytest
 from pydantic import ValidationError
-from pipeline.core.record import DoctorRecord
+from pipeline.domain.record import DoctorRecord
 
 
 def _kwargs(**overrides):

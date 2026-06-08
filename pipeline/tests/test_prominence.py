@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pipeline.core.prominence import _host, prominence_score
+from pipeline.services.prominence import _host, prominence_score
 
 
 def _full(**over):

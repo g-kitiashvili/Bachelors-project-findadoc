@@ -12,9 +12,9 @@ from urllib.parse import quote, urljoin
 
 from bs4 import BeautifulSoup
 
-from pipeline.core.record import ClinicRef, DoctorRecord
-from pipeline.core.registry import register
-from pipeline.core.static_scraper import StaticHtmlScraper
+from pipeline.domain.record import ClinicRef, DoctorRecord
+from pipeline.scrapers.registry import register
+from pipeline.scrapers.static_scraper import StaticHtmlScraper
 
 _PAGE_RE = re.compile(r"[?&]page=(\d+)")
 

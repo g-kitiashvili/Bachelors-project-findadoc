@@ -22,11 +22,11 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
-from pipeline.core.fetcher import FetchError
-from pipeline.core.record import DoctorRecord
-from pipeline.core.registry import register
-from pipeline.core.static_scraper import StaticHtmlScraper
-from pipeline.core.translit import english_or_none
+from pipeline.infra.fetcher import FetchError
+from pipeline.domain.record import DoctorRecord
+from pipeline.scrapers.registry import register
+from pipeline.scrapers.static_scraper import StaticHtmlScraper
+from pipeline.domain.translit import english_or_none
 
 
 _BASE = "https://vipmed.ge"
@@ -55,10 +55,9 @@ class VipmedScraper(StaticHtmlScraper):
         self._photo_by_url: dict[str, str] = {}
 
     def _roster_urls(self) -> Iterator[str]:
-        page = 1
-        while True:
+        # Hard cap as a backstop; discover() stops earlier on an empty or 4xx page.
+        for page in range(1, 200):
             yield _ROSTER if page == 1 else f"{_BASE}/doctors/page/{page}/"
-            page += 1
 
     def index_urls(self) -> Iterable[str]:
         return self._roster_urls()
@@ -66,7 +65,11 @@ class VipmedScraper(StaticHtmlScraper):
     def discover(self) -> Iterator[str]:
         seen: set[str] = set()
         for roster_url in self._roster_urls():
-            soup = BeautifulSoup(self.fetcher.get(roster_url), "lxml")
+            try:
+                html = self.fetcher.get(roster_url)
+            except FetchError:
+                break  # the site 400/404s pages past the last one - that's the end of the roster
+            soup = BeautifulSoup(html, "lxml")
             new_on_page = 0
             for item in soup.select("div.team-item"):
                 link = item.select_one("h3.team-title a[href]")

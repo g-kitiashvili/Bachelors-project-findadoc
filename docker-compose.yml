@@ -32,6 +32,12 @@ services:
         condition: service_healthy
     ports:
       - "${API_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
     restart: unless-stopped
 
   web:
@@ -51,11 +57,16 @@ services:
     build:
       context: ./pipeline
       dockerfile: Dockerfile
-    command: python -m pipeline scheduler
+    # On startup: do a full populate (seed + scrape all + dedup/geocode/brands/prominence),
+    # then hand off to the nightly scheduler. `;` so a partial scrape still leaves the
+    # scheduler running. Waits for the API so the schema exists before seeding.
+    command: sh -c "python -m pipeline run --all; python -m pipeline scheduler"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-findadoc}:${POSTGRES_PASSWORD:-findadoc}@postgres:5432/${POSTGRES_DB:-findadoc}
     depends_on:
       postgres:
+        condition: service_healthy
+      api:
         condition: service_healthy
     restart: unless-stopped
 

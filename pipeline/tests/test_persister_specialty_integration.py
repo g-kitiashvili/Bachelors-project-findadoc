@@ -3,10 +3,10 @@ from __future__ import annotations
 import psycopg
 import pytest
 
-from pipeline.core.persister import Persister
-from pipeline.core.record import DoctorRecord
-from pipeline.core.specialty_matcher import SpecialtyMatcher
-from pipeline.core.translit import normalize
+from pipeline.services.persister import Persister
+from pipeline.domain.record import DoctorRecord
+from pipeline.services.specialty_matcher import SpecialtyMatcher
+from pipeline.domain.translit import normalize
 
 
 @pytest.fixture()
@@ -125,8 +125,8 @@ def test_first_token_unmapped_still_marks_a_primary(persister_db: str) -> None:
         assert cur.fetchone() == ("cardiology", True)
 
 
-from pipeline.core.non_providers import NonProviderList, _Rule
-from pipeline.core.taxonomy import normalize_alias
+from pipeline.domain.non_providers import NonProviderList, _Rule
+from pipeline.domain.taxonomy import normalize_alias
 
 
 def test_alias_maps_doctor_to_specialty(persister_db: str) -> None:

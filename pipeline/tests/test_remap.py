@@ -3,10 +3,10 @@ from __future__ import annotations
 import psycopg
 import pytest
 
-from pipeline.core.non_providers import NonProviderList, _Rule
-from pipeline.core.remapper import Remapper
-from pipeline.core.specialty_matcher import SpecialtyMatcher
-from pipeline.core.taxonomy import normalize_alias
+from pipeline.domain.non_providers import NonProviderList, _Rule
+from pipeline.services.remapper import Remapper
+from pipeline.services.specialty_matcher import SpecialtyMatcher
+from pipeline.domain.taxonomy import normalize_alias
 
 
 @pytest.fixture()
@@ -70,7 +70,7 @@ def test_remap_reactivates_mappable_doctor(remap_db: str) -> None:
 
 
 def test_remap_rolls_back_on_regression(remap_db: str) -> None:
-    from pipeline.core.remapper import RemapRegression
+    from pipeline.services.remapper import RemapRegression
 
     with psycopg.connect(remap_db, autocommit=True) as conn, conn.cursor() as cur:
         cur.execute(

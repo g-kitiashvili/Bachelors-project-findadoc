@@ -3,7 +3,7 @@ from __future__ import annotations
 import psycopg
 import pytest
 
-from pipeline.core.clinic_pass import ClinicNormalizePass
+from pipeline.services.clinic_pass import ClinicPass
 
 pytestmark = pytest.mark.slow
 
@@ -28,7 +28,7 @@ def test_prefixes_aversi_branch_and_romanizes_address(clinic_pass_db):
     with psycopg.connect(clinic_pass_db, autocommit=True) as conn, conn.cursor() as cur:
         _insert(cur, "central", "ცენტრალური ფილიალი | ლაბორატორია", "Central Branch",
                 "https://dashboard.aversiclinic.ge/branch/5", address="ვაჟა-ფშაველას გამზ. 27")
-    ClinicNormalizePass(clinic_pass_db).run()
+    ClinicPass(clinic_pass_db).run()
     with psycopg.connect(clinic_pass_db) as conn, conn.cursor() as cur:
         cur.execute("SELECT name_ka, name_en, address_en FROM clinic WHERE slug='central'")
         ka, en, addr_en = cur.fetchone()
@@ -42,7 +42,7 @@ def test_deactivates_vipmed_role_phrase_keeps_real_clinic(clinic_pass_db):
         _insert(cur, "role", "ავერსის კლინიკის ექიმი",
                 "Oncologist of the Central Branch of Aversi Clinic", "https://vipmed.ge/clinic/x")
         _insert(cur, "real", "თოდუას კლინიკა", "Todua Clinic", "https://vipmed.ge/clinic/todua")
-    ClinicNormalizePass(clinic_pass_db).run()
+    ClinicPass(clinic_pass_db).run()
     with psycopg.connect(clinic_pass_db) as conn, conn.cursor() as cur:
         cur.execute("SELECT status FROM clinic WHERE slug='role'")
         assert cur.fetchone()[0] == "INACTIVE"
@@ -54,7 +54,7 @@ def test_does_not_deactivate_official_clinic(clinic_pass_db):
     # is_role_phrase is only applied to aggregator hosts; an official name is never dropped.
     with psycopg.connect(clinic_pass_db, autocommit=True) as conn, conn.cursor() as cur:
         _insert(cur, "evex", "ევექსი", "Evex Vaja-Pshavela Clinic", "https://admin.evex.ge/c/1")
-    ClinicNormalizePass(clinic_pass_db).run()
+    ClinicPass(clinic_pass_db).run()
     with psycopg.connect(clinic_pass_db) as conn, conn.cursor() as cur:
         cur.execute("SELECT status FROM clinic WHERE slug='evex'")
         assert cur.fetchone()[0] == "ACTIVE"

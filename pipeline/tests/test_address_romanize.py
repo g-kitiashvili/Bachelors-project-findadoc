@@ -1,6 +1,6 @@
 import pytest
 
-from pipeline.core.translit import address_to_en
+from pipeline.domain.translit import address_to_en
 
 
 class TestAddressToEn:

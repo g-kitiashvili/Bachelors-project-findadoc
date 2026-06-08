@@ -5,10 +5,10 @@ from __future__ import annotations
 import json
 from collections.abc import Iterator
 
-from pipeline.core.fetcher import HttpxFetcher
-from pipeline.core.record import ClinicRef, DoctorRecord
-from pipeline.core.registry import register
-from pipeline.core.translit import english_or_none
+from pipeline.infra.fetcher import HttpxFetcher
+from pipeline.domain.record import ClinicRef, DoctorRecord
+from pipeline.scrapers.registry import register
+from pipeline.domain.translit import english_or_none
 
 
 _API = "https://admin.evex.ge/api"
@@ -36,9 +36,21 @@ def _clinics(doctor: dict) -> tuple[ClinicRef, ...]:
             continue
         seen.add(source_url)
         address = ((c.get("address") or {}).get("ka") or "").strip() or None
+        # Some branches (e.g. Batumi) carry only the English address; keep it so the clinic
+        # still has a geocodable street instead of falling back to romanizing a missing one.
+        address_en = english_or_none((c.get("address") or {}).get("en"))
         phone = (c.get("phone") or "").strip() or None
         name_en = english_or_none((c.get("title") or {}).get("en"))
-        clinics.append(ClinicRef(source_url=source_url, name_ka=name, name_en=name_en, address=address, phone=phone))
+        clinics.append(
+            ClinicRef(
+                source_url=source_url,
+                name_ka=name,
+                name_en=name_en,
+                address=address,
+                address_en=address_en,
+                phone=phone,
+            )
+        )
     return tuple(clinics)
 
 

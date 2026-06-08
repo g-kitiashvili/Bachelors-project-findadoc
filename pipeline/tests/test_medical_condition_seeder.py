@@ -3,7 +3,7 @@ from __future__ import annotations
 import psycopg
 import pytest
 
-from pipeline.core.medical_condition_seeder import MedicalConditionSeeder
+from pipeline.services.medical_condition_seeder import MedicalConditionSeeder
 
 
 pytestmark = pytest.mark.slow

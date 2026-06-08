@@ -5,8 +5,8 @@ from pathlib import Path
 import psycopg
 import pytest
 
-from pipeline.core.location_matcher import LocationMatcher
-from pipeline.core.location_seeder import LocationSeeder
+from pipeline.services.location_matcher import LocationMatcher
+from pipeline.services.location_seeder import LocationSeeder
 
 
 pytestmark = pytest.mark.slow

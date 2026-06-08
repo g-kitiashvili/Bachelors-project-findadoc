@@ -1,28 +1,29 @@
 """Runner — orchestrates one scrape cycle per source.
 
-Each scraper carries its own `fetcher` attribute (HttpxFetcher or
-PlaywrightFetcher chosen by the scraper at construction); the Runner reads
-`scraper.fetcher.get(url)` per profile URL.
+Each scraper carries its own `fetcher` attribute (an HttpxFetcher); the Runner
+reads `scraper.fetcher.get(url)` per profile URL.
 """
 
 from __future__ import annotations
 
 import time
 import uuid
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import structlog
 
-from pipeline.core.fetcher import FetchError
-from pipeline.core.persister import Persister
-from pipeline.core.registry import SCRAPERS, get_scraper
-from pipeline.core.translit import normalize
+from pipeline.infra.fetcher import FetchError
+from pipeline.services.persister import Persister
+from pipeline.scrapers.registry import SCRAPERS, get_scraper
+from pipeline.domain.translit import normalize
 
 if TYPE_CHECKING:
-    from pipeline.core.deduplicator import Deduplicator
-    from pipeline.core.location_seeder import LocationSeeder
-    from pipeline.core.specialty_seeder import SpecialtySeeder
+    from collections.abc import Callable, Iterator, Sequence
+
+    from pipeline.services.pass_base import Pass
+    from pipeline.services.seeder_base import Seeder
 
 
 log = structlog.get_logger("pipeline.runner")
@@ -47,26 +48,30 @@ class Runner:
         self,
         *,
         persister: Persister,
-        specialty_seeder: "SpecialtySeeder | None" = None,
-        location_seeder: "LocationSeeder | None" = None,
-        deduplicator: "Deduplicator | None" = None,
+        seeders: "Sequence[Seeder]" = (),
+        post_passes: "Sequence[Pass]" = (),
+        persister_factory: "Callable[[], Persister] | None" = None,
+        scrape_workers: int = 1,
     ) -> None:
         self._persister = persister
-        self._specialty_seeder = specialty_seeder
-        self._location_seeder = location_seeder
-        self._deduplicator = deduplicator
+        self._seeders = seeders
+        self._post_passes = post_passes
+        # A fresh persister per worker avoids races on the shared matcher/location caches.
+        # scrape_workers: 0 = one thread per source, 1 = sequential, N = cap at N.
+        self._persister_factory = persister_factory
+        self._scrape_workers = scrape_workers
         self._seeded = False
 
     def _ensure_seeded(self) -> None:
+        # Seeders run once, in the order supplied (conditions resolve onto specialties,
+        # so specialties must seed before conditions).
         if self._seeded:
             return
-        if self._location_seeder is not None:
-            self._location_seeder.seed()
-        if self._specialty_seeder is not None:
-            self._specialty_seeder.seed()
+        for seeder in self._seeders:
+            seeder.seed()
         self._seeded = True
 
-    def _scrape_source(self, name: str) -> SourceSummary:
+    def _scrape_source(self, name: str, persister: Persister) -> SourceSummary:
         scraper = get_scraper(name)
         summary = SourceSummary(source=name)
         bound = log.bind(cycle_id=summary.cycle_id, source=name)
@@ -77,7 +82,16 @@ class Runner:
         EXTRACT_SKIP_THRESHOLD = 0.2
         MIN_ATTEMPTS_FOR_BREAKER = 10
 
-        for url in scraper.discover():
+        def discovered_urls() -> Iterator[str]:
+            # A failure inside discover() (e.g. a roster page 4xx) aborts THIS source,
+            # not the whole run; URLs already yielded before the failure are kept.
+            try:
+                yield from scraper.discover()
+            except Exception as e:  # noqa: BLE001
+                summary.aborted_reason = "discover_failed"
+                bound.error("discover_failed", error=str(e))
+
+        for url in discovered_urls():
             summary.discovered += 1
             url_log = bound.bind(url=url)
 
@@ -128,7 +142,7 @@ class Runner:
             record = normalize(record)
 
             try:
-                action = self._persister.upsert(record)
+                action = persister.upsert(record)
             except Exception as e:  # noqa: BLE001
                 summary.errors += 1
                 url_log.error("upsert_failed", error=str(e))
@@ -156,16 +170,36 @@ class Runner:
 
     def run_source(self, name: str) -> SourceSummary:
         self._ensure_seeded()
-        summary = self._scrape_source(name)
+        summary = self._scrape_source(name, self._persister)
         self._finalize()
         return summary
 
     def run_all(self) -> dict[str, SourceSummary]:
         self._ensure_seeded()
-        summaries = {name: self._scrape_source(name) for name in list(SCRAPERS)}
+        names = list(SCRAPERS)
+        # 0 (default) = one thread per source; otherwise cap at the configured count.
+        workers = len(names) if self._scrape_workers <= 0 else self._scrape_workers
+        if workers > 1 and len(names) > 1 and self._persister_factory is not None:
+            summaries = self._scrape_concurrently(names, workers)
+        else:
+            summaries = {name: self._scrape_source(name, self._persister) for name in names}
         self._finalize()
         return summaries
 
+    def _scrape_concurrently(self, names: list[str], workers: int) -> dict[str, SourceSummary]:
+        # One source per worker, each with its own persister (fresh matcher/location
+        # caches), so the shared mutable state that the sequential path relies on can't race.
+        factory = self._persister_factory
+        assert factory is not None
+        summaries: dict[str, SourceSummary] = {}
+        with ThreadPoolExecutor(max_workers=min(workers, len(names))) as pool:
+            futures = {pool.submit(self._scrape_source, name, factory()): name for name in names}
+            for future in as_completed(futures):
+                summaries[futures[future]] = future.result()
+        return summaries
+
     def _finalize(self) -> None:
-        if self._deduplicator is not None:
-            self._deduplicator.run()
+        # Post-scrape passes run in the order supplied (dependency order: dedup first,
+        # since brands + prominence read its merge clusters; then geocode, brands, prominence).
+        for post_pass in self._post_passes:
+            post_pass.run()

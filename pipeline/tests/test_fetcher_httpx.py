@@ -3,7 +3,7 @@ import time
 import httpx
 import pytest
 
-from pipeline.core.fetcher import HttpxFetcher, FetchError
+from pipeline.infra.fetcher import HttpxFetcher, FetchError
 
 CHROME_UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "

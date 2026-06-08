@@ -1,4 +1,4 @@
-from pipeline.core.specialty_matcher import tokenize
+from pipeline.services.specialty_matcher import tokenize
 
 
 def test_tokenize_single_token_returns_one_element() -> None:

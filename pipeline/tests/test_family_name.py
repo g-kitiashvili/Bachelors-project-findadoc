@@ -1,4 +1,4 @@
-from pipeline.core.persister import _last_token
+from pipeline.services.persister import _last_token
 
 
 def test_last_token_returns_surname() -> None:

@@ -3,7 +3,7 @@ from __future__ import annotations
 import psycopg
 import pytest
 
-from pipeline.core.deduplicator import Deduplicator, DedupRegression
+from pipeline.services.deduplicator import Deduplicator, DedupRegression
 
 pytestmark = pytest.mark.slow
 

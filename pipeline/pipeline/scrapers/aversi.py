@@ -18,11 +18,11 @@ from __future__ import annotations
 import json
 from collections.abc import Iterator
 
-from pipeline.core.clinic_normalize import brand_prefixed, strip_sublabel
-from pipeline.core.fetcher import FetchError, HttpxFetcher
-from pipeline.core.record import ClinicRef, DoctorRecord
-from pipeline.core.registry import register
-from pipeline.core.translit import english_or_none
+from pipeline.domain.clinic_normalize import brand_prefixed, strip_sublabel
+from pipeline.infra.fetcher import FetchError, HttpxFetcher
+from pipeline.domain.record import ClinicRef, DoctorRecord
+from pipeline.scrapers.registry import register
+from pipeline.domain.translit import english_or_none
 
 
 _BRAND_KA = "ავერსი"

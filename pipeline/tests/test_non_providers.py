@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from pipeline.core.non_providers import NonProviderList, _Rule
-from pipeline.core.taxonomy import normalize_alias
+from pipeline.domain.non_providers import NonProviderList, _Rule
+from pipeline.domain.taxonomy import normalize_alias
 
 
 def test_substring_rule_matches_role_word_anywhere():

@@ -1,7 +1,7 @@
 import pytest
-from pipeline.core.translit import kartuli_to_latin, slugify, next_slug_candidate, normalize, clinic_name_to_en
-from pipeline.core.record import DoctorRecord
-from pipeline.core.translit import english_or_none
+from pipeline.domain.translit import kartuli_to_latin, slugify, next_slug_candidate, normalize, clinic_name_to_en
+from pipeline.domain.record import DoctorRecord
+from pipeline.domain.translit import english_or_none
 
 
 def test_english_or_none_passes_latin():
@@ -160,6 +160,12 @@ def test_normalize_fills_full_name_en_when_missing():
 def test_normalize_keeps_full_name_en_when_present():
     r = normalize(_record(full_name_en="Giorgi Tsintsadze"))
     assert r.full_name_en == "Giorgi Tsintsadze"
+
+
+def test_normalize_collapses_internal_double_spaces_in_names():
+    r = normalize(_record(full_name_ka="ზაზა  კაციტაძე", full_name_en="Zaza  Katsitadze"))
+    assert r.full_name_ka == "ზაზა კაციტაძე"
+    assert r.full_name_en == "Zaza Katsitadze"
 
 
 def test_normalize_sets_slug_base_from_full_name_ka():

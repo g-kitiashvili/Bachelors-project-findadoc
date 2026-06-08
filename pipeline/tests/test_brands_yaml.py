@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pipeline.core.taxonomy import load_brands
+from pipeline.domain.taxonomy import load_brands
 
 _BRANDS = Path(__file__).resolve().parent.parent / "pipeline" / "data" / "brands.yaml"
 

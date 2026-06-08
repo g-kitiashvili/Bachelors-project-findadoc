@@ -1,6 +1,6 @@
 import pytest
 
-from pipeline.core.registry import SCRAPERS, get_scraper
+from pipeline.scrapers.registry import SCRAPERS, get_scraper
 
 
 def test_registry_starts_empty_or_documented():

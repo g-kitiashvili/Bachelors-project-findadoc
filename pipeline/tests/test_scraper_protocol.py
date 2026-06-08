@@ -1,7 +1,7 @@
 from collections.abc import Iterator
 
-from pipeline.core.record import DoctorRecord
-from pipeline.core.scraper import Scraper
+from pipeline.domain.record import DoctorRecord
+from pipeline.scrapers.scraper import Scraper
 
 
 class _NoopFetcher:

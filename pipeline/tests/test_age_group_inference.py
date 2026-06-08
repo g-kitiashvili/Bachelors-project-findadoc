@@ -1,4 +1,4 @@
-from pipeline.core.specialty_matcher import infer_age_groups
+from pipeline.services.specialty_matcher import infer_age_groups
 
 
 def test_infer_age_groups_pediatrician_treats_children_only() -> None:

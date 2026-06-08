@@ -3,10 +3,10 @@ from collections.abc import Iterator
 import psycopg
 import pytest
 
-from pipeline.core.record import DoctorRecord
-from pipeline.core.runner import Runner, SourceSummary
-from pipeline.core.persister import Persister
-from pipeline.core.registry import SCRAPERS, register
+from pipeline.domain.record import DoctorRecord
+from pipeline.runner import Runner, SourceSummary
+from pipeline.services.persister import Persister
+from pipeline.scrapers.registry import SCRAPERS, register
 
 
 pytestmark = pytest.mark.slow

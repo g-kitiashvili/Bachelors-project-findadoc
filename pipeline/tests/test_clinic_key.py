@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pipeline.core.deduplicator import _clinic_key
+from pipeline.services.deduplicator import _clinic_key
 
 
 def test_qualifier_prefix_keys_same_as_bare_name():

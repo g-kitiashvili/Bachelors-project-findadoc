@@ -1,9 +1,9 @@
 import psycopg
 import pytest
 
-from pipeline.core.persister import Persister
-from pipeline.core.record import DoctorRecord
-from pipeline.core.translit import normalize
+from pipeline.services.persister import Persister
+from pipeline.domain.record import DoctorRecord
+from pipeline.domain.translit import normalize
 
 
 pytestmark = pytest.mark.slow

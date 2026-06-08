@@ -14,8 +14,6 @@ dependencies = [
     "structlog>=24.4",
     "tenacity>=9.0",
     "apscheduler>=3.10",
-    "playwright>=1.49",
-    "playwright-stealth>=1.0.6",
     "tzdata>=2024.2",
 ]
 
@@ -51,7 +49,7 @@ target-version = ["py310"]
 
 [tool.pytest.ini_options]
 markers = [
-    "slow: tests that spin up Postgres or Playwright (excluded by default)",
+    "slow: tests that spin up Postgres (excluded by default)",
 ]
 addopts = "-m 'not slow'"
 asyncio_mode = "auto"

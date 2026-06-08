@@ -1,6 +1,6 @@
 import pytest
 
-from pipeline.core.clinic_normalize import brand_prefixed, is_role_phrase, strip_sublabel
+from pipeline.domain.clinic_normalize import brand_prefixed, is_role_phrase, strip_sublabel
 
 
 class TestStripSublabel:

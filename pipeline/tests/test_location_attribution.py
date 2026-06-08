@@ -3,10 +3,10 @@ from __future__ import annotations
 import psycopg
 import pytest
 
-from pipeline.core.location_seeder import LocationSeeder
-from pipeline.core.persister import Persister
-from pipeline.core.record import DoctorRecord
-from pipeline.core.translit import normalize
+from pipeline.services.location_seeder import LocationSeeder
+from pipeline.services.persister import Persister
+from pipeline.domain.record import DoctorRecord
+from pipeline.domain.translit import normalize
 
 
 pytestmark = pytest.mark.slow
@@ -62,7 +62,7 @@ def test_unknown_source_leaves_location_null(seeded_locations: str) -> None:
 
 
 def test_per_doctor_city_overrides_source_default(seeded_locations: str) -> None:
-    from pipeline.core.location_matcher import LocationMatcher
+    from pipeline.services.location_matcher import LocationMatcher
     with psycopg.connect(seeded_locations, autocommit=True) as conn:
         conn.execute(
             "INSERT INTO location (slug, name_ka, name_en, sort_order) "

@@ -2,11 +2,11 @@ from collections.abc import Iterator
 
 import pytest
 
-from pipeline.core.fetcher import FetchError
-from pipeline.core.persister import Persister
-from pipeline.core.record import DoctorRecord
-from pipeline.core.registry import SCRAPERS, register
-from pipeline.core.runner import Runner
+from pipeline.infra.fetcher import FetchError
+from pipeline.services.persister import Persister
+from pipeline.domain.record import DoctorRecord
+from pipeline.scrapers.registry import SCRAPERS, register
+from pipeline.runner import Runner
 
 
 pytestmark = pytest.mark.slow

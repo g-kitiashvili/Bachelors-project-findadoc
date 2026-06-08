@@ -7,7 +7,7 @@ import cycles.
 
 from __future__ import annotations
 
-from pipeline.core.scraper import Scraper
+from pipeline.scrapers.scraper import Scraper
 
 
 SCRAPERS: dict[str, Scraper] = {}

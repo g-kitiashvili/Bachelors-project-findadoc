@@ -7,11 +7,11 @@ from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup
 
-from pipeline.core.fetcher import FetchError
-from pipeline.core.record import ClinicRef, DoctorRecord
-from pipeline.core.registry import register
-from pipeline.core.static_scraper import StaticHtmlScraper
-from pipeline.core.translit import english_or_none
+from pipeline.infra.fetcher import FetchError
+from pipeline.domain.record import ClinicRef, DoctorRecord
+from pipeline.scrapers.registry import register
+from pipeline.scrapers.static_scraper import StaticHtmlScraper
+from pipeline.domain.translit import english_or_none
 
 _BRAND_CLINIC = ClinicRef(source_url="https://newhospitals.ge", name_ka="ნიუ ჰოსპიტალსი", name_en="New Hospitals")
 

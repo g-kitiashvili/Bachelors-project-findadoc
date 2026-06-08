@@ -5,7 +5,7 @@ from pathlib import Path
 import psycopg
 import pytest
 
-from pipeline.core.specialty_seeder import SpecialtySeeder
+from pipeline.services.specialty_seeder import SpecialtySeeder
 
 
 pytestmark = pytest.mark.slow

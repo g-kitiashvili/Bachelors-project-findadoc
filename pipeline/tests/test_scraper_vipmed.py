@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from pipeline.core.fetcher import FetchError
+from pipeline.infra.fetcher import FetchError
 from pipeline.scrapers.vipmed import VipmedScraper, _strip_md
 
 

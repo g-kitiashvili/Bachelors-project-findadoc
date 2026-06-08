@@ -3,9 +3,9 @@ from __future__ import annotations
 import psycopg
 import pytest
 
-from pipeline.core.persister import Persister
-from pipeline.core.record import ClinicRef, DoctorRecord
-from pipeline.core.translit import normalize
+from pipeline.services.persister import Persister
+from pipeline.domain.record import ClinicRef, DoctorRecord
+from pipeline.domain.translit import normalize
 
 
 @pytest.fixture()

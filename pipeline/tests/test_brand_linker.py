@@ -3,7 +3,7 @@ from __future__ import annotations
 import psycopg
 import pytest
 
-from pipeline.core.brand_linker import BrandLinkingPass
+from pipeline.services.brand_linker import BrandLinkingPass
 
 pytestmark = pytest.mark.slow
 

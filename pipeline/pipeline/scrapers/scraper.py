@@ -5,19 +5,18 @@ from __future__ import annotations
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
-from pipeline.core.record import DoctorRecord
+from pipeline.domain.record import DoctorRecord
 
 if TYPE_CHECKING:  # avoid runtime circular import; fetcher.py is independent
-    from pipeline.core.fetcher import Fetcher
+    from pipeline.infra.fetcher import Fetcher
 
 
 @runtime_checkable
 class Scraper(Protocol):
     """Strategy-pattern interface. One implementation per source.
 
-    Each scraper carries its own `fetcher` instance (HttpxFetcher for friendly
-    sites, PlaywrightFetcher for Cloudflare-protected sites). `discover` yields
-    profile URLs (using its own fetcher for the index). `extract` parses one
+    Each scraper carries its own `fetcher` instance (an HttpxFetcher). `discover`
+    yields profile URLs (using its own fetcher for the index). `extract` parses one
     profile's HTML into a DoctorRecord, or None for unsupported pages. The
     `Runner` reads `scraper.fetcher.get(url)` to fetch each profile.
     """

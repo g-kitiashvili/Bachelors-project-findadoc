@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pipeline.core.scheduler import next_run_time
+from pipeline.infra.scheduler import next_run_time
 
 
 def test_next_run_time_after_03_00_in_tbilisi():

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from pipeline.core.taxonomy import build_alias_index, detect_lang, load_search_keywords, normalize_alias
+from pipeline.domain.taxonomy import build_alias_index, detect_lang, load_search_keywords, normalize_alias
 
 
 def test_normalize_alias_lowercases_and_collapses_whitespace():
