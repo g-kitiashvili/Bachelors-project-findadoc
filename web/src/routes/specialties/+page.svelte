@@ -4,6 +4,15 @@
   import { getLocale } from "$lib/paraglide/runtime";
 
   let { data } = $props();
+
+  let query = $state("");
+  const filtered = $derived.by(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return data.specialties;
+    return data.specialties.filter(
+      (s) => s.nameKa.toLowerCase().includes(q) || s.nameEn.toLowerCase().includes(q),
+    );
+  });
 </script>
 
 <svelte:head><title>{m.meta_specialties()}</title></svelte:head>
@@ -12,22 +21,48 @@
   <h1>{m.specialties_heading()}</h1>
   <p class="sub">{m.specialties_intro({ count: data.specialties.length })}</p>
 
-  <ul class="list">
-    {#each data.specialties as s (s.slug)}
-      <li>
-        <a href={href(`/specialties/${s.slug}`)}>
-          <span class="name">{localizedField(s.nameKa, s.nameEn, getLocale())}</span>
-          <span class="count">{s.doctorCount} {s.doctorCount === 1 ? m.noun_doctor() : m.noun_doctors()}</span>
-        </a>
-      </li>
-    {/each}
-  </ul>
+  <input
+    class="filter"
+    type="search"
+    bind:value={query}
+    placeholder={m.specialties_search_placeholder()}
+    aria-label={m.specialties_search_placeholder()} />
+
+  {#if filtered.length === 0}
+    <p class="empty">{m.search_no_matches()}</p>
+  {:else}
+    <ul class="list">
+      {#each filtered as s (s.slug)}
+        <li>
+          <a href={href(`/specialties/${s.slug}`)}>
+            <span class="name">{localizedField(s.nameKa, s.nameEn, getLocale())}</span>
+            <span class="count">{s.doctorCount} {s.doctorCount === 1 ? m.noun_doctor() : m.noun_doctors()}</span>
+          </a>
+        </li>
+      {/each}
+    </ul>
+  {/if}
 </section>
 
 <style>
   .wrap { max-width: 800px; margin: 3rem auto; padding: 0 2rem; }
   h1 { font-family: var(--display); font-size: 2.25rem; letter-spacing: -0.02em; margin: 0 0 0.5rem; }
-  .sub { color: var(--ink-muted); margin: 0 0 2rem; }
+  .sub { color: var(--ink-muted); margin: 0 0 1.5rem; }
+  .filter {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.8rem 1rem;
+    margin: 0 0 1.5rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    background: var(--surface);
+    font-size: 1rem;
+    color: var(--ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .filter::placeholder { color: var(--ink-faint); }
+  .filter:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .empty { color: var(--ink-muted); padding: 1rem 0; }
   .list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
   .list li a { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--line); color: var(--ink); transition: color 0.15s; text-decoration: none; }
   .list li a:hover { color: var(--accent); }

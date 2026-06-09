@@ -8,8 +8,8 @@
 
   // Default order is relevance while searching, otherwise the prominence rank
   // ("Recommended"). Both are the no-sort-param state; an empty `value` means default.
-  const defaultValue = $derived(hasQuery ? "relevancy" : "recommended");
-  const defaultLabel = $derived(hasQuery ? m.sort_relevancy() : m.sort_recommended());
+  const defaultValue = $derived(hasQuery ? "relevancy" : "top");
+  const defaultLabel = $derived(hasQuery ? m.sort_relevancy() : m.sort_top());
   const options = $derived([
     { value: defaultValue, label: defaultLabel },
     { value: "atoz", label: m.sort_atoz() },

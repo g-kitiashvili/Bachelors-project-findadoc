@@ -1,46 +1,40 @@
 <script lang="ts">
-  import Pagination from "$lib/components/Pagination.svelte";
   import * as m from "$lib/paraglide/messages";
   import { href, localizedField } from "$lib/i18n";
   import { getLocale } from "$lib/paraglide/runtime";
 
   let { data } = $props();
   let open = $state<Record<string, boolean>>({});
+
+  let query = $state("");
+  const filtered = $derived.by(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return data.items;
+    const hit = (ka: string, en: string) => ka.toLowerCase().includes(q) || en.toLowerCase().includes(q);
+    return data.items.filter(
+      (c) => hit(c.nameKa, c.nameEn) || (c.branches ?? []).some((b) => hit(b.nameKa, b.nameEn)),
+    );
+  });
 </script>
 
-<svelte:head>
-  <title>{data.q ? m.meta_search({ q: data.q }) : m.meta_clinics()}</title>
-</svelte:head>
+<svelte:head><title>{m.meta_clinics()}</title></svelte:head>
 
 <section class="wrap">
   <h1>{m.clinics_heading()}</h1>
   <p class="sub">{`${data.total} ${data.total === 1 ? m.noun_clinic() : m.noun_clinics()} ${m.clinics_subtitle_suffix()}`}</p>
 
-  <form method="get" action="/clinics" class="search-form">
-    <input
-      type="search"
-      name="q"
-      value={data.q}
-      placeholder={m.clinics_search_placeholder()}
-      class="search-input"
-    />
-    <button type="submit" class="search-btn">{m.search_button()}</button>
-    {#if data.q}
-      <a href={href('/clinics')} class="clear-link">{m.drawer_clear()}</a>
-    {/if}
-  </form>
+  <input
+    class="filter"
+    type="search"
+    bind:value={query}
+    placeholder={m.clinics_search_placeholder()}
+    aria-label={m.clinics_search_placeholder()} />
 
-  {#if data.items.length === 0}
-    <div class="empty">
-      {#if data.q}
-        <p>{m.clinics_no_match({ q: data.q })}</p>
-      {:else}
-        <p>{m.clinics_none()}</p>
-      {/if}
-    </div>
+  {#if filtered.length === 0}
+    <p class="empty">{data.items.length === 0 ? m.clinics_none() : m.search_no_matches()}</p>
   {:else}
     <ul class="list">
-      {#each data.items as c (c.slug)}
+      {#each filtered as c (c.slug)}
         <li>
           {#if c.branches && c.branches.length > 0}
             <button type="button" class="row brandrow" aria-expanded={open[c.slug] ?? false} onclick={() => (open[c.slug] = !open[c.slug])}>
@@ -64,41 +58,27 @@
       {/each}
     </ul>
   {/if}
-
-  <Pagination page={data.page} pageSize={data.pageSize} total={data.total} />
 </section>
 
 <style>
   .wrap { max-width: 800px; margin: 3rem auto; padding: 0 2rem; }
   h1 { font-family: var(--display); font-size: 2.25rem; letter-spacing: -0.02em; margin: 0 0 0.5rem; }
-  .sub { color: var(--ink-muted); margin: 0 0 1.75rem; }
+  .sub { color: var(--ink-muted); margin: 0 0 1.5rem; }
 
-  .search-form { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 2rem; }
-  .search-input {
-    flex: 1;
-    padding: 0.6rem 0.9rem;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    font-size: 0.95rem;
+  .filter {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.8rem 1rem;
+    margin: 0 0 1.5rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
     background: var(--surface);
+    font-size: 1rem;
     color: var(--ink);
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .search-input:focus { outline: none; border-color: var(--accent); }
-  .search-btn {
-    padding: 0.6rem 1.1rem;
-    background: var(--ink);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.92rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .search-btn:hover { background: var(--accent); }
-  .clear-link { font-size: 0.88rem; color: var(--ink-muted); white-space: nowrap; }
-  .clear-link:hover { color: var(--ink); }
+  .filter::placeholder { color: var(--ink-faint); }
+  .filter:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
 
   .list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
   .row { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 1rem 0; border: 0; border-bottom: 1px solid var(--line); color: var(--ink); transition: color 0.15s; text-decoration: none; background: none; font: inherit; text-align: left; cursor: pointer; }
@@ -112,5 +92,5 @@
   .name { font-weight: 500; }
   .count { color: var(--ink-faint); font-size: 0.86rem; }
 
-  .empty { padding: 3rem 0; color: var(--ink-muted); }
+  .empty { padding: 1rem 0; color: var(--ink-muted); }
 </style>
