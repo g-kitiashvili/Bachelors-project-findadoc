@@ -32,25 +32,31 @@ export function classifyHit(p: Pt, box: Box): RegionId {
   const front = p.z >= (box.min.z + box.max.z) / 2;
 
   if (ny >= 0.85) return 'head';
-  if (ny < 0.45) return 'leg';                        // everything below the hip
+  if (nx > 0.30) return 'arm';                        // hands hang past the hip line; the far sides are arm before leg
+  if (ny < 0.50) return 'leg';                        // central column below the hip
   if (nx > 0.18) return 'arm';                        // limbs out to the sides
   if (!front) return 'back';                          // torso, back side
   if (ny >= 0.68) return 'chest';
   if (ny >= 0.60) return 'upper-abdomen';
-  return 'lower-abdomen';                             // pelvis / lower belly (0.45-0.60)
+  return 'lower-abdomen';                             // pelvis / lower belly (0.50-0.60)
 }
 
 /** Classify a hit within the head band (ny >= 0.85) into a facial sub-region.
- *  Mirror of the face-zone logic in BodyScene's shader - keep them in sync. */
-export function classifyFace(p: Pt, box: Box): FaceId {
-  const sx = box.max.x - box.min.x, sy = box.max.y - box.min.y;
+ *  `headHalfX` is the head's own x half-width, so the ear is judged relative to the
+ *  head (not the whole body, which is much wider). Mirror of the face-zone logic in
+ *  BodyScene's shader - keep them in sync. */
+export function classifyFace(p: Pt, box: Box, headHalfX: number): FaceId {
+  const sy = box.max.y - box.min.y;
   const ny = (p.y - box.min.y) / sy;
-  const nx = Math.abs((p.x - (box.min.x + box.max.x) / 2) / sx);
-  const front = p.z >= (box.min.z + box.max.z) / 2;
   const fy = (ny - 0.85) / 0.15; // 0 chin .. 1 crown, within the head
-  if (nx > 0.06) return 'ear';   // off to the sides
-  if (!front) return 'nerves';   // back of head
-  if (fy > 0.72) return 'nerves'; // forehead / scalp
+  const front = p.z >= (box.min.z + box.max.z) / 2;
+  const nxh = Math.abs(p.x - (box.min.x + box.max.x) / 2) / headHalfX; // 0 center .. 1 head edge
+  // Ear first: the lateral edge of the head at ear height, on either side and front-or-back
+  // (the upper bound excludes the much-wider shoulders). The front cheek sits inboard of
+  // this (lower nxh) so it falls through to eyes/nose/jaw instead.
+  if (nxh > 0.85 && nxh < 1.6 && fy >= 0.25 && fy <= 0.7) return 'ear';
+  if (!front) return 'nerves';                // back of head
+  if (fy > 0.72) return 'nerves';             // forehead / scalp
   if (fy >= 0.5) return 'eyes';
   if (fy >= 0.32) return 'nose';
   if (fy >= 0.15) return 'mouth';

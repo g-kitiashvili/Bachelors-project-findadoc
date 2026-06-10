@@ -48,7 +48,8 @@
     dracoLoader.setDecoderPath('/draco/');
     const makeLoader = () => { const l = new GLTFLoader(); l.setDRACOLoader(dracoLoader); return l; };
 
-    let pickProxy: THREE.Mesh | null = null; // invisible box for reliable raycasts (skinned shell raycasts at the wrong scale)
+    let pickProxy: THREE.Mesh | null = null; // invisible box for reliable outer-region raycasts
+    const shellMeshes: THREE.Mesh[] = []; // the actual shell geometry, raycast in face mode for accurate facial hits
     const shellMats: THREE.MeshStandardMaterial[] = [];
     const shellShaders: { uniforms: Record<string, { value: number }> }[] = [];
     let hoveredOrgan: OrganId | null = null;
@@ -64,26 +65,29 @@
         shader.uniforms.uMinY = { value: -size.y / 2 };
         shader.uniforms.uH = { value: size.y };
         shader.uniforms.uW = { value: size.x };
+        shader.uniforms.uHeadHalfX = { value: headHalfX };
         shader.vertexShader = 'varying vec3 vWP;\n' + shader.vertexShader.replace(
           '#include <skinning_vertex>',
           '#include <skinning_vertex>\n\tvWP = (modelMatrix * vec4(transformed, 1.0)).xyz;'
         );
         shader.fragmentShader = shader.fragmentShader
-          .replace('#include <common>', '#include <common>\nvarying vec3 vWP;\nuniform float uRegion;\nuniform float uFace;\nuniform float uMode;\nuniform float uMinY;\nuniform float uH;\nuniform float uW;')
+          .replace('#include <common>', '#include <common>\nvarying vec3 vWP;\nuniform float uRegion;\nuniform float uFace;\nuniform float uMode;\nuniform float uMinY;\nuniform float uH;\nuniform float uW;\nuniform float uHeadHalfX;')
           .replace('#include <emissivemap_fragment>',
             '#include <emissivemap_fragment>\n'
             + 'float ny = (vWP.y - uMinY) / uH;\n'
             + 'float nx = abs(vWP.x) / uW;\n'
             + 'if (uMode < 0.5) {\n'
             + '  float reg;\n'
-            + '  if (ny >= 0.85) reg = 0.0; else if (ny < 0.50) reg = 5.0; else if (nx > 0.18) reg = 4.0;\n'
+            + '  if (ny >= 0.85) reg = 0.0; else if (nx > 0.30) reg = 4.0; else if (ny < 0.50) reg = 5.0; else if (nx > 0.18) reg = 4.0;\n'
             + '  else if (vWP.z < 0.0) reg = 6.0; else if (ny >= 0.68) reg = 1.0; else if (ny >= 0.60) reg = 2.0; else reg = 3.0;\n'
             + '  if (uRegion >= 0.0 && abs(reg - uRegion) < 0.5) { totalEmissiveRadiance += vec3(0.85, 0.42, 0.22) * 0.8; }\n'
             + '} else {\n'
             + '  float fy = (ny - 0.85) / 0.15;\n'
+            + '  float nxh = abs(vWP.x) / uHeadHalfX;\n'
             + '  float fz = -1.0;\n'
             + '  if (ny >= 0.85) {\n'
-            + '    if (nx > 0.06) fz = 4.0; else if (vWP.z < 0.0) fz = 5.0; else if (fy > 0.72) fz = 5.0;\n'
+            + '    if (nxh > 0.85 && nxh < 1.6 && fy >= 0.25 && fy <= 0.7) fz = 4.0;\n'
+            + '    else if (vWP.z < 0.0) fz = 5.0; else if (fy > 0.72) fz = 5.0;\n'
             + '    else if (fy >= 0.5) fz = 0.0; else if (fy >= 0.32) fz = 1.0; else if (fy >= 0.15) fz = 2.0; else fz = 3.0;\n'
             + '  }\n'
             + '  if (uFace >= 0.0 && abs(fz - uFace) < 0.5) { totalEmissiveRadiance += vec3(0.85, 0.42, 0.22) * 0.9; }\n'
@@ -93,6 +97,7 @@
     }
     let modelBox = new THREE.Box3();
     let size = new THREE.Vector3(1, 1.8, 0.3);
+    let headHalfX = 0.07; // head's own x half-width (measured at load); gates the ear zone
     const organMap = new Map<OrganId, THREE.Object3D>();
     const organsRoot = new THREE.Group();
     organsRoot.rotation.x = -Math.PI / 2; // BodyParts3D is Z-up; scene is Y-up
@@ -191,7 +196,9 @@
       showHighlight(null);
       showFace(null);
       hoveredOrgan = null;
-      pickables = pickProxy ? [pickProxy] : [];
+      // raycast the real head geometry (not the flat proxy) so facial hits land on the
+      // actual curved surface, matching where the shader lights each zone
+      pickables = shellMeshes.length ? shellMeshes : (pickProxy ? [pickProxy] : []);
       setShellOpacity(0.85);
       layer = 'face';
       const hy0 = modelBox.min.y + 0.85 * size.y;
@@ -221,9 +228,10 @@
           const mat = new THREE.MeshStandardMaterial({ color: 0xcfd4da, roughness: 0.85, transparent: true, opacity: 0.55, depthWrite: false });
           applyGlow(mat);
           (o as THREE.Mesh).material = mat; shellMats.push(mat);
+          shellMeshes.push(o as THREE.Mesh);
         }
       });
-      // measure true rendered size (this GLB's Armature scale fools setFromObject)
+      // measure true rendered size 
       model.updateWorldMatrix(true, true);
       const worldB = new THREE.Box3().setFromObject(model);
       const geomB = new THREE.Box3(); const tb = new THREE.Box3();
@@ -239,6 +247,23 @@
       model.position.sub(srcBox.getCenter(new THREE.Vector3()));
       model.updateWorldMatrix(true, true);
       scene.add(model);
+
+      // Measure the head's own x half-width (max |x| among vertices in the top 10%
+      // band, which is above the shoulders) so the ear zone is judged relative to the
+      // head, not the much wider shoulders.
+      const headMinY = -size.y / 2 + 0.90 * size.y;
+      const v = new THREE.Vector3();
+      let maxHeadX = 0;
+      model.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        const pos = mesh.isMesh ? mesh.geometry.attributes.position : undefined;
+        if (!pos) return;
+        for (let i = 0; i < pos.count; i++) {
+          v.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld);
+          if (v.y >= headMinY && Math.abs(v.x) > maxHeadX) maxHeadX = Math.abs(v.x);
+        }
+      });
+      if (maxHeadX > 0) headHalfX = maxHeadX;
 
       modelBox = new THREE.Box3(size.clone().multiplyScalar(-0.5), size.clone().multiplyScalar(0.5));
       const aspect = camera.aspect || (host.clientWidth / host.clientHeight) || 1;
@@ -276,7 +301,7 @@
         return { id: named ? (named.object.name.slice('organ:'.length) as TargetId) : null, point: hits[0].point };
       }
       if (layer === 'face') {
-        return { id: classifyFace(hits[0].point, { min: modelBox.min, max: modelBox.max }), point: hits[0].point };
+        return { id: classifyFace(hits[0].point, { min: modelBox.min, max: modelBox.max }, headHalfX), point: hits[0].point };
       }
       return { id: classifyHit(hits[0].point, { min: modelBox.min, max: modelBox.max }), point: hits[0].point };
     }
