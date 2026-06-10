@@ -26,6 +26,7 @@ interface DoctorProfile {
   specialties: SpecialtyRef[];
   clinics: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null; addressEn: string | null; phone: string | null }>;
   lastSourceUrl: string | null;
+  lastUpdatedAt: string | null;
 }
 
 export const load: PageServerLoad = async ({ params, fetch }) => {

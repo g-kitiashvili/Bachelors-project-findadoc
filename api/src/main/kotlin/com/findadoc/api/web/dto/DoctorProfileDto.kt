@@ -18,6 +18,7 @@ data class DoctorProfileDto(
     val specialties: List<SpecialtyRefWithFlagDto>,
     val clinics: List<ClinicRefDto>,
     val lastSourceUrl: String?,
+    val lastUpdatedAt: String?,
 )
 
 fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
@@ -48,4 +49,5 @@ fun Doctor.toProfileDto(): DoctorProfileDto = DoctorProfileDto(
         .sortedBy { it.nameEn }
         .map { ClinicRefDto(slug = it.slug, nameKa = it.nameKa, nameEn = it.nameEn, address = it.address, addressEn = it.addressEn, phone = it.phone) },
     lastSourceUrl = lastSourceUrl,
+    lastUpdatedAt = lastUpdatedAt?.toLocalDate()?.toString(),
 )

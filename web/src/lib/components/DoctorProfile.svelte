@@ -26,6 +26,7 @@
     specialties: SpecialtyRef[];
     clinics: Array<{ slug: string; nameKa: string; nameEn: string; address: string | null; addressEn: string | null; phone: string | null }>;
     lastSourceUrl: string | null;
+    lastUpdatedAt: string | null;
   }
 
   let { doctor }: { doctor: Doctor } = $props();
@@ -52,6 +53,15 @@
   }
   const source = $derived(
     doctor.lastSourceUrl ? { url: doctor.lastSourceUrl, name: sourceLabel(doctor.lastSourceUrl) } : null,
+  );
+  const updatedDate = $derived(
+    doctor.lastUpdatedAt
+      ? new Date(doctor.lastUpdatedAt).toLocaleDateString(getLocale() === "ka" ? "ka-GE" : "en-GB", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : null,
   );
 
   const name = $derived(localizedField(doctor.fullNameKa, doctor.fullNameEn, getLocale()));
@@ -164,7 +174,7 @@
 
     {#if source}
       <p class="source-line">
-        {m.profile_source()}: <a href={source.url} target="_blank" rel="noopener noreferrer">{source.name}</a>
+        {m.profile_source()}: <a href={source.url} target="_blank" rel="noopener noreferrer">{source.name}</a>{#if updatedDate} · {m.profile_updated()} {updatedDate}{/if}
       </p>
     {/if}
   </div>
