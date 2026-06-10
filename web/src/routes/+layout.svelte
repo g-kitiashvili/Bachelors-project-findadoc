@@ -35,9 +35,9 @@
 </svelte:head>
 
 <TopNav {active} />
-<div class="content">
+<main class="content">
   {@render children()}
-</div>
+</main>
 <SiteFooter />
 
 <style>

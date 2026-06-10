@@ -61,7 +61,7 @@
   </a>
   <div class="info">
     <a class="name-link" href={href(`/doctors/${doctor.slug}`)}>
-      <h3 class="name">{displayName}</h3>
+      <h2 class="name">{displayName}</h2>
     </a>
     {#if doctor.primarySpecialty}
       <a class="specialty-pill" href={href(`/specialties/${doctor.primarySpecialty.slug}`)}>

@@ -9,14 +9,24 @@
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Load fonts non-render-blocking: preload as style, then promote to a stylesheet on load.
+         display=swap (in the URLs) renders text in a fallback face until the web font arrives. -->
     <link
+      rel="preload"
+      as="style"
       href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=switzer@300,400,500,600,700&display=swap"
-      rel="stylesheet"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400..700&display=swap"
-      rel="stylesheet"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=switzer@300,400,500,600,700&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400..700&display=swap" rel="stylesheet" />
+    </noscript>
 
     %sveltekit.head%
   </head>

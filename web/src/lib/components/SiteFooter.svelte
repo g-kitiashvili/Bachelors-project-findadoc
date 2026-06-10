@@ -10,7 +10,7 @@
       <p class="footer-desc">{m.footer_tagline()}</p>
     </div>
     <div class="footer-col">
-      <h4>{m.footer_browse()}</h4>
+      <h2>{m.footer_browse()}</h2>
       <ul>
         <li><a href={href('/doctors')}>{m.footer_all_doctors()}</a></li>
         <li><a href={href('/specialties')}>{m.footer_by_specialty()}</a></li>
@@ -19,7 +19,7 @@
       </ul>
     </div>
     <div class="footer-col">
-      <h4>{m.footer_legal()}</h4>
+      <h2>{m.footer_legal()}</h2>
       <ul>
         <li><a href={href('/privacy')}>{m.footer_privacy()}</a></li>
         <li><a href={href('/terms')}>{m.footer_terms()}</a></li>
@@ -65,7 +65,7 @@
     max-width: 360px;
     margin: 0;
   }
-  .footer-col h4 {
+  .footer-col h2 {
     color: white;
     font-size: 0.86rem;
     font-weight: 600;
