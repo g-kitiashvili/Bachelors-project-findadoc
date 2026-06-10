@@ -191,14 +191,11 @@
     align-items: start;
   }
 
-  /* sticky meta card */
   .card {
     background: white;
     border: 1px solid var(--line);
     border-radius: 16px;
     overflow: hidden;
-    position: sticky;
-    top: 6rem;
   }
   .photo {
     aspect-ratio: 1 / 1;
@@ -364,7 +361,6 @@
       grid-template-columns: 1fr;
       gap: 2rem;
     }
-    .card { position: static; }
   }
   @media (max-width: 600px) {
     .profile { padding: 0 1.25rem; }
