@@ -4,12 +4,32 @@
   import * as m from "$lib/paraglide/messages";
   import { href, localizedField } from "$lib/i18n";
   import { getLocale } from "$lib/paraglide/runtime";
+  import { jsonLdScript } from "$lib/jsonld";
+  import { page } from "$app/state";
 
   let { data } = $props();
+
+  const ld = $derived.by(() => {
+    const d = data.doctor;
+    const loc = getLocale();
+    return jsonLdScript({
+      "@type": "Physician",
+      name: localizedField(d.fullNameKa, d.fullNameEn, loc),
+      url: page.url.origin + page.url.pathname,
+      ...(d.photoUrl ? { image: d.photoUrl } : {}),
+      ...(d.specialties?.length
+        ? { medicalSpecialty: d.specialties.map((s) => localizedField(s.nameKa, s.nameEn, loc)) }
+        : {}),
+      ...(d.clinics?.length
+        ? { worksFor: d.clinics.map((c) => ({ "@type": "MedicalClinic", name: localizedField(c.nameKa, c.nameEn, loc) })) }
+        : {}),
+    });
+  });
 </script>
 
 <svelte:head>
   <title>{localizedField(data.doctor.fullNameKa, data.doctor.fullNameEn, getLocale())}{m.meta_suffix()}</title>
+  {@html ld}
 </svelte:head>
 
 <nav class="breadcrumb" aria-label={m.aria_breadcrumb()}>

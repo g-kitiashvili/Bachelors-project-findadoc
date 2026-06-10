@@ -2,8 +2,19 @@
   import SearchBar from "$lib/components/SearchBar.svelte";
   import * as m from "$lib/paraglide/messages";
   import { href } from "$lib/i18n";
+  import { jsonLdScript } from "$lib/jsonld";
+  import { page } from "$app/state";
 
   let { data } = $props();
+
+  const ld = $derived(
+    jsonLdScript({
+      "@type": "MedicalOrganization",
+      name: "Find-a-Doc",
+      url: page.url.origin + page.url.pathname,
+      description: "Bilingual doctor and clinic search for Georgia",
+    }),
+  );
 
   // Three sample doctors (whatever the API returns) used for the hero collage initials.
   const slot1 = $derived(data.sample[0]);
@@ -22,6 +33,7 @@
 
 <svelte:head>
   <title>{m.meta_home()}</title>
+  {@html ld}
 </svelte:head>
 
 <section class="hero">

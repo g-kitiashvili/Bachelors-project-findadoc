@@ -2,15 +2,43 @@ import type { Handle } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { paraglideMiddleware } from '$lib/paraglide/server';
 
+// 'unsafe-inline' on script/style is a deliberate relaxation: SvelteKit's hydration
+// bootstrap and Svelte's scoped/inline styles are inline, and we don't run a nonce setup.
+// 'wasm-unsafe-eval' lets the body-map's Three.js DRACO decoder compile its WebAssembly.
+// Font CSS comes from Fontshare + Google Fonts; map tiles and doctor photos are remote.
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
+  "style-src 'self' 'unsafe-inline' https://api.fontshare.com https://fonts.googleapis.com",
+  "font-src 'self' data: https://api.fontshare.com https://fonts.gstatic.com",
+  "img-src 'self' data: https:",
+  "connect-src 'self' https://*.tile.openstreetmap.org",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "frame-ancestors 'none'"
+].join('; ');
+
+const SECURITY_HEADERS: Record<string, string> = {
+  'Content-Security-Policy': CSP,
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self)',
+  'X-Frame-Options': 'DENY'
+};
+
 export const handle: Handle = ({ event, resolve }) => {
   if (event.url.pathname === '/') {
     const cookieLocale = event.cookies.get('PARAGLIDE_LOCALE');
     throw redirect(307, `/${cookieLocale === 'en' ? 'en' : 'ka'}`);
   }
-  return paraglideMiddleware(event.request, ({ request, locale }) => {
+  return paraglideMiddleware(event.request, async ({ request, locale }) => {
     event.request = request;
-    return resolve(event, {
+    const response = await resolve(event, {
       transformPageChunk: ({ html }) => html.replace('%lang%', locale)
     });
+    for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+      response.headers.set(key, value);
+    }
+    return response;
   });
 };

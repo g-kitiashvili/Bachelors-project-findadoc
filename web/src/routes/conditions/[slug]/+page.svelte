@@ -4,11 +4,27 @@
   import * as m from "$lib/paraglide/messages";
   import { href, localizedField } from "$lib/i18n";
   import { getLocale } from "$lib/paraglide/runtime";
+  import { jsonLdScript } from "$lib/jsonld";
+  import { page } from "$app/state";
 
   let { data } = $props();
+
+  const ld = $derived.by(() => {
+    const c = data.detail;
+    const description = localizedField(c.descriptionKa, c.descriptionEn, getLocale());
+    return jsonLdScript({
+      "@type": "MedicalCondition",
+      name: localizedField(c.nameKa, c.nameEn, getLocale()),
+      url: page.url.origin + page.url.pathname,
+      ...(description ? { description } : {}),
+    });
+  });
 </script>
 
-<svelte:head><title>{`${localizedField(data.detail.nameKa, data.detail.nameEn, getLocale())}${m.meta_suffix()}`}</title></svelte:head>
+<svelte:head>
+  <title>{`${localizedField(data.detail.nameKa, data.detail.nameEn, getLocale())}${m.meta_suffix()}`}</title>
+  {@html ld}
+</svelte:head>
 
 <nav class="crumbs">
   <a href={href("/conditions")}>{m.conditions_heading()}</a>

@@ -18,6 +18,14 @@
         <li><a href={href('/clinics')}>{m.footer_by_clinic()}</a></li>
       </ul>
     </div>
+    <div class="footer-col">
+      <h4>{m.footer_legal()}</h4>
+      <ul>
+        <li><a href={href('/privacy')}>{m.footer_privacy()}</a></li>
+        <li><a href={href('/terms')}>{m.footer_terms()}</a></li>
+        <li><a href={href('/takedown')}>{m.footer_takedown()}</a></li>
+      </ul>
+    </div>
   </div>
   <div class="footer-bottom">
     <span>{m.footer_copyright()}</span>
@@ -37,7 +45,7 @@
     margin: 0 auto;
     padding: 0 2rem;
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1.5fr 1fr 1fr;
     gap: 3rem;
   }
   .footer-brand {

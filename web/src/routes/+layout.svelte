@@ -3,8 +3,15 @@
   import TopNav from "$lib/components/TopNav.svelte";
   import SiteFooter from "$lib/components/SiteFooter.svelte";
   import { page } from "$app/state";
+  import { localizeHref, deLocalizeHref } from "$lib/paraglide/runtime";
 
   let { children } = $props();
+
+  // Canonical (current locale) + hreflang alternates, from the locale-stripped path.
+  const bare = $derived(deLocalizeHref(page.url.pathname));
+  const canonical = $derived(page.url.origin + localizeHref(bare));
+  const kaHref = $derived(page.url.origin + localizeHref(bare, { locale: "ka" }));
+  const enHref = $derived(page.url.origin + localizeHref(bare, { locale: "en" }));
 
   // Determine which nav item is active based on the route id.
   const active = $derived.by(() => {
@@ -19,6 +26,13 @@
     return "";
   });
 </script>
+
+<svelte:head>
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="ka" href={kaHref} />
+  <link rel="alternate" hreflang="en" href={enHref} />
+  <link rel="alternate" hreflang="x-default" href={enHref} />
+</svelte:head>
 
 <TopNav {active} />
 <div class="content">
