@@ -2,7 +2,7 @@ import type { PageServerLoad } from "./$types";
 import type { SpecialtyRef, ClinicRef, LocationRegion } from "../+page.server";
 import { appendList } from "$lib/listParams";
 
-const API_BASE = process.env.API_URL ?? "http://localhost:8080";
+import { API_BASE } from "$lib/server/api";
 
 interface Pin { slug: string; nameEn: string; nameKa: string; lat: number; lng: number; doctorCount: number }
 
@@ -30,10 +30,6 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   const radiusKm = url.searchParams.get("radiusKm");
   if (center) pinParams.set("center", center);
   if (radiusKm) pinParams.set("radiusKm", radiusKm);
-  const pinQs = pinParams.toString();
-  const pinsRes = await fetch(`${API_BASE}/api/v1/doctors/map-pins${pinQs ? `?${pinQs}` : ""}`);
-  const pins: Pin[] = pinsRes.ok ? ((await pinsRes.json()) as { pins: Pin[] }).pins : [];
-
   // Filter-control data, mirroring the doctor list page so the same FilterBar works here.
   const specParams = new URLSearchParams();
   if (region) specParams.set("region", region);
@@ -41,17 +37,12 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   appendList(specParams, "clinic", clinic);
   if (treatsChildren) specParams.set("treatsChildren", "true");
   if (treatsAdults) specParams.set("treatsAdults", "true");
-  const specRes = await fetch(`${API_BASE}/api/v1/specialties${specParams.toString() ? `?${specParams}` : ""}`);
-  const specialties = (specRes.ok ? ((await specRes.json()) as { items: Array<SpecialtyRef & { doctorCount: number; parentSlug?: string | null }> }).items : [])
-    .filter((s) => s.doctorCount > 0);
 
   const locParams = new URLSearchParams();
   appendList(locParams, "specialty", specialty);
   appendList(locParams, "clinic", clinic);
   if (treatsChildren) locParams.set("treatsChildren", "true");
   if (treatsAdults) locParams.set("treatsAdults", "true");
-  const locRes = await fetch(`${API_BASE}/api/v1/locations${locParams.toString() ? `?${locParams}` : ""}`);
-  const regions = locRes.ok ? ((await locRes.json()) as { items: LocationRegion[] }).items : [];
 
   const clinicParams = new URLSearchParams({ located: "true" }); // the map only filters by clinics it can place
   if (region) clinicParams.set("region", region);
@@ -59,8 +50,25 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   appendList(clinicParams, "specialty", specialty);
   if (treatsChildren) clinicParams.set("treatsChildren", "true");
   if (treatsAdults) clinicParams.set("treatsAdults", "true");
-  const clinicsRes = await fetch(`${API_BASE}/api/v1/clinics?${clinicParams}`);
-  const clinics = clinicsRes.ok ? ((await clinicsRes.json()) as { items: ClinicRef[] }).items : [];
+
+  const qs = (p: URLSearchParams) => (p.toString() ? `?${p}` : "");
+  const json = async <T>(path: string, fallback: T): Promise<T> => {
+    const r = await fetch(`${API_BASE}${path}`);
+    return r.ok ? ((await r.json()) as T) : fallback;
+  };
+
+  // Independent lookups - fetch in parallel rather than waterfalling.
+  const [pinsData, specialtiesData, regionsData, clinicsData] = await Promise.all([
+    json<{ pins: Pin[] }>(`/api/v1/doctors/map-pins${qs(pinParams)}`, { pins: [] }),
+    json<{ items: Array<SpecialtyRef & { doctorCount: number; parentSlug?: string | null }> }>(`/api/v1/specialties${qs(specParams)}`, { items: [] }),
+    json<{ items: LocationRegion[] }>(`/api/v1/locations${qs(locParams)}`, { items: [] }),
+    json<{ items: ClinicRef[] }>(`/api/v1/clinics?${clinicParams}`, { items: [] }),
+  ]);
+
+  const pins: Pin[] = pinsData.pins;
+  const specialties = specialtiesData.items.filter((s) => s.doctorCount > 0);
+  const regions = regionsData.items;
+  const clinics = clinicsData.items;
 
   const parts = center?.split(",").map((s) => Number(s.trim()));
   const centerPoint = parts && parts.length === 2 && parts.every(Number.isFinite) ? { lat: parts[0], lng: parts[1] } : null;

@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import type { TriageGraph } from '$lib/triage';
 
-const API_BASE = process.env.API_URL ?? 'http://localhost:8080';
+import { API_BASE } from "$lib/server/api";
 type NameItem = { slug: string; nameKa: string; nameEn: string };
 
 async function nameMap(fetch: typeof globalThis.fetch, path: string, type: string): Promise<Record<string, { ka: string; en: string }>> {

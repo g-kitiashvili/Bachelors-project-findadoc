@@ -1,7 +1,7 @@
 import type { PageServerLoad } from "./$types";
 import { appendList } from "$lib/listParams";
 
-const API_BASE = process.env.API_URL ?? "http://localhost:8080";
+import { API_BASE } from "$lib/server/api";
 
 export interface SpecialtyRef {
   slug: string;
@@ -62,39 +62,18 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   if (treatsChildren) params.set("treatsChildren", "true");
   if (treatsAdults) params.set("treatsAdults", "true");
 
-  const res = await fetch(`${API_BASE}/api/v1/doctors?${params.toString()}`);
-  const data = res.ok
-    ? ((await res.json()) as DoctorPage)
-    : { items: [], page, pageSize: 12, total: 0 };
-
-  const selectedSlugs = specialty ? specialty.split(",").filter(Boolean) : [];
-  const selectedSort = sort || (q ? "relevancy" : "top");
-
   const specParams = new URLSearchParams();
   if (region) specParams.set("region", region);
   if (city) specParams.set("city", city);
   appendList(specParams, "clinic", clinic);
   if (treatsChildren) specParams.set("treatsChildren", "true");
   if (treatsAdults) specParams.set("treatsAdults", "true");
-  const specQuery = specParams.toString();
-  const specRes = await fetch(
-    `${API_BASE}/api/v1/specialties${specQuery ? `?${specQuery}` : ""}`,
-  );
-  const specialties = (
-    specRes.ok
-      ? ((await specRes.json()) as { items: Array<SpecialtyRef & { doctorCount: number }> }).items
-      : []
-  ).filter((s) => s.doctorCount > 0);
 
   const locParams = new URLSearchParams();
   appendList(locParams, "specialty", specialty);
   appendList(locParams, "clinic", clinic);
   if (treatsChildren) locParams.set("treatsChildren", "true");
   if (treatsAdults) locParams.set("treatsAdults", "true");
-  const locRes = await fetch(`${API_BASE}/api/v1/locations${locParams.toString() ? `?${locParams}` : ""}`);
-  const regions = locRes.ok
-    ? ((await locRes.json()) as { items: LocationRegion[] }).items
-    : [];
 
   const clinicParams = new URLSearchParams();
   if (region) clinicParams.set("region", region);
@@ -102,10 +81,24 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
   appendList(clinicParams, "specialty", specialty);
   if (treatsChildren) clinicParams.set("treatsChildren", "true");
   if (treatsAdults) clinicParams.set("treatsAdults", "true");
-  const clinicsRes = await fetch(`${API_BASE}/api/v1/clinics${clinicParams.toString() ? `?${clinicParams}` : ""}`);
-  const clinics = clinicsRes.ok
-    ? ((await clinicsRes.json()) as { items: ClinicRef[] }).items
-    : [];
 
-  return { ...data, q, selectedSlugs, specialties, regions, selectedRegion: region, selectedCity: city, sort, selectedSort, clinics, selectedClinics: clinic ? clinic.split(",").filter(Boolean) : [], selectedTreatsChildren: treatsChildren, selectedTreatsAdults: treatsAdults };
+  const qs = (p: URLSearchParams) => (p.toString() ? `?${p}` : "");
+  const json = async <T>(path: string, fallback: T): Promise<T> => {
+    const r = await fetch(`${API_BASE}${path}`);
+    return r.ok ? ((await r.json()) as T) : fallback;
+  };
+
+  // Independent lookups - fetch in parallel rather than waterfalling.
+  const [data, specialtiesData, regionsData, clinicsData] = await Promise.all([
+    json<DoctorPage>(`/api/v1/doctors?${params}`, { items: [], page, pageSize: 12, total: 0 }),
+    json<{ items: Array<SpecialtyRef & { doctorCount: number }> }>(`/api/v1/specialties${qs(specParams)}`, { items: [] }),
+    json<{ items: LocationRegion[] }>(`/api/v1/locations${qs(locParams)}`, { items: [] }),
+    json<{ items: ClinicRef[] }>(`/api/v1/clinics${qs(clinicParams)}`, { items: [] }),
+  ]);
+
+  const specialties = specialtiesData.items.filter((s) => s.doctorCount > 0);
+  const selectedSlugs = specialty ? specialty.split(",").filter(Boolean) : [];
+  const selectedSort = sort || (q ? "relevancy" : "top");
+
+  return { ...data, q, selectedSlugs, specialties, regions: regionsData.items, selectedRegion: region, selectedCity: city, sort, selectedSort, clinics: clinicsData.items, selectedClinics: clinic ? clinic.split(",").filter(Boolean) : [], selectedTreatsChildren: treatsChildren, selectedTreatsAdults: treatsAdults };
 };

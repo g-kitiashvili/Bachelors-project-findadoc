@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { appendList } from "$lib/listParams";
 
-const API_BASE = process.env.API_URL ?? "http://localhost:8080";
+import { API_BASE } from "$lib/server/api";
 
 export const GET: RequestHandler = async ({ url, fetch }) => {
   const params = new URLSearchParams();

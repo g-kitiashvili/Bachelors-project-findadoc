@@ -1,6 +1,6 @@
 import { json, type RequestHandler } from "@sveltejs/kit";
 
-const API_BASE = process.env.API_URL ?? "http://localhost:8080";
+import { API_BASE } from "$lib/server/api";
 
 export const GET: RequestHandler = async ({ fetch }) => {
   try {

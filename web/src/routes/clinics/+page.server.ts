@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
 
-const API_BASE = process.env.API_URL ?? "http://localhost:8080";
+import { API_BASE } from "$lib/server/api";
 
 type Branch = { slug: string; nameKa: string; nameEn: string; address: string | null };
 type Clinic = { slug: string; nameKa: string; nameEn: string; doctorCount: number; branches?: Branch[] };

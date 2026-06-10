@@ -1,7 +1,7 @@
 import { error, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
-const API_BASE = process.env.API_URL ?? "http://localhost:8080";
+import { API_BASE } from "$lib/server/api";
 
 interface SpecialtyRef {
   slug: string;
@@ -30,10 +30,11 @@ interface DoctorProfile {
 }
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
-  const res = await fetch(
-    `${API_BASE}/api/v1/doctors/${encodeURIComponent(params.slug)}`,
-    { redirect: "manual" },
-  );
+  const slug = encodeURIComponent(params.slug);
+  const [res, similarRes] = await Promise.all([
+    fetch(`${API_BASE}/api/v1/doctors/${slug}`, { redirect: "manual" }),
+    fetch(`${API_BASE}/api/v1/doctors/${slug}/similar?limit=12`),
+  ]);
   if (res.status === 301) {
     const loc = res.headers.get("location") ?? "";
     const canonical = loc.split("/").pop();
@@ -46,8 +47,6 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
     error(res.status, "Could not load doctor");
   }
   const doctor = (await res.json()) as DoctorProfile;
-
-  const similarRes = await fetch(`${API_BASE}/api/v1/doctors/${encodeURIComponent(params.slug)}/similar?limit=12`);
   const similar = similarRes.ok ? await similarRes.json() : [];
 
   return { doctor, similar };

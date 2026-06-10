@@ -149,19 +149,22 @@
   {/if}
 </div>
 
-<FilterDrawer
-  open={drawerOpen}
-  {selectedSlugs}
-  {specialties}
-  onClose={() => (drawerOpen = false)}
-  {regions}
-  {selectedRegion}
-  {selectedCity}
-  {clinics}
-  {selectedClinics}
-  {selectedTreatsChildren}
-  {selectedTreatsAdults}
-/>
+<!-- Mounted only while open so the draft state initializes fresh from the current filters each time. -->
+{#if drawerOpen}
+  <FilterDrawer
+    open={drawerOpen}
+    {selectedSlugs}
+    {specialties}
+    onClose={() => (drawerOpen = false)}
+    {regions}
+    {selectedRegion}
+    {selectedCity}
+    {clinics}
+    {selectedClinics}
+    {selectedTreatsChildren}
+    {selectedTreatsAdults}
+  />
+{/if}
 
 <style>
   .bar { max-width: 1280px; margin: 1.5rem auto 0; padding: 0 2rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }

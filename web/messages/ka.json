@@ -131,6 +131,8 @@
   "error_something_wrong": "რაღაც შეცდომა მოხდა.",
   "error_default_message": "მოთხოვნილი გვერდი არ არსებობს ან აღარ არის ხელმისაწვდომი.",
   "error_back_all_doctors": "← უკან, ყველა ექიმთან",
+  "error_page_not_found": "ეს გვერდი ვერ მოიძებნა.",
+  "error_back_home": "← მთავარ გვერდზე",
   "meta_home": "Find-a-Doc - ორენოვანი სამედიცინო პროექტი საქართველოსთვის",
   "meta_doctors": "ექიმები - Find-a-Doc",
   "meta_search": "ძიება · {q} - Find-a-Doc",

@@ -14,8 +14,9 @@
     if (id.startsWith("/specialties")) return "specialties";
     if (id.startsWith("/conditions")) return "conditions";
     if (id.startsWith("/clinics")) return "clinics";
+    if (id.startsWith("/symptoms") || id.startsWith("/body") || id.startsWith("/triage")) return "symptoms";
     if (id.startsWith("/about")) return "about";
-    return "doctors";
+    return "";
   });
 </script>
 

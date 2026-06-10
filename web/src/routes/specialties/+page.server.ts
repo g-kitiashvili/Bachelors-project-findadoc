@@ -1,6 +1,6 @@
 import type { PageServerLoad } from "./$types";
 
-const API_BASE = process.env.API_URL ?? "http://localhost:8080";
+import { API_BASE } from "$lib/server/api";
 
 export const load: PageServerLoad = async ({ fetch }) => {
   const res = await fetch(`${API_BASE}/api/v1/specialties`);

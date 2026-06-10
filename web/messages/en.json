@@ -131,6 +131,8 @@
   "error_something_wrong": "Something went wrong.",
   "error_default_message": "The page you requested doesn't exist or is no longer available.",
   "error_back_all_doctors": "← Back to all doctors",
+  "error_page_not_found": "We couldn't find that page.",
+  "error_back_home": "← Back to home",
   "meta_home": "Find-a-Doc - bilingual medical directory for Georgia",
   "meta_doctors": "Doctors - Find-a-Doc",
   "meta_search": "Search · {q} - Find-a-Doc",

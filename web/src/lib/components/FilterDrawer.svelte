@@ -214,9 +214,11 @@
   }
 </script>
 
+<svelte:window onkeydown={(e) => { if (open && e.key === "Escape") onClose(); }} />
+
 {#if open}
   <div class="backdrop" onclick={onClose} role="presentation"></div>
-  <aside class="drawer" role="dialog" aria-label={m.filter_filters()}>
+  <div class="drawer" role="dialog" aria-modal="true" aria-label={m.filter_filters()}>
     <header>
       <h2>{m.filter_filters()}</h2>
       <button class="close" onclick={onClose} aria-label={m.drawer_close()}>✕</button>
@@ -273,7 +275,7 @@
       <button class="clear" onclick={clearDraft}>{m.drawer_clear()}</button>
       <button class="apply" onclick={apply}>{m.drawer_apply()}</button>
     </footer>
-  </aside>
+  </div>
 {/if}
 
 <style>

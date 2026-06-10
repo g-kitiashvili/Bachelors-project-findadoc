@@ -16,7 +16,7 @@
 
   let { doctors }: { doctors: Doc[] } = $props();
 
-  let rail: HTMLDivElement;
+  let rail = $state<HTMLDivElement>();
   function page(dir: number) {
     if (!rail) return;
     rail.scrollBy({ left: dir * rail.clientWidth * 0.85, behavior: "smooth" });
