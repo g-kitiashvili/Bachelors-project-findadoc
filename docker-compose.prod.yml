@@ -1,0 +1,38 @@
+name: findadoc
+
+# Production overlay. Use together with the base file:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# Caddy is the only internet-facing service (80/443). It terminates HTTPS with
+# an automatically issued Let's Encrypt certificate and reverse-proxies to the
+# web container over the internal network. Set BIND_ADDR=127.0.0.1 in .env so
+# postgres/api/web are reachable only from the host, never the public internet.
+
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN in .env}
+    depends_on:
+      - web
+
+  web:
+    environment:
+      API_URL: http://api:8080
+      PORT: "3000"
+      ORIGIN: https://${DOMAIN}
+      PROTOCOL_HEADER: x-forwarded-proto
+      HOST_HEADER: x-forwarded-host
+
+volumes:
+  caddy_data:
+  caddy_config:
