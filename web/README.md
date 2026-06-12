@@ -14,7 +14,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000 — should show the seeded doctor name fetched from the API.
+Open http://localhost:3000 to browse doctors and clinics served from the API.
 
 ## Build for production
 

@@ -17,7 +17,7 @@ Kotlin + Spring Boot 3 backend for Find-a-Doc.
 The app listens on `http://localhost:8080`. Sanity checks:
 
 - `curl http://localhost:8080/actuator/health` → `{"status":"UP"}`
-- `curl http://localhost:8080/api/v1/doctors/test-doctor` → `{"slug":"test-doctor","fullName":"Test Doctor"}`
+- `curl http://localhost:8080/api/v1/doctors?pageSize=1` → a page of doctors (requires a populated database)
 
 ## Build & test
 

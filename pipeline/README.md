@@ -4,10 +4,22 @@ Python data-ingestion pipeline for Find-a-Doc.
 
 ## Sources
 
-| Source | Domain | Fetcher | Status |
-|---|---|---|---|
-| newhospitals | newhospitals.ge | httpx | active (~191 doctors) |
-| aversi | aversiclinic.ge | Playwright + stealth (CF bypass) | active (~480 doctors) |
+All sources are fetched with `httpx` over static HTML or JSON; no headless browser is used.
+
+| Source | Domain | Notes |
+|---|---|---|
+| newhospitals | newhospitals.ge | static HTML |
+| aversi | aversiclinic.ge | public dashboard JSON API (`dashboard.aversiclinic.ge/api/doctors/{lang}`) |
+| caraps | carapsmedline.ge | static HTML |
+| cmc | cmchospital.ge | static HTML, EN + KA pages |
+| evex | evex.ge | JSON API, bilingual |
+| joann | joann.ge | static HTML |
+| tsamali | tsamali.ge | static HTML, per-city listings |
+| vipmed | vipmed.ge | static HTML |
+| vivamedi | vivamedi.ge | static HTML |
+| vivomedical | vivomedical.ge | static HTML |
+
+A full run ingests roughly 3,200 doctors across all sources.
 
 ## Two entrypoints
 
@@ -29,7 +41,6 @@ Both call into the same scraper code; only the trigger differs.
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
-python -m playwright install chromium
 python -m pipeline run --source newhospitals
 ```
 
@@ -39,7 +50,7 @@ python -m pipeline run --source newhospitals
 # Fast tests only (default):
 pytest
 
-# Include slow tests (Testcontainers + Playwright integration):
+# Include slow tests (Testcontainers integration):
 pytest -m "slow or not slow"
 ```
 
@@ -52,24 +63,6 @@ pytest -m "slow or not slow"
 | `PIPELINE_SCHEDULER_CRON` | `0 3 * * *` | Cron expression |
 | `PIPELINE_TIMEZONE` | `Asia/Tbilisi` | Scheduler timezone |
 | `PIPELINE_LOG_LEVEL` | `INFO` | structlog level |
-| `PIPELINE_PLAYWRIGHT_HEADLESS` | `true` | Default; AversiScraper overrides to `false` |
-
-## Aversi runtime note
-
-Aversi sits behind Cloudflare bot protection. The only confirmed bypass is headed
-Chromium + `playwright-stealth` + 8s post-navigation wait. In production, the pipeline
-runs inside the Docker container based on `mcr.microsoft.com/playwright/python` —
-Xvfb is preinstalled there, so the headed browser renders to a virtual framebuffer
-(no visible window). When running directly on a local machine, a Chromium window
-pops up briefly during scraping.
-
-`AversiScraper.discover()` is capped at `max_pages=2` by default (~32 doctors).
-For full coverage (~480 doctors across 30 pages), construct the scraper explicitly:
-
-```python
-from pipeline.scrapers.aversi import AversiScraper
-AversiScraper(max_pages=30)
-```
 
 ## Adding a new source
 
