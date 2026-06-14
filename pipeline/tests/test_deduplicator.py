@@ -73,7 +73,6 @@ def test_does_not_merge_near_spelling(dedup_db):
 
 
 def test_merges_within_source_duplicate_sharing_specialty(dedup_db):
-    # a source can list the same person twice; sharing a specialty, they still merge
     with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
         _insert_doctor(cur, "w1", "Giorgi Same", "გ ერთი", "evex.ge", "cardiology")
         _insert_doctor(cur, "w2", "Giorgi Same", "გ ორი",  "evex.ge", "cardiology")
@@ -90,6 +89,24 @@ def test_does_not_merge_different_specialty(dedup_db):
     Deduplicator(dedup_db).run()
     assert _status(dedup_db, "d1")[0] == "ACTIVE"
     assert _status(dedup_db, "d2")[0] == "ACTIVE"
+
+
+def test_merges_fuzzy_ka_variant_sharing_specialty(dedup_db):
+    with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
+        _insert_doctor(cur, "f1", "Davit Gobejishvili", "დავით გობეჯიშვილი", "evex.ge", "cardiology", photo="p")
+        _insert_doctor(cur, "f2", "Daviti Gobejishvili", "დავითი გობეჯიშვილი", "cmc.ge", "cardiology")
+    Deduplicator(dedup_db).run()
+    statuses = {_status(dedup_db, "f1")[0], _status(dedup_db, "f2")[0]}
+    assert statuses == {"ACTIVE", "MERGED"}
+
+
+def test_does_not_fuzzy_merge_similar_ka_different_specialty(dedup_db):
+    with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
+        _insert_doctor(cur, "g1", "Davit Gobejishvili", "დავით გობეჯიშვილი", "evex.ge", "cardiology")
+        _insert_doctor(cur, "g2", "Daviti Gobejishvili", "დავითი გობეჯიშვილი", "cmc.ge", "neurology")
+    Deduplicator(dedup_db).run()
+    assert _status(dedup_db, "g1")[0] == "ACTIVE"
+    assert _status(dedup_db, "g2")[0] == "ACTIVE"
 
 
 def test_idempotent_and_reversible(dedup_db):
@@ -129,8 +146,6 @@ def _insert_clinic(cur, slug, name_en, src, phone=None, website=None, address=No
 
 
 def test_merges_clinic_same_name_across_sources(dedup_db):
-    # Aggregators relist a clinic with no phone/website to correlate on; matching on
-    # the shared name across distinct sources is enough to merge.
     with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
         _insert_clinic(cur, "alpha-evex", "Alpha Clinic", "evex.ge")
         c2 = _insert_clinic(cur, "alpha-tsamali", "Alpha Clinic", "tsamali.ge")
@@ -149,8 +164,6 @@ def test_merges_clinic_same_name_across_sources(dedup_db):
 
 
 def test_clinic_merge_prefers_official_and_enriches(dedup_db):
-    # Official source is canonical even when the aggregator copy is more complete;
-    # the official record absorbs the aggregator's address.
     with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
         _insert_clinic(cur, "beta-newhosp", "Beta Hospital", "newhospitals.ge")
         _insert_clinic(cur, "beta-tsamali", "Beta Hospital", "tsamali.ge", address="Krtsanisi St. 12")
@@ -165,8 +178,6 @@ def test_clinic_merge_prefers_official_and_enriches(dedup_db):
 
 
 def test_merges_same_name_within_one_source(dedup_db):
-    # A source can list one clinic under near-identical names for different doctors;
-    # they collapse to a single entry.
     with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
         _insert_clinic(cur, "gamma-1", "Gamma Clinic", "tsamali.ge")
         _insert_clinic(cur, "gamma-2", "Gamma Clinic", "tsamali.ge")
@@ -177,8 +188,6 @@ def test_merges_same_name_within_one_source(dedup_db):
 
 
 def test_merges_across_quote_punctuation_differences(dedup_db):
-    # vipmed wraps names in curly quotes; the dedup key ignores quotes so the quoted
-    # and unquoted copies merge.
     with psycopg.connect(dedup_db, autocommit=True) as conn, conn.cursor() as cur:
         _insert_clinic(cur, "delta-evex", "Delta Clinic", "evex.ge")
         _insert_clinic(cur, "delta-vipmed", "“Delta Clinic”", "vipmed.ge")

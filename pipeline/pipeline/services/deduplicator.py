@@ -75,9 +75,11 @@ def _clinic_key(name: str | None) -> str:
 
 
 class Deduplicator(Pass):
-    def __init__(self, dsn: str, *, max_merge_fraction: float = 0.8) -> None:
+    def __init__(self, dsn: str, *, max_merge_fraction: float = 0.8,
+                 name_similarity_threshold: float = 0.85) -> None:
         super().__init__(dsn)
         self._max = max_merge_fraction
+        self._name_thr = name_similarity_threshold
 
     def run(self) -> DedupStats:
         # Non-autocommit: a DedupRegression raised mid-run rolls the whole pass back;
@@ -141,6 +143,19 @@ class Deduplicator(Pass):
             for ids in buckets.values():
                 for other in ids[1:]:
                     name_dsu.union(ids[0], other)
+
+        cur.execute(
+            "SELECT DISTINCT d1.id, d2.id FROM doctor d1 "
+            "JOIN doctor_specialty s1 ON s1.doctor_id = d1.id "
+            "JOIN doctor_specialty s2 ON s2.specialty_id = s1.specialty_id "
+            "JOIN doctor d2 ON d2.id = s2.doctor_id "
+            "WHERE d1.status='ACTIVE' AND d2.status='ACTIVE' AND d1.id < d2.id "
+            "AND similarity(d1.full_name_ka, d2.full_name_ka) >= %(thr)s",
+            {"thr": self._name_thr},
+        )
+        for a, b in cur.fetchall():
+            if a in meta and b in meta:
+                name_dsu.union(a, b)
 
         merged = 0
         for ids in name_dsu.groups().values():
